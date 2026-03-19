@@ -1245,7 +1245,7 @@ const CFG = {
 /* ═══════════════════════════════════════════════
    DEMO MODE — intercepts fetch when not on Netlify
 ═══════════════════════════════════════════════ */
-const IS_NETLIFY = location.hostname.includes('netlify') || location.hostname.includes('businessworldtravel');
+const IS_NETLIFY = true; // Always use live API — Render deployment
 
 function makeDemoOffers(orig, dest, dep) {
   const base = new Date(dep || new Date());
