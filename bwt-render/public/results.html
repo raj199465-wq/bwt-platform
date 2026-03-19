@@ -1742,33 +1742,28 @@ async function doSearch() {
   btn.innerHTML='<span class="spin"></span> Searching';
 
   try {
-    if (IS_NETLIFY) {
-      // Live — call real API
-      const res  = await fetch(CFG.searchUrl,{
-        method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({origin:orig,destination:dest,departureDate:dep,returnDate:ret||undefined,adults:1,cabin:'BUSINESS',sort:'best'}),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        console.error('[search] API error:', res.status, data);
-        showToast('Search error: ' + (data.message||data.error||res.status), 'error');
-      }
-      allOffers = res.ok ? (data.offers||[]) : [];
-      if (res.ok && data.priceInsights) window._priceInsights = data.priceInsights;
-      if (!res.ok && !allOffers.length) {
-        document.getElementById('cards').innerHTML =
-          '<div class="empty"><div class="empty-emo">⚠️</div>' +
-          '<div class="empty-h">Search unavailable</div>' +
-          '<p class="empty-p">' + (data.message || 'Search temporarily unavailable. Please WhatsApp us.') + '</p>' +
-          '<a href="https://wa.me/YOUR_WA_NUMBER" target="_blank" class="pr-cta"' +
-          ' style="max-width:240px;margin:16px auto 0;display:block;text-align:center;text-decoration:none">' +
-          'WhatsApp Us For a Quote</a></div>';
-        return;
-      }
-    } else {
-      // Not on Netlify yet — skip fetch, use demo data directly with a short delay
-      await new Promise(r=>setTimeout(r,1200));
-      allOffers = makeDemoOffers(orig, dest, dep);
+    // Live API call
+    const res  = await fetch(CFG.searchUrl,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({origin:orig,destination:dest,departureDate:dep,returnDate:ret||undefined,adults:1,cabin:'BUSINESS',sort:'best'}),
+    });
+    const data = await res.json();
+    console.log('[search] status:', res.status, 'offers:', (data.offers||[]).length);
+    if (!res.ok) {
+      console.error('[search] API error:', res.status, data);
+      showToast('Search error: ' + (data.message||data.error||'Please try again'), 'error');
+    }
+    allOffers = res.ok ? (data.offers||[]) : [];
+    if (res.ok && data.priceInsights) window._priceInsights = data.priceInsights;
+    if (!res.ok && !allOffers.length) {
+      document.getElementById('cards').innerHTML =
+        '<div class="empty"><div class="empty-emo">⚠️</div>' +
+        '<div class="empty-h">Search unavailable</div>' +
+        '<p class="empty-p">' + (data.message || 'Search temporarily unavailable. Please WhatsApp us.') + '</p>' +
+        '<a href="https://wa.me/YOUR_WA_NUMBER" target="_blank" class="pr-cta"' +
+        ' style="max-width:240px;margin:16px auto 0;display:block;text-align:center;text-decoration:none">' +
+        'WhatsApp Us For a Quote</a></div>';
+      return;
     }
 
     filteredOffers = [...allOffers];
@@ -3723,33 +3718,28 @@ async function doSearch() {
   btn.innerHTML='<span class="spin"></span> Searching';
 
   try {
-    if (IS_NETLIFY) {
-      // Live — call real API
-      const res  = await fetch(CFG.searchUrl,{
-        method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({origin:orig,destination:dest,departureDate:dep,returnDate:ret||undefined,adults:1,cabin:'BUSINESS',sort:'best'}),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        console.error('[search] API error:', res.status, data);
-        showToast('Search error: ' + (data.message||data.error||res.status), 'error');
-      }
-      allOffers = res.ok ? (data.offers||[]) : [];
-      if (res.ok && data.priceInsights) window._priceInsights = data.priceInsights;
-      if (!res.ok && !allOffers.length) {
-        document.getElementById('cards').innerHTML =
-          '<div class="empty"><div class="empty-emo">⚠️</div>' +
-          '<div class="empty-h">Search unavailable</div>' +
-          '<p class="empty-p">' + (data.message || 'Search temporarily unavailable. Please WhatsApp us.') + '</p>' +
-          '<a href="https://wa.me/YOUR_WA_NUMBER" target="_blank" class="pr-cta"' +
-          ' style="max-width:240px;margin:16px auto 0;display:block;text-align:center;text-decoration:none">' +
-          'WhatsApp Us For a Quote</a></div>';
-        return;
-      }
-    } else {
-      // Not on Netlify yet — skip fetch, use demo data directly with a short delay
-      await new Promise(r=>setTimeout(r,1200));
-      allOffers = makeDemoOffers(orig, dest, dep);
+    // Live API call
+    const res  = await fetch(CFG.searchUrl,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({origin:orig,destination:dest,departureDate:dep,returnDate:ret||undefined,adults:1,cabin:'BUSINESS',sort:'best'}),
+    });
+    const data = await res.json();
+    console.log('[search] status:', res.status, 'offers:', (data.offers||[]).length);
+    if (!res.ok) {
+      console.error('[search] API error:', res.status, data);
+      showToast('Search error: ' + (data.message||data.error||'Please try again'), 'error');
+    }
+    allOffers = res.ok ? (data.offers||[]) : [];
+    if (res.ok && data.priceInsights) window._priceInsights = data.priceInsights;
+    if (!res.ok && !allOffers.length) {
+      document.getElementById('cards').innerHTML =
+        '<div class="empty"><div class="empty-emo">⚠️</div>' +
+        '<div class="empty-h">Search unavailable</div>' +
+        '<p class="empty-p">' + (data.message || 'Search temporarily unavailable. Please WhatsApp us.') + '</p>' +
+        '<a href="https://wa.me/YOUR_WA_NUMBER" target="_blank" class="pr-cta"' +
+        ' style="max-width:240px;margin:16px auto 0;display:block;text-align:center;text-decoration:none">' +
+        'WhatsApp Us For a Quote</a></div>';
+      return;
     }
 
     filteredOffers = [...allOffers];
@@ -3956,7 +3946,6 @@ function buildCard(offer, idx, gated=false, starPriority=false) {
 
   card.innerHTML=`
     <div class="fg">
-      <!-- Airline -->
       <div class="fc-air">
         <div class="al-lg">
           ${logoUrl
@@ -3967,7 +3956,6 @@ function buildCard(offer, idx, gated=false, starPriority=false) {
         <div class="air-name">${offer.carrierName||code}</div>
         ${primaryFn?'<div class="air-fnum">'+primaryFn+'</div>':''}
       </div>
-      <!-- Route -->
       <div class="fc-rt">
         <div class="rt-times">
           <div class="rt-pt">
@@ -3998,7 +3986,6 @@ function buildCard(offer, idx, gated=false, starPriority=false) {
         </div>
         ${amenities?'<div class="rt-amenities">'+amenities+'</div>':''}
       </div>
-      <!-- Price -->
       <div class="fc-pr">
         <div class="pr-badges">${bdgHTML}</div>
         <div class="pr-amt">
@@ -4011,7 +3998,6 @@ function buildCard(offer, idx, gated=false, starPriority=false) {
         </div>
       </div>
     </div>
-    <!-- Mobile strip -->
     <div class="fc-mob">
       <div>
         <div class="fc-mob-p">$${Math.round(offer.totalPrice||0).toLocaleString()}</div>
@@ -4019,12 +4005,10 @@ function buildCard(offer, idx, gated=false, starPriority=false) {
       </div>
       <button class="pr-cta" style="width:auto;padding:8px 16px;margin-top:0" onclick="openModal(window._offerMap[${idx}])">Quote</button>
     </div>
-    <!-- Toggle -->
     <button class="fc-tog" id="tog-${idx}" onclick="toggleSegs(${idx})">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
       ${segs.length} segment${segs.length!==1?'s':''} · View details
     </button>
-    <!-- Segments -->
     <div class="fc-segs" id="sgs-${idx}">
       <div class="seg-wrap">
         <div class="seg-hd">Outbound · ${j.origin||''} → ${j.destination||''}</div>
@@ -4182,15 +4166,16 @@ function buildSCard(f, idx) {
     return '<div class="sc-chip">' + logoHtml + ' ' + code + '</div>';
   }).join('');
 
-  // Quote payload for this specialist find
-  const qData = JSON.stringify({
+  // Store specialist find data by index for onclick access
+  if (!window._sfMap) window._sfMap = {};
+  window._sfMap[idx] = {
     specialistFind: true,
     fareType: f.label,
     route: f.route,
     airlines: f.airlines,
     indicativePrice: f.price,
     savings: f.saving,
-  }).replace(/\\/g,'\\\\').replace(/`/g,'\\`');
+  };
 
   el.innerHTML = `
     <div class="scard-bar"></div>
@@ -4217,7 +4202,7 @@ function buildSCard(f, idx) {
           <div class="sc-price"><sup>$</sup>${f.price.toLocaleString()}</div>
           <div class="sc-pnote">est. per person</div>
         </div>
-        <button class="sc-cta" onclick="openModal(\`${qData}\`)">Get This Fare</button>
+        <button class="sc-cta" onclick="openModal(window._sfMap[${idx}])">Get This Fare</button>
       </div>
     </div>
     <div class="sc-mob">
@@ -4226,7 +4211,7 @@ function buildSCard(f, idx) {
         <div style="font-family:'Instrument Serif',serif;font-size:21px;color:var(--ink)">$${f.price.toLocaleString()}</div>
         <div style="font-size:9px;color:var(--muted)">est. per person</div>
       </div>
-      <button class="sc-cta" onclick="openModal(\`${qData}\`)">Get This Fare</button>
+      <button class="sc-cta" onclick="openModal(window._sfMap[${idx}])">Get This Fare</button>
     </div>`;
 
   return el;
