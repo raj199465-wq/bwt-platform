@@ -44,7 +44,13 @@ app.use((req, res, next) => {
 });
 
 // Serve static files from /public
-app.use(express.static(path.join(__dirname, '../public')));
+// Serve static files — use multiple path strategies for reliability
+const PUBLIC_DIR = path.join(__dirname, '..', 'public');
+const PUBLIC_DIR2 = path.join(process.cwd(), 'public');
+const fs = require('fs');
+const STATIC_DIR = fs.existsSync(PUBLIC_DIR) ? PUBLIC_DIR : PUBLIC_DIR2;
+console.log('[static] serving from:', STATIC_DIR, '| exists:', fs.existsSync(STATIC_DIR));
+app.use(express.static(STATIC_DIR));
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 function getIP(req) {
@@ -529,8 +535,8 @@ app.get('*', (req, res) => {
     '/agent-cockpit.html': 'agent-cockpit.html',
   };
   const file = htmlFiles[req.path];
-  if (file) return res.sendFile(path.join(__dirname, '../public', file));
-  res.sendFile(path.join(__dirname, '../public/index.html'));
+  if (file) return res.sendFile(path.join(STATIC_DIR, file));
+  res.sendFile(path.join(STATIC_DIR, 'index.html'));
 });
 
 // ── Start ──────────────────────────────────────────────────────────────────────
