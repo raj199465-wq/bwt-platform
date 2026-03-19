@@ -119,18 +119,16 @@ function normalizeGroup(group, idx, requestedCabin, tripType, isBest) {
     // Refundable — check extensions
     const refundable = extractRefundable(group.extensions || []);
 
-    // Use combined round trip price if available
-    const combinedPrice = group._combinedPrice || totalPrice;
-    const hasReturn = !!group._returnFlight;
+    // SearchAPI round trip: price field already includes both legs
+    // The 'type' field tells us: "Round trip" or "One way"
+    const isRoundTrip = (group.type || '').toLowerCase().includes('round');
 
     return {
-      id:               `serp_${idx}_${combinedPrice}`,
+      id:               `serp_${idx}_${totalPrice}`,
       source:           'serpapi',
-      totalPrice:       combinedPrice,
-      outboundPrice:    totalPrice,
-      returnPrice:      group._returnFlight?.price || null,
-      isRoundTrip:      hasReturn,
-      perPaxPrice:      combinedPrice,
+      totalPrice,
+      isRoundTrip,
+      perPaxPrice:      totalPrice,
       basePrice:        Math.round(totalPrice * 0.8),
       taxes:            Math.round(totalPrice * 0.2),
       currency:         'USD',

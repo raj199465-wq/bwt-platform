@@ -310,44 +310,8 @@ app.post('/api/search', async (req, res) => {
     const data = await raw.json();
     if (data.error) throw new Error(`SearchAPI: ${data.error}`);
 
-    // For round trips: fetch return legs using departure_tokens
-    if (tripType === 'round' && returnDate) {
-      const allOutbound = [...(data.best_flights||[]), ...(data.other_flights||[])];
-      // Fetch return options for top 3 outbound flights to get combined prices
-      const returnFetches = allOutbound.slice(0, 5)
-        .filter(f => f.departure_token)
-        .map(async f => {
-          try {
-            // SearchAPI round trip step 2: pass departure_token with return_date
-            const rp = { ...params, departure_token: f.departure_token };
-            // Keep return_date — SearchAPI needs it for the return leg search
-            const rqs = new URLSearchParams(rp);
-            log('info', 'search', 'fetching return leg', { token: f.departure_token?.slice(0,20) });
-            const rraw = await fetch(`${SEARCHAPI_BASE}?${rqs.toString()}`,
-              { signal: AbortSignal.timeout(20000) });
-            if (!rraw.ok) {
-              log('warn', 'search', 'return leg failed', { status: rraw.status });
-              return null;
-            }
-            const rdata = await rraw.json();
-            if (rdata.error) { log('warn','search','return leg error',{err:rdata.error}); return null; }
-            return { outbound: f, returnData: rdata };
-          } catch(e) {
-            log('warn', 'search', 'return leg exception', { err: e.message });
-            return null;
-          }
-        });
-      const returnResults = (await Promise.all(returnFetches)).filter(Boolean);
-      // Attach return flight info to outbound offers
-      returnResults.forEach(({ outbound, returnData }) => {
-        const returnFlights = [...(returnData.best_flights||[]), ...(returnData.other_flights||[])];
-        if (returnFlights.length) {
-          outbound._returnFlight = returnFlights[0];
-          outbound._combinedPrice = (outbound.price||0) + (returnFlights[0].price||0);
-        }
-      });
-    }
-
+    // SearchAPI round trip: price already includes both legs — no second call needed
+    // The type field in each result tells us "Round trip" or "One way"
     const { offers, priceInsights } = normalizeSearchAPIResponse(data, travelClass, tripType);
 
     if (!offers.length) {
