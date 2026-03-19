@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: bwt-platform
+    runtime: node
+    buildCommand: npm install
+    startCommand: node server/index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SEARCHAPI_KEY
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: AGENT_EMAIL
+        sync: false
+      - key: FROM_EMAIL
+        sync: false
+      - key: IP_SALT
+        sync: false
+      - key: ADMIN_KEY
+        sync: false
+    healthCheckPath: /api/health

@@ -1,0 +1,1583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Dashboard — Business World Travel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#04060e;--navy2:#070c18;--navy3:#0c1220;
+  --gold:#c8a84b;--gold2:#e6c86a;
+  --l0:#fff;--l1:#f7f8fc;--l2:#eef0f6;--l3:#e4e7f0;
+  --lb:#d4d8e8;--lt:#1a2340;--lm:#5a6480;--ld:#9aa3b8;
+  --green:#2d7a5f;--greenb:rgba(45,122,95,.1);
+  --red:#b84040;--redb:rgba(184,64,64,.09);
+  --amber:#b87a20;--amberb:rgba(184,122,32,.1);
+  --blue:#2a5cb8;--blueb:rgba(42,92,184,.09);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--l1);font-family:'DM Sans',sans-serif;color:var(--lt);min-height:100vh}
+
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#04060e 0%,#0c1a2e 60%,#04060e 100%)}
+.login-card{background:#fff;border:1.5px solid rgba(200,168,75,.3);border-radius:20px;width:100%;max-width:400px;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,.45);animation:up .4s cubic-bezier(.22,1,.36,1) both}
+@keyframes up{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+.login-top{background:linear-gradient(135deg,#04060e,#0c1a2e);padding:32px 36px 24px;border-bottom:1px solid rgba(200,168,75,.2)}
+.login-brand{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.login-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:#fff}
+.login-title em{font-style:italic;color:var(--gold)}
+.login-body{padding:28px 36px 32px}
+.ff{display:flex;flex-direction:column;margin-bottom:16px}
+.ff label{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.ff input,.ff select,.ff textarea{background:var(--l1);border:1.5px solid var(--lb);color:var(--lt);padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:13.5px;outline:none;transition:border-color .2s;border-radius:8px}
+.ff input:focus,.ff select:focus,.ff textarea:focus{border-color:var(--gold);background:#fffdf7}
+.ff textarea{resize:vertical;min-height:80px}
+.ff-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-gold{width:100%;background:var(--gold);color:#000;border:none;padding:13px;font-family:'DM Sans',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;border-radius:10px;transition:background .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-gold:hover{background:var(--gold2)}
+.err-msg{color:var(--red);font-size:12px;margin-bottom:12px;display:none}
+
+#appShell{display:none;flex-direction:column;min-height:100vh}
+
+.topbar{background:var(--navy);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(200,168,75,.15)}
+.topbar-brand{font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.topbar-brand span{color:rgba(200,210,230,.35);margin-left:10px;font-size:10px;letter-spacing:.25em}
+.topbar-right{display:flex;align-items:center;gap:16px}
+.topbar-agent{font-size:12px;color:rgba(200,210,230,.55)}
+.topbar-agent strong{color:rgba(200,210,230,.9)}
+.topbar-logout{background:none;border:1px solid rgba(200,168,75,.25);color:rgba(200,168,75,.7);padding:6px 14px;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:11px;cursor:pointer;transition:all .2s;letter-spacing:.06em}
+.topbar-logout:hover{border-color:var(--gold);color:var(--gold)}
+.topbar-tab{background:none;border:1px solid rgba(200,168,75,.15);color:rgba(200,210,230,.45);padding:5px 13px;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:11px;cursor:pointer;transition:all .2s;letter-spacing:.06em}
+.topbar-tab:hover{border-color:rgba(200,168,75,.35);color:rgba(200,210,230,.8)}
+.cache-stat-card{background:var(--navy2);border:1px solid var(--lb);border-radius:10px;padding:16px 18px}
+.csc-n{font-size:26px;font-weight:700;color:var(--lt);margin-bottom:4px}
+.csc-l{font-size:11px;color:var(--ld);letter-spacing:.05em}
+.cr-row{display:grid;grid-template-columns:120px 80px 1fr 110px 90px 80px 70px;gap:0;padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.04);font-size:12px;color:var(--lt);align-items:center}
+.cr-row:last-child{border-bottom:none}
+.cr-row:hover{background:rgba(255,255,255,.03)}
+.status-fresh{color:#4ade80;font-size:11px;font-weight:600}
+.status-stale{color:#fbbf24;font-size:11px;font-weight:600}
+.status-expired{color:#f87171;font-size:11px;font-weight:600}
+.wr-chip{background:var(--navy2);border:1px solid var(--lb);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--lt);display:flex;align-items:center;justify-content:space-between}
+.wr-chip button{background:rgba(200,168,75,.12);border:1px solid rgba(200,168,75,.2);color:var(--gold);border-radius:5px;padding:3px 10px;font-size:10px;cursor:pointer;letter-spacing:.04em}
+.topbar-pulse{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(45,122,95,.5)}50%{box-shadow:0 0 0 5px rgba(45,122,95,0)}}
+
+.statbar{background:#fff;border-bottom:1px solid var(--lb);padding:0 28px;display:flex;align-items:stretch}
+.sb-stat{padding:16px 24px 16px 0;margin-right:24px;border-right:1px solid var(--lb);display:flex;align-items:center;gap:12px;cursor:pointer;transition:opacity .2s}
+.sb-stat:last-child{border-right:none}
+.sb-stat:hover{opacity:.7}
+.sb-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.sb-dot-new{background:var(--red)}
+.sb-dot-working{background:var(--amber)}
+.sb-dot-booked{background:var(--blue)}
+.sb-dot-done{background:var(--green)}
+.sb-dot-all{background:var(--ld)}
+.sb-num{font-size:24px;font-weight:700;font-family:'Cormorant Garamond',serif;color:var(--lt);line-height:1}
+.sb-lbl{font-size:10px;color:var(--lm);font-weight:500}
+.sb-stat.af .sb-lbl{color:var(--gold);font-weight:600}
+
+.main{display:flex;flex:1;min-height:0}
+
+.req-list{width:390px;flex-shrink:0;background:#fff;border-right:1px solid var(--lb);overflow-y:auto;height:calc(100vh - 56px - 65px)}
+.rlh{padding:13px 18px;border-bottom:1px solid var(--lb);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:10}
+.rlh-title{font-size:11px;font-weight:700;color:var(--lt);letter-spacing:.07em}
+.req-search{background:var(--l1);border:1px solid var(--lb);border-radius:6px;padding:6px 10px;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--lt);outline:none;width:150px}
+.req-search:focus{border-color:var(--gold)}
+
+.req-item{padding:15px 18px;border-bottom:1px solid var(--l2);cursor:pointer;transition:background .15s;position:relative}
+.req-item:hover{background:var(--l1)}
+.req-item.sel{background:#fffdf5;border-left:3px solid var(--gold);padding-left:15px}
+.ri-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.ri-ref{font-family:'DM Mono',monospace;font-size:10px;color:var(--lm);letter-spacing:.06em}
+.ri-age{font-size:10px;color:var(--ld)}
+.ri-route{font-size:15px;font-weight:700;color:var(--lt);margin-bottom:3px}
+.ri-route s{color:var(--gold);margin:0 5px;font-style:normal}
+.ri-meta{font-size:11px;color:var(--lm);display:flex;gap:10px;flex-wrap:wrap}
+.ri-co{font-size:10.5px;color:var(--ld);margin-top:3px}
+
+.spill{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:10px;font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase}
+.sd{width:5px;height:5px;border-radius:50%;background:currentColor}
+.spill-submitted{background:var(--redb);color:var(--red);animation:blink 2s infinite}
+@keyframes blink{0%,100%{box-shadow:0 0 0 0 rgba(184,64,64,.4)}50%{box-shadow:0 0 0 5px rgba(184,64,64,0)}}
+.spill-working{background:var(--amberb);color:var(--amber)}
+.spill-booked{background:var(--blueb);color:var(--blue)}
+.spill-fulfilled{background:var(--greenb);color:var(--green)}
+
+.detail{flex:1;overflow-y:auto;height:calc(100vh - 56px - 65px)}
+.detail-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--ld);text-align:center;padding:60px 20px}
+.de-icon{font-size:44px;margin-bottom:14px;opacity:.25}
+
+.dh{background:#fff;border-bottom:1px solid var(--lb);padding:18px 28px;display:flex;align-items:flex-start;justify-content:space-between;gap:20px;position:sticky;top:0;z-index:10}
+.dh-ref{font-family:'DM Mono',monospace;font-size:11px;color:var(--lm);letter-spacing:.06em;margin-bottom:5px}
+.dh-route{font-size:21px;font-weight:700;color:var(--lt)}
+.dh-route s{color:var(--gold);margin:0 7px;font-style:normal}
+.dh-acts{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;flex-shrink:0}
+
+.db{padding:22px 28px}
+.ds{margin-bottom:22px}
+.ds-title{font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--l3)}
+
+.ig{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.ig3{grid-template-columns:1fr 1fr 1fr}
+.ig-item{background:var(--l1);border:1px solid var(--lb);border-radius:8px;padding:11px 13px}
+.ig-l{font-size:8.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ld);margin-bottom:3px}
+.ig-v{font-size:13px;font-weight:600;color:var(--lt)}
+.ig-v.mono{font-family:'DM Mono',monospace;font-size:12px}
+.ig-v.gold{color:var(--amber)}
+.ig-v.green{color:var(--green)}
+.ig-v.red{color:var(--red)}
+
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:.05em;cursor:pointer;border:none;transition:all .18s}
+.btn-sm{padding:6px 13px;font-size:10.5px}
+.btn-primary{background:var(--gold);color:#000}
+.btn-primary:hover{background:var(--gold2)}
+.btn-amber{background:var(--amberb);color:var(--amber);border:1px solid rgba(184,122,32,.2)}
+.btn-amber:hover{background:rgba(184,122,32,.18)}
+.btn-blue{background:var(--blueb);color:var(--blue);border:1px solid rgba(42,92,184,.2)}
+.btn-blue:hover{background:rgba(42,92,184,.18)}
+.btn-green{background:var(--greenb);color:var(--green);border:1px solid rgba(45,122,95,.2)}
+.btn-green:hover{background:rgba(45,122,95,.18)}
+.btn-outline{background:none;border:1.5px solid var(--lb);color:var(--lm)}
+.btn-outline:hover{border-color:var(--gold);color:var(--lt)}
+
+.alert{padding:10px 13px;border-radius:8px;font-size:12px;line-height:1.6;margin-bottom:13px;display:flex;align-items:flex-start;gap:9px}
+.alert-warn{background:var(--amberb);border:1px solid rgba(184,122,32,.2);color:var(--amber)}
+.alert-info{background:var(--blueb);border:1px solid rgba(42,92,184,.2);color:var(--blue)}
+.alert-success{background:var(--greenb);border:1px solid rgba(45,122,95,.2);color:var(--green)}
+
+.tl{display:flex;flex-direction:column}
+.tl-item{display:flex;gap:12px;position:relative}
+.tl-item:not(:last-child)::after{content:'';position:absolute;left:10px;top:26px;bottom:-6px;width:2px;background:var(--l3)}
+.tl-dot{width:22px;height:22px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;border:2px solid var(--lb);background:#fff;z-index:1}
+.tl-dot.done{background:var(--green);border-color:var(--green);color:#fff}
+.tl-dot.active{background:var(--gold);border-color:var(--gold);color:#000}
+.tl-dot.pend{background:#fff;border-color:var(--lb);color:var(--ld)}
+.tl-body{padding-bottom:14px;flex:1}
+.tl-lbl{font-size:12px;font-weight:600;color:var(--lt);margin-bottom:2px}
+.tl-sub{font-size:11px;color:var(--lm)}
+.tl-time{font-size:10px;color:var(--ld)}
+
+.sms-log{background:var(--navy3);border-radius:10px;padding:14px;margin-top:10px}
+.sms-lbl{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(200,168,75,.5);margin-bottom:8px}
+.sms-item{display:flex;gap:9px;margin-bottom:7px;align-items:flex-start}
+.sms-text{font-size:11px;color:rgba(200,210,230,.65);line-height:1.5}
+.sms-time{font-size:9px;color:rgba(200,210,230,.3);margin-top:2px}
+
+.modal-overlay{display:none;position:fixed;inset:0;z-index:1000;background:rgba(4,6,14,.65);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px}
+.modal-overlay.on{display:flex}
+.modal-box{background:#fff;border:1.5px solid rgba(200,168,75,.3);border-radius:16px;width:100%;max-width:520px;box-shadow:0 40px 100px rgba(0,0,0,.3);animation:up .3s cubic-bezier(.22,1,.36,1) both;max-height:90vh;overflow-y:auto}
+.mh{padding:18px 22px 15px;border-bottom:1px solid var(--lb);display:flex;align-items:center;justify-content:space-between}
+.mh-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--lt)}
+.mclose{background:none;border:1px solid var(--lb);border-radius:6px;width:28px;height:28px;cursor:pointer;color:var(--lm);display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .18s}
+.mclose:hover{border-color:var(--gold)}
+.mb{padding:18px 22px 22px}
+
+.spin{width:15px;height:15px;border:2px solid rgba(0,0,0,.15);border-top-color:#000;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+#toast{position:fixed;bottom:22px;right:22px;z-index:9999;background:var(--lt);color:#fff;padding:10px 17px;border-radius:10px;font-size:12.5px;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,.2);transform:translateY(70px);opacity:0;transition:all .3s cubic-bezier(.22,1,.36,1);pointer-events:none;max-width:300px}
+
+@media(max-width:880px){.req-list{width:300px}}
+@media(max-width:640px){.main{flex-direction:column}.req-list{width:100%;height:280px}.detail{height:auto}}
+
+/* ══════════════════════════════════════
+   PAYMENT MODAL & PANEL
+══════════════════════════════════════ */
+.pay-steps{display:flex;align-items:center;gap:0;margin-bottom:20px;counter-reset:step}
+.pay-step{flex:1;text-align:center;position:relative}
+.pay-step::after{content:'';position:absolute;top:14px;left:50%;width:100%;height:2px;background:var(--lb);z-index:0}
+.pay-step:last-child::after{display:none}
+.pay-step-dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--lb);background:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 5px;position:relative;z-index:1;color:var(--ld);transition:all .2s}
+.pay-step.done .pay-step-dot{background:var(--green);border-color:var(--green);color:#fff}
+.pay-step.active .pay-step-dot{background:var(--navy);border-color:var(--gold);color:var(--gold)}
+.pay-step-lbl{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ld)}
+.pay-step.done .pay-step-lbl{color:var(--green)}
+.pay-step.active .pay-step-lbl{color:var(--lt)}
+
+/* Auth result panel */
+.auth-result{border-radius:11px;padding:14px 16px;margin:12px 0;border:1.5px solid}
+.auth-result.ok{background:var(--greenb);border-color:rgba(45,122,95,.25)}
+.auth-result.fail{background:var(--redb);border-color:rgba(184,64,64,.2)}
+.auth-result.pending{background:var(--amberb);border-color:rgba(184,122,32,.2)}
+.auth-result-h{font-size:12px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:7px}
+.auth-result.ok .auth-result-h{color:var(--green)}
+.auth-result.fail .auth-result-h{color:var(--red)}
+.auth-result.pending .auth-result-h{color:var(--amber)}
+.auth-result-row{display:flex;justify-content:space-between;font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.05)}
+.auth-result-row:last-child{border-bottom:none}
+.auth-result-row span:first-child{color:var(--lm)}
+.auth-result-row span:last-child{font-weight:600;color:var(--lt);font-family:'DM Mono',monospace;font-size:10.5px}
+
+/* Payment status badge in detail */
+.pay-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:100px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.pay-badge.auth-held{background:var(--amberb);color:var(--amber);border:1px solid rgba(184,122,32,.25)}
+.pay-badge.captured{background:var(--greenb);color:var(--green);border:1px solid rgba(45,122,95,.2)}
+.pay-badge.voided{background:var(--redb);color:var(--red);border:1px solid rgba(184,64,64,.15)}
+.pay-badge.pending{background:var(--blueb);color:var(--blue);border:1px solid rgba(42,92,184,.2)}
+
+/* Payment history in detail panel */
+.pay-log{margin-top:8px}
+.pay-log-item{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:9px 12px;background:var(--l1);border:1px solid var(--lb);border-radius:8px;margin-bottom:6px}
+.pay-log-ico{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.pay-log-ico.auth{background:var(--amberb)}
+.pay-log-ico.capture{background:var(--greenb)}
+.pay-log-ico.void{background:var(--redb)}
+.pay-log-main{min-width:0}
+.pay-log-type{font-size:11.5px;font-weight:700;color:var(--lt)}
+.pay-log-meta{font-size:10.5px;color:var(--lm);margin-top:1px;font-family:'DM Mono',monospace}
+.pay-log-amt{font-size:15px;font-weight:700;color:var(--lt);font-family:'DM Mono',monospace;text-align:right}
+.pay-log-amt.green{color:var(--green)}
+.pay-log-amt.amber{color:var(--amber)}
+.pay-log-amt.red{color:var(--red);text-decoration:line-through}
+
+/* Verify checklist */
+.verify-list{margin:10px 0}
+.verify-item{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border-radius:8px;margin-bottom:6px;cursor:pointer;border:1.5px solid var(--lb);background:#fff;transition:all .15s}
+.verify-item:hover{border-color:var(--gold);background:#fffdf7}
+.verify-item.checked{border-color:var(--green);background:var(--greenb)}
+.verify-check{width:18px;height:18px;border-radius:5px;border:2px solid var(--lb);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:10px;color:#fff}
+.verify-item.checked .verify-check{background:var(--green);border-color:var(--green)}
+.verify-txt{font-size:12px;color:var(--lt);font-weight:500;line-height:1.4}
+.verify-txt small{display:block;color:var(--lm);font-size:10.5px;font-weight:400;margin-top:1px}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-top">
+      <div class="login-brand">Business World Travel</div>
+      <div class="login-title">Agent <em>Dashboard</em></div>
+    </div>
+    <div class="login-body">
+      <div class="ff"><label>Email</label><input type="email" id="agEmail" placeholder="agent@businessworldtravel.com" onkeydown="if(event.key==='Enter')agentLogin()"></div>
+      <div class="ff"><label>Password</label><input type="password" id="agPw" placeholder="••••••••" onkeydown="if(event.key==='Enter')agentLogin()"></div>
+      <div class="err-msg" id="agErr"></div>
+      <button class="btn-gold" onclick="agentLogin()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        Sign In to Ops
+      </button>
+      <div style="font-size:11px;color:var(--ld);text-align:center;margin-top:14px">BWT staff only · <a onclick="quickDemo()" style="color:var(--gold);cursor:pointer">Demo login</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- APP SHELL -->
+<div id="appShell">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:12px">
+      <span class="topbar-brand">Business World Travel <span>Ops</span></span>
+      <div class="topbar-pulse" title="Live — auto-refreshing"></div>
+    </div>
+    <div class="topbar-right">
+      <button class="topbar-tab" id="tabRequests" onclick="showTab('requests')" style="background:rgba(200,168,75,.15);color:var(--gold)">Requests</button>
+      <button class="topbar-tab" id="tabCache" onclick="showTab('cache')">Fare Cache</button>
+      <div class="topbar-agent">Agent: <strong id="agentName">—</strong></div>
+      <button class="topbar-logout" onclick="agentLogout()">Sign Out</button>
+    </div>
+  </div>
+
+  <div class="statbar" id="statbar"></div>
+
+  <!-- REQUESTS TAB -->
+  <div id="panelRequests" class="main">
+    <div class="req-list">
+      <div class="rlh">
+        <div class="rlh-title">REQUESTS</div>
+        <input class="req-search" id="reqSearch" placeholder="Ref, route, name…" oninput="renderList()">
+      </div>
+      <div id="reqListBody"></div>
+    </div>
+    <div class="detail" id="detailPanel">
+      <div class="detail-empty">
+        <div class="de-icon">✈</div>
+        <div style="font-size:15px;font-weight:600;color:var(--lt);margin-bottom:6px">Select a request</div>
+        <div style="font-size:12px">Click any item on the left</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FARE CACHE TAB -->
+  <div id="panelCache" style="display:none;padding:28px 32px;max-width:1100px;margin:0 auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px">
+      <div>
+        <div style="font-size:18px;font-weight:700;color:var(--lt)">Fare Cache</div>
+        <div style="font-size:12px;color:var(--ld);margin-top:3px">Saved fares from Amadeus — served to visitors even when Amadeus is down</div>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-outline" onclick="loadCacheStatus()" id="cacheRefreshBtn">↻ Refresh Status</button>
+        <button class="btn btn-gold" onclick="warmCache()" id="cacheWarmBtn">⚡ Warm All Routes</button>
+      </div>
+    </div>
+
+    <!-- Stats row -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px" id="cacheStats">
+      <div class="cache-stat-card"><div class="csc-n" id="csFresh">—</div><div class="csc-l">Fresh entries</div></div>
+      <div class="cache-stat-card"><div class="csc-n" id="csStale">—</div><div class="csc-l">Stale (serving)</div></div>
+      <div class="cache-stat-card"><div class="csc-n" id="csRoutes">—</div><div class="csc-l">Routes cached</div></div>
+      <div class="cache-stat-card"><div class="csc-n" id="csHits">—</div><div class="csc-l">Cache hits today</div></div>
+    </div>
+
+    <!-- Warm log -->
+    <div id="cacheWarmLog" style="display:none;background:var(--navy3);border:1px solid var(--lb);border-radius:10px;padding:16px;margin-bottom:20px;font-size:12px;font-family:monospace;color:var(--ld);max-height:180px;overflow-y:auto"></div>
+
+    <!-- Cache table -->
+    <div style="background:var(--navy2);border:1px solid var(--lb);border-radius:12px;overflow:hidden">
+      <div style="display:grid;grid-template-columns:120px 80px 1fr 110px 90px 80px 70px;gap:0;padding:10px 16px;border-bottom:1px solid var(--lb);font-size:10px;letter-spacing:.08em;color:var(--ld)">
+        <div>ROUTE</div><div>CABIN</div><div>WEEK OF</div><div>FETCHED</div><div>STATUS</div><div>OFFERS</div><div>HITS</div>
+      </div>
+      <div id="cacheTable"><div style="padding:40px;text-align:center;color:var(--ld);font-size:13px">Click "Refresh Status" to load cache data</div></div>
+    </div>
+
+    <!-- Warm routes config -->
+    <div style="margin-top:28px">
+      <div style="font-size:13px;font-weight:600;color:var(--lt);margin-bottom:12px">Scheduled Warm Routes</div>
+      <div id="warmRoutesList" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px"></div>
+      <div style="margin-top:12px;font-size:11px;color:var(--ld)">These routes are pre-fetched nightly at 2am ET for departure dates 7, 14, 21, and 28 days out.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FULFIL MODAL -->
+<div class="modal-overlay" id="fulfilModal">
+  <div class="modal-box">
+    <div class="mh">
+      <div class="mh-title">Confirm Booking</div>
+      <button class="mclose" onclick="closeModal()">×</button>
+    </div>
+    <div class="mb">
+      <div class="alert alert-info">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        Saving this will mark the request <strong>Booked</strong> and send the traveller an SMS confirmation.
+      </div>
+      <div id="fulfilSummary" style="background:var(--l1);border:1px solid var(--lb);border-radius:10px;padding:13px 15px;margin-bottom:14px;font-size:12.5px;color:var(--lt);line-height:1.7"></div>
+      <div class="ff"><label>PNR Booking Reference *</label><input type="text" id="fulfilPNR" placeholder="e.g. ABC123" style="font-family:'DM Mono',monospace;letter-spacing:.08em;font-size:15px;font-weight:600"></div>
+      <div class="ff-row">
+        <div class="ff"><label>Airline Ticket Number</label><input type="text" id="fulfilTicket" placeholder="e.g. 016-2345678901"></div>
+        <div class="ff"><label>Actual Fare (USD)</label><input type="number" id="fulfilFare" placeholder="e.g. 4200"></div>
+      </div>
+      <div class="ff"><label>E-Ticket Reference / Notes</label><input type="text" id="fulfilEticket" placeholder="Link to PDF or 'Emailed directly'"></div>
+      <div class="ff"><label>Internal Agent Notes</label><textarea id="fulfilNotes" placeholder="Any notes about this booking…"></textarea></div>
+      <div style="display:flex;gap:9px;margin-top:4px">
+        <button class="btn btn-green" style="flex:1" id="fulfilBtn" onclick="confirmFulfil()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+          Save & Notify Traveller
+        </button>
+        <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- PAYMENT MODAL -->
+<div class="modal-overlay" id="payModal">
+  <div class="modal-box" style="max-width:520px">
+    <div class="mh">
+      <div class="mh-title">💳 Authorize Payment</div>
+      <button class="mclose" onclick="closePayModal()">×</button>
+    </div>
+    <div class="mb">
+      <!-- Step indicator -->
+      <div class="pay-steps" id="paySteps">
+        <div class="pay-step active" id="pstep1"><div class="pay-step-dot">1</div><div class="pay-step-lbl">Set Amount</div></div>
+        <div class="pay-step" id="pstep2"><div class="pay-step-dot">2</div><div class="pay-step-lbl">Verify</div></div>
+        <div class="pay-step" id="pstep3"><div class="pay-step-dot">3</div><div class="pay-step-lbl">Auth &amp; Hold</div></div>
+        <div class="pay-step" id="pstep4"><div class="pay-step-dot">4</div><div class="pay-step-lbl">Capture</div></div>
+      </div>
+
+      <!-- Booking summary -->
+      <div id="paySummary" style="background:var(--l1);border:1px solid var(--lb);border-radius:10px;padding:12px 15px;margin-bottom:16px;font-size:12.5px;color:var(--lt);line-height:1.7"></div>
+
+      <!-- STEP 1: Amount -->
+      <div id="payPane1">
+        <div class="ff-row">
+          <div class="ff">
+            <label>Charge Amount (USD) *</label>
+            <input type="number" id="payAmount" placeholder="e.g. 5000" min="1" max="50000" step="0.01"
+              style="font-family:'DM Mono',monospace;font-size:17px;font-weight:600;letter-spacing:.04em">
+          </div>
+          <div class="ff">
+            <label>Transaction Type</label>
+            <select id="payTxType">
+              <option value="auth_only" selected>Auth Only — Hold Funds (Recommended)</option>
+              <option value="auth_capture">Auth + Capture — Charge Immediately</option>
+            </select>
+          </div>
+        </div>
+        <div class="ff">
+          <label>Customer Email (for receipt)</label>
+          <input type="email" id="payEmail" placeholder="customer@email.com">
+        </div>
+        <div class="ff">
+          <label>Customer Phone</label>
+          <input type="tel" id="payPhone" placeholder="+1 (555) 000-0000">
+        </div>
+        <div class="alert alert-info" style="margin-bottom:14px">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          <strong>Auth Only</strong> reserves funds on the customer's card without charging. You have <strong>7 days</strong> to capture. Recommended — complete verification before capturing.
+        </div>
+        <div style="display:flex;gap:9px">
+          <button class="btn btn-gold" style="flex:1" onclick="payStep2()">
+            Next — Verify Customer
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+          <button class="btn btn-outline" onclick="closePayModal()">Cancel</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: Verification checklist -->
+      <div id="payPane2" style="display:none">
+        <div style="font-size:12px;color:var(--lm);margin-bottom:12px;line-height:1.6">Before running the authorization, confirm you have completed each verification step. This protects BWT from chargebacks.</div>
+        <div class="verify-list" id="verifyList">
+          <div class="verify-item" onclick="toggleVerify(this)">
+            <div class="verify-check"></div>
+            <div class="verify-txt">Called customer back on <strong id="vPhone">—</strong>
+              <small>Confirmed name, route, and travel dates verbally</small></div>
+          </div>
+          <div class="verify-item" onclick="toggleVerify(this)">
+            <div class="verify-check"></div>
+            <div class="verify-txt">Passport name matches booking name exactly
+              <small>Name on passport = name on ticket — no exceptions</small></div>
+          </div>
+          <div class="verify-item" onclick="toggleVerify(this)">
+            <div class="verify-check"></div>
+            <div class="verify-txt">Card billing address received and noted
+              <small>AVS will verify this against card issuer records</small></div>
+          </div>
+          <div class="verify-item" onclick="toggleVerify(this)">
+            <div class="verify-check"></div>
+            <div class="verify-txt">Amount confirmed verbally with customer
+              <small>Customer confirmed $<span id="vAmount">—</span> USD on the call</small></div>
+          </div>
+          <div class="verify-item" onclick="toggleVerify(this)" id="verifyHighValue" style="display:none">
+            <div class="verify-check"></div>
+            <div class="verify-txt">Passport copy received (required for bookings over $3,000)
+              <small>Emailed to quotes@businessworldtravel.com before proceeding</small></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:9px;margin-top:14px">
+          <button class="btn btn-gold" style="flex:1" id="verifyNextBtn" onclick="payStep3()" disabled>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Verification Complete — Run Authorization
+          </button>
+          <button class="btn btn-outline" onclick="payBack1()">← Back</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Auth result -->
+      <div id="payPane3" style="display:none">
+        <div id="authRunning" style="text-align:center;padding:24px 0">
+          <div class="spin" style="width:32px;height:32px;border-width:3px;margin:0 auto 12px"></div>
+          <div style="font-size:13px;font-weight:600;color:var(--lt)">Submitting Authorization…</div>
+          <div style="font-size:11px;color:var(--lm);margin-top:4px">Contacting Authorize.net · AVS + CVV + 3DS</div>
+        </div>
+        <div id="authResultPanel" style="display:none">
+          <div id="authResultBox"></div>
+          <div id="authActions" style="display:flex;gap:9px;margin-top:14px"></div>
+        </div>
+      </div>
+
+      <!-- STEP 4: Capture / Void -->
+      <div id="payPane4" style="display:none">
+        <div id="captureResultBox"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── CONFIG ──
+const AGENT_CFG = {
+  twilio_proxy_url: 'YOUR_TWILIO_PROXY_URL',
+  formspree_id:     'YOUR_FORMSPREE_ID',
+  poll_ms:          15000,
+};
+
+const AGENT_ACCOUNTS = [
+  { email:'raj@businessworldtravel.com',    pw:'BWTops2026!',  name:'Raj',    role:'admin' },
+  { email:'dennis@businessworldtravel.com', pw:'BWTops2026!',  name:'Dennis', role:'agent' },
+  { email:'joan@businessworldtravel.com',   pw:'BWTops2026!',  name:'Joan',   role:'agent' },
+  { email:'sharon@businessworldtravel.com', pw:'BWTops2026!',  name:'Sharon', role:'agent' },
+  { email:'admin@businessworldtravel.com',  pw:'bwtadmin2026', name:'Admin',  role:'admin' },
+];
+
+// ── DATA STORE (same localStorage namespace as portal.html) ──
+const DB = {
+  get:(k)=>{ try{return JSON.parse(localStorage.getItem('bwt_p_'+k))||null}catch{return null} },
+  set:(k,v)=>{ try{localStorage.setItem('bwt_p_'+k,JSON.stringify(v))}catch{} },
+};
+
+// ── STATE ──
+let currentAgent = null;
+let allRequests  = [];
+let selectedRef  = null;
+let activeFilter = 'all';
+
+// ── AUTH ──
+function quickDemo() {
+  document.getElementById('agEmail').value = 'admin@businessworldtravel.com';
+  document.getElementById('agPw').value    = 'bwtadmin2026';
+  agentLogin();
+}
+
+function agentLogin() {
+  const email = document.getElementById('agEmail').value.trim().toLowerCase();
+  const pw    = document.getElementById('agPw').value;
+  const err   = document.getElementById('agErr');
+  err.style.display = 'none';
+  const agent = AGENT_ACCOUNTS.find(a => a.email === email && a.pw === pw);
+  if (!agent) { err.textContent='Invalid credentials.'; err.style.display='block'; return; }
+  currentAgent = agent;
+  sessionStorage.setItem('bwt_agent_sess', JSON.stringify(agent));
+  launchApp();
+}
+
+function agentLogout() {
+  clearInterval(window._poll);
+  sessionStorage.removeItem('bwt_agent_sess');
+  currentAgent = null;
+  document.getElementById('appShell').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+}
+
+// ── LAUNCH ──
+function launchApp() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appShell').style.display    = 'flex';
+  document.getElementById('agentName').textContent      = currentAgent.name;
+  loadAll();
+  clearInterval(window._poll);
+  window._poll = setInterval(()=>{
+    const prev = allRequests.filter(r=>r.status==='submitted').length;
+    loadAll(true);
+    const cur = allRequests.filter(r=>r.status==='submitted').length;
+    if (cur > prev) showToast(`🔔 ${cur-prev} new booking request${cur-prev>1?'s':''} arrived`);
+  }, AGENT_CFG.poll_ms);
+}
+
+// ── LOAD ALL REQUESTS from localStorage ──
+function loadAll(silent = false) {
+  const reqs = [], coMap = {}, uMap = {};
+
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i); if (!k) continue;
+    try {
+      if (k.startsWith('bwt_p_company_')) { const c=JSON.parse(localStorage.getItem(k)); if(c?.id) coMap[c.id]=c; }
+      if (k.startsWith('bwt_p_user_'))    { const u=JSON.parse(localStorage.getItem(k)); if(u?.email) uMap[u.email]=u; }
+      if (k.startsWith('bwt_p_trips_'))   { (JSON.parse(localStorage.getItem(k))||[]).forEach(t=>{if(t?.ref)reqs.push(t)}); }
+    } catch {}
+  }
+
+  reqs.forEach(r => {
+    r._co   = coMap[r.companyId] || { name: r.companyId||'—' };
+    r._user = uMap[r.userId]     || { firstName:r.userId||'—', lastName:'', profile:{} };
+  });
+
+  const order = { submitted:0, working:1, booked:2, fulfilled:3 };
+  reqs.sort((a,b)=>{
+    const od = (order[a.status]??4)-(order[b.status]??4);
+    return od !== 0 ? od : new Date(b.submittedAt)-new Date(a.submittedAt);
+  });
+
+  allRequests = reqs;
+  renderStatBar();
+  renderList(silent);
+  if (!silent && selectedRef) {
+    const r = allRequests.find(x=>x.ref===selectedRef);
+    if (r) renderDetail(r);
+  }
+}
+
+// ── STAT BAR ──
+function renderStatBar() {
+  const c = {
+    all:       allRequests.length,
+    submitted: allRequests.filter(r=>r.status==='submitted').length,
+    working:   allRequests.filter(r=>r.status==='working').length,
+    booked:    allRequests.filter(r=>r.status==='booked').length,
+    fulfilled: allRequests.filter(r=>r.status==='fulfilled').length,
+  };
+  document.getElementById('statbar').innerHTML = [
+    {key:'submitted',lbl:'New Requests',  dot:'new'},
+    {key:'working',  lbl:'In Progress',   dot:'working'},
+    {key:'booked',   lbl:'Booked',        dot:'booked'},
+    {key:'fulfilled',lbl:'Fulfilled',     dot:'done'},
+    {key:'all',      lbl:'All',           dot:'all'},
+  ].map(s=>`<div class="sb-stat${activeFilter===s.key?' af':''}" onclick="setFilter('${s.key}')">
+    <div class="sb-dot sb-dot-${s.dot}"></div>
+    <div><div class="sb-num">${c[s.key]||0}</div><div class="sb-lbl">${s.lbl}</div></div>
+  </div>`).join('');
+}
+
+function setFilter(f){ activeFilter=f; renderStatBar(); renderList(); }
+
+// ── LIST ──
+function renderList(preserveScroll=false) {
+  const q = (document.getElementById('reqSearch')?.value||'').toLowerCase();
+  let fl = activeFilter==='all' ? allRequests : allRequests.filter(r=>r.status===activeFilter);
+  if (q) fl = fl.filter(r=>
+    [r.ref,r.orig,r.dest,r._user?.firstName,r._user?.lastName,r._co?.name,r.airline]
+    .some(v=>v?.toLowerCase().includes(q))
+  );
+  const el = document.getElementById('reqListBody');
+  const st = preserveScroll ? el.scrollTop : 0;
+  if (!fl.length) { el.innerHTML=`<div style="padding:28px 18px;text-align:center;color:var(--ld);font-size:12px">No requests found</div>`; return; }
+  el.innerHTML = fl.map(r=>{
+    const u = r._user||{};
+    const name = `${u.firstName||''} ${u.lastName||''}`.trim()||r.userId;
+    return `<div class="req-item${selectedRef===r.ref?' sel':''}" onclick="selectRequest('${r.ref}')">
+      <div class="ri-top">
+        <span class="ri-ref">${r.ref}</span>
+        <div style="display:flex;gap:7px;align-items:center">
+          <span class="ri-age">${age(r.submittedAt)}</span>
+          <span class="spill spill-${r.status}"><span class="sd"></span>${r.status}</span>
+        </div>
+      </div>
+      <div class="ri-route">${r.orig}<s>→</s>${r.dest}</div>
+      <div class="ri-meta"><span>${r.airline}</span><span>${r.depDate}</span><span>${r.pax} pax</span><span style="font-weight:700">$${r.price?.toLocaleString()}</span></div>
+      <div class="ri-co">${name} · ${r._co?.name||''}</div>
+    </div>`;
+  }).join('');
+  el.scrollTop = st;
+}
+
+function age(iso) {
+  if(!iso) return '—';
+  const m = Math.round((Date.now()-new Date(iso))/60000);
+  if(m<1) return 'just now'; if(m<60) return m+'m ago';
+  const h=Math.floor(m/60); if(h<24) return h+'h ago';
+  return Math.floor(h/24)+'d ago';
+}
+
+// ── SELECT ──
+function selectRequest(ref) {
+  selectedRef = ref;
+  renderList(true);
+  const r = allRequests.find(x=>x.ref===ref);
+  if (r) renderDetail(r);
+}
+
+// ── DETAIL ──
+function renderDetail(req) {
+  const u    = req._user||{};
+  const co   = req._co||{};
+  const prof = u.profile||{};
+  const pass = prof.passport||{};
+  const loy  = prof.loyalty||{};
+  const pref = prof.prefs||{};
+  const fd   = d => d ? new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—';
+
+  const passExp = pass.expiry ? new Date(pass.expiry+'T12:00:00') : null;
+  const expired  = passExp && passExp < new Date();
+  const expWarn  = passExp && !expired && (passExp - new Date()) < 180*86400000;
+
+  // Action buttons
+  let acts = '';
+  if (req.status==='submitted') acts += `<button class="btn btn-amber" onclick="setStatus('${req.ref}','working')">▶ Claim</button><button class="btn btn-blue" onclick="openFulfilModal('${req.ref}')">✓ Mark Booked</button>`;
+  if (req.status==='working')   acts += `<button class="btn btn-blue" onclick="openFulfilModal('${req.ref}')">✓ Mark Booked</button>`;
+  if (req.status==='booked')    acts += `<button class="btn btn-green" onclick="setStatus('${req.ref}','fulfilled')">✓ E-Ticket Sent</button>`;
+  // Payment button — show if no payment yet, or allow re-run
+  const payStatus = req.payment?.status;
+  if (!payStatus || payStatus==='voided') {
+    acts += `<button class="btn btn-blue" onclick="openPayModal('${req.ref}')">💳 Charge Card</button>`;
+  } else if (payStatus==='auth_held') {
+    acts += `<button class="btn btn-amber" onclick="openPayModal('${req.ref}')">💳 Auth Held — Capture</button>`;
+  } else if (payStatus==='captured') {
+    acts += `<button class="btn btn-outline btn-sm" style="color:var(--green);border-color:var(--green)" onclick="openPayModal('${req.ref}')">💳 Paid ✓</button>`;
+  }
+  acts += `<button class="btn btn-outline btn-sm" onclick="sendSMS('${req.ref}','update')">💬 SMS</button>`;
+
+  // Quick action strip
+  let qblock = '';
+  if (req.status==='submitted'||req.status==='working') {
+    qblock = `<div class="ds"><div class="ds-title">Actions</div><div style="display:flex;gap:8px;flex-wrap:wrap">
+      ${req.status==='submitted'?`<button class="btn btn-amber" onclick="setStatus('${req.ref}','working')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>Claim — I'm On It</button>`:''}
+      <button class="btn btn-blue" onclick="openFulfilModal('${req.ref}')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>Enter PNR / Mark Booked</button>
+      <button class="btn btn-outline btn-sm" onclick="sendSMS('${req.ref}','update')">💬 SMS Update</button>
+    </div></div>`;
+  } else if (req.status==='booked') {
+    qblock = `<div class="ds"><div class="ds-title">Actions</div><div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-green" onclick="setStatus('${req.ref}','fulfilled')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Mark E-Ticket Sent</button>
+      <button class="btn btn-outline btn-sm" onclick="sendSMS('${req.ref}','ticket')">💬 Resend SMS</button>
+    </div></div>`;
+  }
+
+  // Timeline
+  const statusOrder = {submitted:0,working:1,booked:2,fulfilled:3};
+  const cur = statusOrder[req.status]??0;
+  const steps = [
+    {lbl:'Request Submitted',  sub:`${u.firstName||''} ${u.lastName||''} · ${co.name||''}`,     t:req.submittedAt},
+    {lbl:'Agent Claimed',      sub:req.claimedBy?`By ${req.claimedBy}`:'',                        t:req.claimedAt},
+    {lbl:'Booking Confirmed',  sub:req.bookingRef?`PNR: ${req.bookingRef}`:'',                     t:req.bookedAt},
+    {lbl:'E-Ticket Sent',      sub:req.fulfilledBy?`By ${req.fulfilledBy}`:'',                     t:req.fulfilledAt},
+  ];
+  const timeline = `<div class="tl">${steps.map((s,i)=>{
+    const dc = i<cur?'done':i===cur?'active':'pend';
+    const ic = i<cur?'✓':i===cur?'●':'○';
+    return `<div class="tl-item"><div class="tl-dot ${dc}">${ic}</div>
+      <div class="tl-body"><div class="tl-lbl" style="${i>cur?'color:var(--ld)':''}">${s.lbl}</div>
+      ${s.sub?`<div class="tl-sub">${s.sub}</div>`:''}
+      ${s.t?`<div class="tl-time">${new Date(s.t).toLocaleString()}</div>`:''}
+      </div></div>`;
+  }).join('')}</div>`;
+
+  // SMS log
+  const smsItems = req.smsLog||[];
+  const smsBlock = smsItems.length ? `<div class="ds"><div class="ds-title">SMS Log</div>
+    <div class="sms-log"><div class="sms-lbl">Sent to traveller</div>
+    ${smsItems.map(m=>`<div class="sms-item"><div style="font-size:14px">💬</div>
+      <div><div class="sms-text">${m.text}</div><div class="sms-time">${new Date(m.at).toLocaleString()} · ${m.by}</div></div>
+    </div>`).join('')}</div></div>` : '';
+
+  // Booking block (if booked)
+  const bookBlock = req.bookingRef ? `<div class="ds"><div class="ds-title">Booking Details</div>
+    <div class="ig ig3">
+      <div class="ig-item"><div class="ig-l">PNR</div><div class="ig-v mono" style="font-size:17px;letter-spacing:.1em">${req.bookingRef}</div></div>
+      ${req.ticketNum?`<div class="ig-item"><div class="ig-l">Ticket No.</div><div class="ig-v mono">${req.ticketNum}</div></div>`:''}
+      ${req.actualFare?`<div class="ig-item"><div class="ig-l">Actual Fare</div><div class="ig-v gold">$${Number(req.actualFare).toLocaleString()}</div></div>`:''}
+      ${req.eticketRef?`<div class="ig-item" style="grid-column:1/-1"><div class="ig-l">E-Ticket / Notes</div><div class="ig-v" style="font-size:12px">${req.eticketRef}</div></div>`:''}
+      ${req.agentNotes?`<div class="ig-item" style="grid-column:1/-1"><div class="ig-l">Agent Notes</div><div class="ig-v" style="font-size:12px">${req.agentNotes}</div></div>`:''}
+      ${req.bookedBy?`<div class="ig-item"><div class="ig-l">Booked By</div><div class="ig-v">${req.bookedBy}</div></div>`:''}
+      ${req.bookedAt?`<div class="ig-item"><div class="ig-l">Booked At</div><div class="ig-v" style="font-size:11px">${new Date(req.bookedAt).toLocaleString()}</div></div>`:''}
+    </div></div>` : '';
+
+  // Loyalty programs
+  const loyItems = [['United MileagePlus',loy.united],['Lufthansa Miles & More',loy.lh],['Air Canada Aeroplan',loy.ac],['Swiss Miles & More',loy.swiss],['TAP Miles&Go',loy.tap],['Other',loy.other]].filter(x=>x[1]);
+  const loyBlock = loyItems.length ? loyItems.map(([n,v])=>`<div class="ig-item"><div class="ig-l">${n}</div><div class="ig-v mono">${v}</div></div>`).join('') : `<div style="font-size:12px;color:var(--ld)">No loyalty numbers on file</div>`;
+
+  // Payment block
+  const pay = req.payment||{};
+  let payBlock = '';
+  if (pay.status) {
+    const statusMap = {auth_held:'Auth Held',captured:'Captured',voided:'Voided'};
+    const badgeCls  = {auth_held:'auth-held',captured:'captured',voided:'voided'}[pay.status]||'pending';
+    const logItems  = (pay.log||[]).map(l => {
+      const icoMap = {auth:'auth',capture:'capture',void:'void'};
+      const icoEm  = {auth:'🔒',capture:'✅',void:'❌'};
+      const amtCls = {auth:'amber',capture:'green',void:'red'}[l.type]||'';
+      return `<div class="pay-log-item">
+        <div class="pay-log-ico ${icoMap[l.type]||''}">${icoEm[l.type]||'💳'}</div>
+        <div class="pay-log-main">
+          <div class="pay-log-type">${{auth:'Authorization Hold',capture:'Payment Captured',void:'Authorization Voided'}[l.type]||l.type}</div>
+          <div class="pay-log-meta">${l.txId||''} · ${l.by||''} · ${new Date(l.at).toLocaleString()}</div>
+          ${l.avs?`<div class="pay-log-meta">AVS: ${l.avs} · CVV: ${l.cvv||'—'}</div>`:''}
+        </div>
+        <div class="pay-log-amt ${amtCls}">$${Number(l.amount||0).toLocaleString()}</div>
+      </div>`;
+    }).join('');
+    payBlock = `<div class="ds"><div class="ds-title" style="display:flex;align-items:center;gap:10px">
+      Payment <span class="pay-badge ${badgeCls}">${statusMap[pay.status]||pay.status}</span>
+      ${pay.status==='auth_held'?`<span style="font-size:10px;color:var(--amber);margin-left:auto">⚠ Capture within 7 days · Expires ${pay.authExpiry||'—'}</span>`:''}
+    </div>
+    <div class="ig ig3" style="margin-bottom:10px">
+      ${pay.amount?`<div class="ig-item"><div class="ig-l">Amount</div><div class="ig-v gold" style="font-family:'DM Mono',monospace">$${Number(pay.amount).toLocaleString()}</div></div>`:''}
+      ${pay.txId?`<div class="ig-item"><div class="ig-l">Trans. ID</div><div class="ig-v mono" style="font-size:11px">${pay.txId}</div></div>`:''}
+      ${pay.authCode?`<div class="ig-item"><div class="ig-l">Auth Code</div><div class="ig-v mono">${pay.authCode}</div></div>`:''}
+      ${pay.cardLast4?`<div class="ig-item"><div class="ig-l">Card</div><div class="ig-v">•••• ${pay.cardLast4}</div></div>`:''}
+      ${pay.avs?`<div class="ig-item"><div class="ig-l">AVS</div><div class="ig-v" style="color:${pay.avs==='Match'?'var(--green)':'var(--amber)'}">${pay.avs}</div></div>`:''}
+    </div>
+    <div class="pay-log">${logItems}</div>
+    ${pay.status==='auth_held'?`<div style="display:flex;gap:8px;margin-top:10px">
+      <button class="btn btn-green" style="flex:1" onclick="openPayModal('${req.ref}')">✅ Capture Payment Now</button>
+      <button class="btn btn-outline" style="color:var(--red);border-color:var(--red)" onclick="openPayModal('${req.ref}')">Void Hold</button>
+    </div>`:''}
+    </div>`;
+  }
+
+    document.getElementById('detailPanel').innerHTML = `
+    <div class="dh">
+      <div>
+        <div class="dh-ref">${req.ref}</div>
+        <div class="dh-route">${req.orig}<s>→</s>${req.dest}</div>
+        <div style="margin-top:5px;display:flex;gap:8px;align-items:center">
+          <span class="spill spill-${req.status}"><span class="sd"></span>${req.status}</span>
+          <span style="font-size:11px;color:var(--lm)">${req.airline} · ${req.fn||'—'} · ${req.depTime||'—'}–${req.arrTime||'—'}</span>
+        </div>
+      </div>
+      <div class="dh-acts">${acts}</div>
+    </div>
+    <div class="db">
+      ${req.status==='submitted'?`<div class="alert alert-warn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01"/></svg>New — awaiting agent action</div>`:''}
+      ${!pass.num?`<div class="alert alert-warn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>Traveller has no passport on file — contact them before booking</div>`:''}
+      ${expired?`<div class="alert alert-warn">⚠ Traveller's passport is EXPIRED (${pass.expiry}) — do not book without a valid document</div>`:''}
+
+      <div class="ds"><div class="ds-title">Flight</div>
+        <div class="ig ig3">
+          <div class="ig-item"><div class="ig-l">Route</div><div class="ig-v">${req.orig} → ${req.dest}</div></div>
+          <div class="ig-item"><div class="ig-l">Type</div><div class="ig-v">${req.tripType==='round'?'Round Trip':'One Way'}</div></div>
+          <div class="ig-item"><div class="ig-l">Cabin</div><div class="ig-v">${req.cabin||'Business Class'}</div></div>
+          <div class="ig-item"><div class="ig-l">Airline</div><div class="ig-v">${req.airline}</div></div>
+          <div class="ig-item"><div class="ig-l">Flight No.</div><div class="ig-v mono">${req.fn||'—'}</div></div>
+          <div class="ig-item"><div class="ig-l">Stops</div><div class="ig-v">${req.stops||'—'}</div></div>
+          <div class="ig-item"><div class="ig-l">Depart</div><div class="ig-v">${fd(req.depDate)} ${req.depTime||''}</div></div>
+          <div class="ig-item"><div class="ig-l">Arrive</div><div class="ig-v">${req.arrTime||'—'}</div></div>
+          ${req.retDate?`<div class="ig-item"><div class="ig-l">Return</div><div class="ig-v">${fd(req.retDate)}</div></div>`:''}
+          <div class="ig-item"><div class="ig-l">Passengers</div><div class="ig-v">${req.pax}</div></div>
+          <div class="ig-item"><div class="ig-l">Est. Fare</div><div class="ig-v gold">$${req.price?.toLocaleString()}</div></div>
+          <div class="ig-item"><div class="ig-l">Per Person</div><div class="ig-v">$${req.pricePerPax?.toLocaleString()||'—'}</div></div>
+        </div>
+        ${req.purpose?`<div style="margin-top:9px;padding:9px 13px;background:var(--l1);border:1px solid var(--lb);border-radius:7px;font-size:12px;color:var(--lm)"><strong>Purpose:</strong> ${req.purpose}${req.justification?' — <em>'+req.justification+'</em>':''}</div>`:''}
+        ${req.notes?`<div style="margin-top:7px;padding:9px 13px;background:var(--l1);border:1px solid var(--lb);border-radius:7px;font-size:12px;color:var(--lm)"><strong>Special requests:</strong> ${req.notes}</div>`:''}
+      </div>
+
+      <div class="ds"><div class="ds-title">Traveller</div>
+        <div class="ig ig3">
+          <div class="ig-item"><div class="ig-l">Name</div><div class="ig-v">${u.firstName||''} ${u.lastName||''}</div></div>
+          <div class="ig-item"><div class="ig-l">Email</div><div class="ig-v" style="font-size:11.5px;word-break:break-all">${u.email||'—'}</div></div>
+          <div class="ig-item"><div class="ig-l">Phone / WhatsApp</div><div class="ig-v ${!prof.phone?'red':''}">${prof.phone||'NOT SET'}</div></div>
+          <div class="ig-item"><div class="ig-l">Company</div><div class="ig-v">${co.name||'—'}</div></div>
+          <div class="ig-item"><div class="ig-l">Nationality</div><div class="ig-v">${prof.nat||'—'}</div></div>
+          <div class="ig-item"><div class="ig-l">Date of Birth</div><div class="ig-v ${!prof.dob?'red':''}">${prof.dob||'NOT SET'}</div></div>
+        </div>
+      </div>
+
+      <div class="ds"><div class="ds-title">Passport</div>
+        <div class="ig ig3">
+          <div class="ig-item"><div class="ig-l">Number</div><div class="ig-v mono ${!pass.num?'red':''}">${pass.num||'MISSING'}</div></div>
+          <div class="ig-item"><div class="ig-l">Country</div><div class="ig-v">${pass.country||'—'}</div></div>
+          <div class="ig-item"><div class="ig-l">Expiry</div><div class="ig-v ${expired?'red':expWarn?'gold':'green'}">${pass.expiry||'MISSING'}${expired?' ⚠ EXPIRED':expWarn?' ⚠ Soon':pass.expiry?' ✓':''}</div></div>
+          <div class="ig-item"><div class="ig-l">Issue Date</div><div class="ig-v">${pass.issue||'—'}</div></div>
+        </div>
+      </div>
+
+      <div class="ds"><div class="ds-title">Loyalty Programs</div>
+        <div class="ig ig3">${loyBlock}</div>
+      </div>
+
+      <div class="ds"><div class="ds-title">Preferences</div>
+        <div class="ig ig3">
+          <div class="ig-item"><div class="ig-l">Seat</div><div class="ig-v">${pref.seat||'—'}</div></div>
+          <div class="ig-item"><div class="ig-l">Meal</div><div class="ig-v">${pref.meal||'—'}</div></div>
+          <div class="ig-item"><div class="ig-l">KTN / TSA Pre</div><div class="ig-v mono">${pref.ktn||'—'}</div></div>
+        </div>
+      </div>
+
+      ${bookBlock}
+      ${payBlock}
+      ${qblock}
+
+      <div class="ds"><div class="ds-title">Timeline</div>${timeline}</div>
+      ${smsBlock}
+    </div>`;
+}
+
+// ── STATUS UPDATE ──
+function setStatus(ref, status) {
+  mutateRequest(ref, r => {
+    r.status = status;
+    if (status==='working')   { r.claimedBy=currentAgent.name; r.claimedAt=new Date().toISOString(); }
+    if (status==='fulfilled') { r.fulfilledBy=currentAgent.name; r.fulfilledAt=new Date().toISOString(); sendSMS(ref,'ticket'); }
+  });
+  loadAll(); selectRequest(ref);
+  showToast(`Status updated → ${status}`);
+}
+
+// ── FULFIL MODAL ──
+let fulfilRef = null;
+function openFulfilModal(ref) {
+  fulfilRef = ref;
+  const r = allRequests.find(x=>x.ref===ref); if(!r) return;
+  const fd = d => d ? new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
+  document.getElementById('fulfilSummary').innerHTML = `<strong>${r.orig} → ${r.dest}</strong> · ${r.airline} · ${r.fn||''}<br>${fd(r.depDate)}${r.retDate?' → '+fd(r.retDate):''} · ${r.pax} pax<br><span style="color:var(--amber);font-weight:700">Est. $${r.price?.toLocaleString()}</span> · ${r._user?.firstName||''} ${r._user?.lastName||''} · ${r._co?.name||''}`;
+  document.getElementById('fulfilPNR').value     = r.bookingRef||'';
+  document.getElementById('fulfilTicket').value  = r.ticketNum||'';
+  document.getElementById('fulfilFare').value    = r.actualFare||'';
+  document.getElementById('fulfilEticket').value = r.eticketRef||'';
+  document.getElementById('fulfilNotes').value   = r.agentNotes||'';
+  document.getElementById('fulfilModal').classList.add('on');
+  setTimeout(()=>document.getElementById('fulfilPNR').focus(),100);
+}
+
+async function confirmFulfil() {
+  const pnr = document.getElementById('fulfilPNR').value.trim().toUpperCase();
+  if (!pnr) { showToast('Please enter the PNR.'); return; }
+  const btn = document.getElementById('fulfilBtn');
+  btn.disabled=true; btn.innerHTML='<span class="spin"></span> Saving…';
+
+  mutateRequest(fulfilRef, r => {
+    r.status     = 'booked';
+    r.bookingRef = pnr;
+    r.ticketNum  = document.getElementById('fulfilTicket').value.trim();
+    r.actualFare = document.getElementById('fulfilFare').value.trim();
+    r.eticketRef = document.getElementById('fulfilEticket').value.trim();
+    r.agentNotes = document.getElementById('fulfilNotes').value.trim();
+    r.bookedBy   = currentAgent.name;
+    r.bookedAt   = new Date().toISOString();
+  });
+
+  await sendSMS(fulfilRef, 'booked');
+
+  btn.disabled=false;
+  btn.innerHTML=`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Save & Notify Traveller`;
+
+  closeModal();
+  loadAll();
+  selectRequest(fulfilRef);
+  showToast(`✅ PNR ${pnr} saved · Traveller notified by SMS`);
+}
+
+// ── SMS ──
+async function sendSMS(ref, type) {
+  const r = allRequests.find(x=>x.ref===ref); if(!r) return;
+  const phone = r._user?.profile?.phone;
+  const texts = {
+    booked:  `Business World Travel: Your ${r.orig}→${r.dest} flight (${r.airline}, ${r.depDate}) has been BOOKED. PNR: ${r.bookingRef}. E-ticket coming shortly. Ref: ${r.ref}`,
+    ticket:  `Business World Travel: Your e-ticket for ${r.orig}→${r.dest} (${r.airline}, ${r.depDate}) has been emailed. PNR: ${r.bookingRef}. Safe travels! Ref: ${r.ref}`,
+    update:  `Business World Travel: Your booking request ${r.ref} (${r.orig}→${r.dest}) is being processed. We'll send your confirmation shortly.`,
+  };
+  const text = texts[type]||texts.update;
+  mutateRequest(ref, x => {
+    if (!x.smsLog) x.smsLog=[];
+    x.smsLog.push({text, at:new Date().toISOString(), by:currentAgent.name, phone:phone||'—'});
+  });
+  if (AGENT_CFG.twilio_proxy_url!=='YOUR_TWILIO_PROXY_URL' && phone) {
+    try { await fetch(AGENT_CFG.twilio_proxy_url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to:phone,body:text})}); }
+    catch(e){console.warn('SMS:',e);}
+  } else {
+    console.log(`📱 [DEMO SMS → ${phone||'no phone'}]: ${text}`);
+  }
+  loadAll(true);
+  const updated = allRequests.find(x=>x.ref===ref);
+  if (updated && selectedRef===ref) renderDetail(updated);
+}
+
+// ── MUTATE REQUEST IN LOCALSTORAGE ──
+function mutateRequest(ref, fn) {
+  for (let i=0;i<localStorage.length;i++) {
+    const k=localStorage.key(i); if(!k?.startsWith('bwt_p_trips_')) continue;
+    try {
+      const arr=JSON.parse(localStorage.getItem(k))||[];
+      const idx=arr.findIndex(t=>t.ref===ref);
+      if(idx!==-1){ fn(arr[idx]); localStorage.setItem(k,JSON.stringify(arr)); return arr[idx]; }
+    } catch{}
+  }
+}
+
+function closeModal(){ document.getElementById('fulfilModal').classList.remove('on'); }
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.style.transform='translateY(0)'; t.style.opacity='1';
+  setTimeout(()=>{t.style.transform='translateY(70px)';t.style.opacity='0';},3500);
+}
+
+
+// ══════════════════════════════════════════════════════════════
+//  PAYMENT — AUTHORIZE.NET AUTH + HOLD FLOW
+// ══════════════════════════════════════════════════════════════
+
+// ⚠️ Replace with your real Authorize.net credentials
+// For production: these should come from a secure backend proxy
+// NEVER expose your real API keys in client-side code in production
+const ANET_CFG = {
+  apiLoginId:     'YOUR_ANET_LOGIN_ID',       // from authorize.net dashboard
+  transactionKey: 'YOUR_ANET_TRANSACTION_KEY', // from authorize.net dashboard
+  env: 'sandbox', // 'sandbox' for testing, 'production' for live
+};
+
+const ANET_URL = {
+  sandbox:    'https://apitest.authorize.net/xml/v1/request.api',
+  production: 'https://api.authorize.net/xml/v1/request.api',
+};
+
+let payRef = null;  // current booking ref being paid
+let payStep = 1;
+let authTxId = null; // stored transaction ID for capture/void
+
+function openPayModal(ref) {
+  payRef = ref;
+  payStep = 1;
+  authTxId = null;
+  const r = allRequests.find(x => x.ref === ref);
+  if (!r) return;
+
+  // Pre-fill summary
+  const fd = d => d ? new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
+  document.getElementById('paySummary').innerHTML =
+    `<strong>${r.orig} → ${r.dest}</strong> · ${r.airline} · ${r.fn||''}<br>` +
+    `${fd(r.depDate)}${r.retDate?' → '+fd(r.retDate):''} · ${r.pax} pax<br>` +
+    `<span style="color:var(--amber);font-weight:700">Est. $${r.price?.toLocaleString()}</span> · ` +
+    `${r._user?.firstName||''} ${r._user?.lastName||''} · ${r._co?.name||''}`;
+
+  // Pre-fill amount from existing payment or estimate
+  const existingPay = r.payment;
+  if (existingPay?.status === 'auth_held' && existingPay?.txId) {
+    // Already have an auth — go to capture/void step
+    authTxId = existingPay.txId;
+    document.getElementById('payAmount').value = existingPay.amount || r.price || '';
+    showCaptureVoidPane(r);
+  } else {
+    document.getElementById('payAmount').value = r.price || '';
+    document.getElementById('payEmail').value  = r._user?.email || '';
+    document.getElementById('payPhone').value  = r._user?.profile?.phone || '';
+    setPayStep(1);
+  }
+
+  document.getElementById('payModal').classList.add('on');
+}
+
+function closePayModal() {
+  document.getElementById('payModal').classList.remove('on');
+  payRef = null; payStep = 1; authTxId = null;
+}
+
+function setPayStep(n) {
+  payStep = n;
+  [1,2,3,4].forEach(i => {
+    const pane = document.getElementById('payPane'+i);
+    const step = document.getElementById('pstep'+i);
+    if (pane) pane.style.display = i===n ? 'block' : 'none';
+    if (step) {
+      step.className = 'pay-step' + (i<n?' done':i===n?' active':'');
+    }
+  });
+}
+
+function payStep2() {
+  const amount = parseFloat(document.getElementById('payAmount').value);
+  if (!amount || amount < 1) { showToast('Please enter a valid amount.'); return; }
+  const phone  = document.getElementById('payPhone').value || '—';
+
+  // Update verify checklist with live values
+  document.getElementById('vPhone').textContent  = phone;
+  document.getElementById('vAmount').textContent = amount.toLocaleString();
+
+  // Show passport copy requirement if over $3,000
+  const highVal = document.getElementById('verifyHighValue');
+  if (highVal) highVal.style.display = amount >= 3000 ? 'flex' : 'none';
+
+  // Reset checkboxes
+  document.querySelectorAll('#verifyList .verify-item').forEach(el => {
+    el.classList.remove('checked');
+    el.querySelector('.verify-check').textContent = '';
+  });
+  document.getElementById('verifyNextBtn').disabled = true;
+
+  setPayStep(2);
+}
+
+function payBack1() { setPayStep(1); }
+
+function toggleVerify(el) {
+  el.classList.toggle('checked');
+  el.querySelector('.verify-check').textContent = el.classList.contains('checked') ? '✓' : '';
+  // Enable next button only when all visible items are checked
+  const all   = [...document.querySelectorAll('#verifyList .verify-item')].filter(e => e.style.display !== 'none');
+  const done  = all.filter(e => e.classList.contains('checked'));
+  document.getElementById('verifyNextBtn').disabled = done.length < all.length;
+}
+
+async function payStep3() {
+  setPayStep(3);
+  document.getElementById('authRunning').style.display = 'block';
+  document.getElementById('authResultPanel').style.display = 'none';
+
+  const amount   = parseFloat(document.getElementById('payAmount').value);
+  const txType   = document.getElementById('payTxType').value;
+  const email    = document.getElementById('payEmail').value;
+  const r        = allRequests.find(x => x.ref === payRef);
+
+  try {
+    const result = await runAuthorizeNetAuth(amount, txType, r, email);
+    showAuthResult(result, amount, txType, r);
+  } catch(e) {
+    showAuthResult({ success:false, error: e.message||'Network error — check connection and retry.' }, amount, txType, r);
+  }
+}
+
+// ── AUTHORIZE.NET API CALL ──
+async function runAuthorizeNetAuth(amount, txType, req, email) {
+  const isDemo = ANET_CFG.apiLoginId === 'YOUR_ANET_LOGIN_ID';
+
+  if (isDemo) {
+    // Demo mode — simulate a realistic response after delay
+    await new Promise(r => setTimeout(r, 2200));
+    const demoScenarios = [
+      { success:true, txId:'60174914022', authCode:'UGELKJ', avs:'Match', cvv:'Match', cardLast4:'4242', cardType:'Visa' },
+      { success:true, txId:'60174914023', authCode:'TPKMZW', avs:'Match', cvv:'Match', cardLast4:'1881', cardType:'Mastercard' },
+    ];
+    return demoScenarios[Math.floor(Math.random() * demoScenarios.length)];
+  }
+
+  // Real Authorize.net API call
+  const txTypeMap = { auth_only: 'authOnlyTransaction', auth_capture: 'authCaptureTransaction' };
+  const payload = {
+    createTransactionRequest: {
+      merchantAuthentication: {
+        name: ANET_CFG.apiLoginId,
+        transactionKey: ANET_CFG.transactionKey,
+      },
+      refId: req.ref,
+      transactionRequest: {
+        transactionType: txTypeMap[txType] || 'authOnlyTransaction',
+        amount: amount.toFixed(2),
+        payment: {
+          // In production, card data comes from Authorize.net Accept.js hosted form
+          // NEVER pass raw card data through your own server
+          opaqueData: {
+            dataDescriptor: 'COMMON.ACCEPT.INAPP.PAYMENT',
+            dataValue: 'PLACEHOLDER_FROM_ACCEPT_JS',
+          }
+        },
+        customer: { email: email || '' },
+        order: {
+          invoiceNumber: req.ref,
+          description: `BWT Business Class · ${req.orig}→${req.dest} · ${req.depDate}`,
+        },
+        transactionSettings: {
+          setting: [
+            { settingName: 'duplicateWindow', settingValue: '300' },
+          ]
+        }
+      }
+    }
+  };
+
+  const resp = await fetch(ANET_URL[ANET_CFG.env], {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await resp.json();
+  const tx   = data?.transactionResponse;
+  const msgs = data?.messages;
+
+  if (msgs?.resultCode === 'Ok' && tx?.responseCode === '1') {
+    return {
+      success:   true,
+      txId:      tx.transId,
+      authCode:  tx.authCode,
+      avs:       tx.avsResultCode === 'Y' ? 'Match' : tx.avsResultCode === 'Z' ? 'ZIP Only' : 'No Match',
+      cvv:       tx.cvvResultCode  === 'M' ? 'Match' : 'No Match',
+      cardLast4: tx.accountNumber?.slice(-4),
+      cardType:  tx.accountType,
+    };
+  } else {
+    const err = tx?.errors?.[0]?.errorText || msgs?.message?.[0]?.text || 'Authorization declined';
+    return { success: false, error: err, code: tx?.responseCode };
+  }
+}
+
+function showAuthResult(result, amount, txType, req) {
+  document.getElementById('authRunning').style.display = 'none';
+  document.getElementById('authResultPanel').style.display = 'block';
+
+  const box     = document.getElementById('authResultBox');
+  const actions = document.getElementById('authActions');
+  const expiry  = new Date(Date.now() + 7*24*60*60*1000).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+
+  if (result.success) {
+    authTxId = result.txId;
+    const isAuthOnly = txType === 'auth_only';
+    const statusLabel = isAuthOnly ? 'Authorization Hold Placed' : 'Payment Captured';
+    const statusClass = isAuthOnly ? 'pending' : 'ok';
+
+    box.innerHTML = `
+      <div class="auth-result ${statusClass}">
+        <div class="auth-result-h">
+          ${isAuthOnly ? '🔒' : '✅'} ${statusLabel}
+        </div>
+        <div class="auth-result-row"><span>Transaction ID</span><span>${result.txId}</span></div>
+        <div class="auth-result-row"><span>Auth Code</span><span>${result.authCode}</span></div>
+        <div class="auth-result-row"><span>Amount</span><span>$${Number(amount).toLocaleString()} USD</span></div>
+        <div class="auth-result-row"><span>Card</span><span>${result.cardType||'Card'} •••• ${result.cardLast4||'—'}</span></div>
+        <div class="auth-result-row"><span>AVS</span><span style="color:${result.avs==='Match'?'var(--green)':'var(--amber)'}">${result.avs}</span></div>
+        <div class="auth-result-row"><span>CVV</span><span style="color:${result.cvv==='Match'?'var(--green)':'var(--red)'}">${result.cvv}</span></div>
+        ${isAuthOnly ? `<div class="auth-result-row"><span>Expires</span><span style="color:var(--amber)">${expiry} — capture before this date</span></div>` : ''}
+      </div>`;
+
+    // Save to request
+    const payStatus = isAuthOnly ? 'auth_held' : 'captured';
+    mutateRequest(payRef, r => {
+      r.payment = {
+        status:     payStatus,
+        amount:     amount,
+        txId:       result.txId,
+        authCode:   result.authCode,
+        cardLast4:  result.cardLast4,
+        cardType:   result.cardType,
+        avs:        result.avs,
+        cvv:        result.cvv,
+        authExpiry: expiry,
+        log: [{
+          type:   isAuthOnly ? 'auth' : 'capture',
+          txId:   result.txId,
+          amount: amount,
+          avs:    result.avs,
+          cvv:    result.cvv,
+          at:     new Date().toISOString(),
+          by:     currentAgent.name,
+        }]
+      };
+    });
+
+    // Actions
+    if (isAuthOnly) {
+      actions.innerHTML = `
+        <button class="btn btn-green" style="flex:1" onclick="capturePayment()">
+          ✅ Capture $${Number(amount).toLocaleString()} Now
+        </button>
+        <button class="btn btn-outline" style="color:var(--red);border-color:var(--red)" onclick="voidAuth()">
+          Void Hold
+        </button>
+        <button class="btn btn-outline" onclick="closePayModal();loadAll();selectRequest(payRef)">
+          Done — Capture Later
+        </button>`;
+    } else {
+      actions.innerHTML = `
+        <button class="btn btn-green" style="flex:1" onclick="closePayModal();loadAll();selectRequest(payRef)">
+          ✅ Done — Payment Complete
+        </button>`;
+    }
+
+    loadAll(true);
+    showToast(`✅ ${statusLabel} · Trans. ${result.txId}`);
+
+  } else {
+    // Declined
+    box.innerHTML = `
+      <div class="auth-result fail">
+        <div class="auth-result-h">❌ Authorization Declined</div>
+        <div class="auth-result-row"><span>Reason</span><span>${result.error}</span></div>
+        ${result.code ? `<div class="auth-result-row"><span>Code</span><span>${result.code}</span></div>` : ''}
+      </div>
+      <div class="alert alert-warn" style="margin-top:10px">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+        Do <strong>not</strong> issue the ticket. Contact customer and ask for an alternative payment method.
+      </div>`;
+    actions.innerHTML = `
+      <button class="btn btn-outline" style="flex:1" onclick="payBack1()">← Try Different Amount</button>
+      <button class="btn btn-outline" onclick="closePayModal()">Close</button>`;
+    showToast('❌ Authorization declined — do not ticket');
+  }
+}
+
+function showCaptureVoidPane(req) {
+  // Called when re-opening modal on an auth_held booking
+  setPayStep(3);
+  document.getElementById('authRunning').style.display = 'none';
+  document.getElementById('authResultPanel').style.display = 'block';
+
+  const pay = req.payment;
+  const box = document.getElementById('authResultBox');
+  const actions = document.getElementById('authActions');
+
+  box.innerHTML = `
+    <div class="auth-result pending">
+      <div class="auth-result-h">🔒 Authorization Hold Active</div>
+      <div class="auth-result-row"><span>Transaction ID</span><span>${pay.txId}</span></div>
+      <div class="auth-result-row"><span>Auth Code</span><span>${pay.authCode||'—'}</span></div>
+      <div class="auth-result-row"><span>Amount Held</span><span>$${Number(pay.amount).toLocaleString()} USD</span></div>
+      <div class="auth-result-row"><span>Card</span><span>${pay.cardType||'Card'} •••• ${pay.cardLast4||'—'}</span></div>
+      <div class="auth-result-row"><span>Expires</span><span style="color:var(--amber)">${pay.authExpiry||'—'}</span></div>
+    </div>`;
+
+  actions.innerHTML = `
+    <button class="btn btn-green" style="flex:1" onclick="capturePayment()">
+      ✅ Capture $${Number(pay.amount).toLocaleString()} Now
+    </button>
+    <button class="btn btn-outline" style="color:var(--red);border-color:var(--red)" onclick="voidAuth()">
+      ❌ Void Hold
+    </button>`;
+}
+
+async function capturePayment() {
+  if (!authTxId || !payRef) return;
+  const r   = allRequests.find(x => x.ref === payRef);
+  const amt = r?.payment?.amount || parseFloat(document.getElementById('payAmount').value);
+  const btn = event.target;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> Capturing…';
+
+  const isDemo = ANET_CFG.apiLoginId === 'YOUR_ANET_LOGIN_ID';
+  let captureResult;
+
+  if (isDemo) {
+    await new Promise(r => setTimeout(r, 1800));
+    captureResult = { success:true, txId: authTxId, authCode:'CAPTURED' };
+  } else {
+    try {
+      const resp = await fetch(ANET_URL[ANET_CFG.env], {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          createTransactionRequest: {
+            merchantAuthentication: { name: ANET_CFG.apiLoginId, transactionKey: ANET_CFG.transactionKey },
+            transactionRequest: { transactionType: 'priorAuthCaptureTransaction', amount: amt.toFixed(2), refTransId: authTxId }
+          }
+        })
+      });
+      const data = await resp.json();
+      const tx = data?.transactionResponse;
+      captureResult = (tx?.responseCode === '1')
+        ? { success:true, txId:tx.transId, authCode:tx.authCode }
+        : { success:false, error: tx?.errors?.[0]?.errorText || 'Capture failed' };
+    } catch(e) {
+      captureResult = { success:false, error: e.message };
+    }
+  }
+
+  if (captureResult.success) {
+    mutateRequest(payRef, r => {
+      r.payment.status = 'captured';
+      if (!r.payment.log) r.payment.log = [];
+      r.payment.log.push({ type:'capture', txId:captureResult.txId, amount:amt, at:new Date().toISOString(), by:currentAgent.name });
+    });
+    document.getElementById('authResultBox').innerHTML += `
+      <div class="auth-result ok" style="margin-top:10px">
+        <div class="auth-result-h">✅ Payment Captured — $${Number(amt).toLocaleString()} USD</div>
+        <div class="auth-result-row"><span>Transaction ID</span><span>${captureResult.txId}</span></div>
+        <div class="auth-result-row"><span>By</span><span>${currentAgent.name}</span></div>
+      </div>`;
+    document.getElementById('authActions').innerHTML = `
+      <button class="btn btn-green" style="flex:1" onclick="closePayModal();loadAll();selectRequest(payRef)">
+        ✅ Done — Proceed to Ticket
+      </button>`;
+    loadAll(true);
+    showToast(`✅ $${Number(amt).toLocaleString()} captured · Trans. ${captureResult.txId}`);
+  } else {
+    showToast('❌ Capture failed: ' + captureResult.error);
+    btn.disabled = false;
+    btn.innerHTML = '✅ Capture Now — Retry';
+  }
+}
+
+async function voidAuth() {
+  if (!authTxId || !payRef) return;
+  if (!confirm('Void this authorization? The held funds will be released back to the customer.')) return;
+
+  const btn = event.target;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> Voiding…';
+
+  const isDemo = ANET_CFG.apiLoginId === 'YOUR_ANET_LOGIN_ID';
+  let voidResult;
+
+  if (isDemo) {
+    await new Promise(r => setTimeout(r, 1500));
+    voidResult = { success: true };
+  } else {
+    try {
+      const resp = await fetch(ANET_URL[ANET_CFG.env], {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          createTransactionRequest: {
+            merchantAuthentication: { name: ANET_CFG.apiLoginId, transactionKey: ANET_CFG.transactionKey },
+            transactionRequest: { transactionType: 'voidTransaction', refTransId: authTxId }
+          }
+        })
+      });
+      const data = await resp.json();
+      const tx = data?.transactionResponse;
+      voidResult = (tx?.responseCode === '1') ? { success:true } : { success:false, error: tx?.errors?.[0]?.errorText };
+    } catch(e) {
+      voidResult = { success:false, error: e.message };
+    }
+  }
+
+  if (voidResult.success) {
+    mutateRequest(payRef, r => {
+      r.payment.status = 'voided';
+      if (!r.payment.log) r.payment.log = [];
+      r.payment.log.push({ type:'void', txId:authTxId, amount:r.payment.amount, at:new Date().toISOString(), by:currentAgent.name });
+    });
+    showToast('Authorization voided — funds released to customer');
+    closePayModal();
+    loadAll();
+    selectRequest(payRef);
+  } else {
+    showToast('❌ Void failed: ' + (voidResult.error||'Unknown error'));
+    btn.disabled = false;
+    btn.innerHTML = '❌ Void Hold — Retry';
+  }
+}
+
+// ── RESUME SESSION ──
+window.addEventListener('load',()=>{
+  const s=sessionStorage.getItem('bwt_agent_sess');
+  if(s){try{currentAgent=JSON.parse(s);launchApp();}catch{sessionStorage.removeItem('bwt_agent_sess');}}
+});
+/* ═══════════════════════════════════════════════
+   TAB SWITCHING
+═══════════════════════════════════════════════ */
+function showTab(tab) {
+  document.getElementById('panelRequests').style.display = tab==='requests' ? 'flex' : 'none';
+  document.getElementById('panelCache').style.display    = tab==='cache'    ? 'block': 'none';
+  document.getElementById('tabRequests').style.background = tab==='requests' ? 'rgba(200,168,75,.15)' : 'none';
+  document.getElementById('tabRequests').style.color      = tab==='requests' ? 'var(--gold)' : '';
+  document.getElementById('tabCache').style.background    = tab==='cache'    ? 'rgba(200,168,75,.15)' : 'none';
+  document.getElementById('tabCache').style.color         = tab==='cache'    ? 'var(--gold)' : '';
+  if (tab==='cache') loadCacheStatus();
+}
+
+/* ═══════════════════════════════════════════════
+   FARE CACHE PANEL
+═══════════════════════════════════════════════ */
+const ADMIN_KEY = ''; // Set this to your ADMIN_KEY env var value for local testing
+                      // In production this is handled server-side
+
+const TOP_ROUTES = [
+  {origin:'JFK',destination:'LHR',cabin:'BUSINESS',label:'New York → London'},
+  {origin:'JFK',destination:'CDG',cabin:'BUSINESS',label:'New York → Paris'},
+  {origin:'JFK',destination:'FRA',cabin:'BUSINESS',label:'New York → Frankfurt'},
+  {origin:'JFK',destination:'AMS',cabin:'BUSINESS',label:'New York → Amsterdam'},
+  {origin:'JFK',destination:'DUB',cabin:'BUSINESS',label:'New York → Dublin'},
+  {origin:'EWR',destination:'LHR',cabin:'BUSINESS',label:'Newark → London'},
+  {origin:'EWR',destination:'CDG',cabin:'BUSINESS',label:'Newark → Paris'},
+  {origin:'BOS',destination:'LHR',cabin:'BUSINESS',label:'Boston → London'},
+  {origin:'MIA',destination:'LHR',cabin:'BUSINESS',label:'Miami → London'},
+  {origin:'BOS',destination:'CDG',cabin:'BUSINESS',label:'Boston → Paris'},
+];
+
+async function loadCacheStatus() {
+  const btn = document.getElementById('cacheRefreshBtn');
+  btn.textContent = '↻ Loading…';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch('/api/warm-cache', {
+      headers: { 'x-bwt-admin-key': ADMIN_KEY || prompt('Enter admin key:') || '' }
+    });
+    if (!res.ok) { showToast('Could not load cache status — check admin key', 'err'); return; }
+    const data = await res.json();
+    renderCacheTable(data.status || []);
+  } catch {
+    // Demo mode — show mock status
+    renderCacheTable(getMockCacheStatus());
+  } finally {
+    btn.textContent = '↻ Refresh Status';
+    btn.disabled = false;
+  }
+}
+
+function renderCacheTable(rows) {
+  const tbl   = document.getElementById('cacheTable');
+  const fresh  = rows.filter(r=>r.isFresh).length;
+  const stale  = rows.filter(r=>!r.isFresh).length;
+  const routes = new Set(rows.map(r=>r.route)).size;
+  const hits   = rows.reduce((s,r)=>s+(r.hits||0), 0);
+
+  document.getElementById('csFresh').textContent  = fresh;
+  document.getElementById('csStale').textContent  = stale;
+  document.getElementById('csRoutes').textContent = routes;
+  document.getElementById('csHits').textContent   = hits;
+
+  if (!rows.length) {
+    tbl.innerHTML = '<div style="padding:40px;text-align:center;color:var(--ld);font-size:13px">No cached fares yet — click "Warm All Routes" to pre-load</div>';
+    return;
+  }
+
+  tbl.innerHTML = rows.map(r => {
+    const statusCls = r.isFresh ? 'status-fresh' : (r.ageHours < 168 ? 'status-stale' : 'status-expired');
+    const statusTxt = r.isFresh ? '✓ Fresh' : `Stale (${Math.round(r.ageHours)}h)`;
+    const fetchedAgo = r.ageHours < 1 ? '<1h ago' : `${Math.round(r.ageHours)}h ago`;
+    return `<div class="cr-row">
+      <div style="font-weight:600">${r.route||`${r.origin}→${r.destination}`}</div>
+      <div style="font-size:11px;opacity:.6">${r.cabin}</div>
+      <div style="font-size:11px;opacity:.5">wk ${r.weekStart||'—'}</div>
+      <div style="font-size:11px;opacity:.5">${fetchedAgo}</div>
+      <div class="${statusCls}">${statusTxt}</div>
+      <div>${r.offerCount||0}</div>
+      <div style="opacity:.5">${r.hits||0}</div>
+    </div>`;
+  }).join('');
+
+  // Render warm routes chips
+  const wr = document.getElementById('warmRoutesList');
+  wr.innerHTML = TOP_ROUTES.map(r => `
+    <div class="wr-chip">
+      <span>${r.label}</span>
+      <button onclick="warmSingleRoute('${r.origin}','${r.destination}','${r.cabin}',this)">Warm now</button>
+    </div>`).join('');
+}
+
+async function warmCache() {
+  const btn = document.getElementById('cacheWarmBtn');
+  const log = document.getElementById('cacheWarmLog');
+  btn.textContent = '⚡ Warming…';
+  btn.disabled = true;
+  log.style.display = 'block';
+  log.innerHTML = '⚡ Starting warm-up for all routes...\n';
+
+  try {
+    const res = await fetch('/api/warm-cache', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-bwt-admin-key': ADMIN_KEY || prompt('Enter admin key:') || ''
+      },
+      body: JSON.stringify({ routes: TOP_ROUTES })
+    });
+
+    if (!res.ok) {
+      log.innerHTML += `❌ Server error: ${res.status}\n`;
+      return;
+    }
+
+    const data = await res.json();
+    log.innerHTML += `✅ Complete: ${data.summary?.success||0} fetched, ${data.summary?.failed||0} failed, ${data.summary?.skipped||0} skipped\n`;
+    (data.results?.success||[]).forEach(r => log.innerHTML += `  ✓ ${r.route} — ${r.offers} offers\n`);
+    (data.results?.failed||[]).forEach(r => log.innerHTML += `  ✗ ${r.route}: ${r.error}\n`);
+    showToast(`Cache warmed: ${data.summary?.success||0} routes updated`,'ok');
+    setTimeout(loadCacheStatus, 1000);
+  } catch {
+    // Not on Netlify yet
+    log.innerHTML += '⚠ Not connected to Netlify yet — cache warm-up only works on live deployment\n';
+    log.innerHTML += 'Demo mode: showing mock status\n';
+    renderCacheTable(getMockCacheStatus());
+    showToast('Cache panel ready — will work once deployed to Netlify','ok');
+  } finally {
+    btn.textContent = '⚡ Warm All Routes';
+    btn.disabled = false;
+  }
+}
+
+async function warmSingleRoute(orig, dest, cabin, btn) {
+  const origText = btn.textContent;
+  btn.textContent = '…';
+  btn.disabled = true;
+  try {
+    const res = await fetch('/api/warm-cache', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','x-bwt-admin-key': ADMIN_KEY||''},
+      body: JSON.stringify({ routes:[{origin:orig,destination:dest,cabin}] })
+    });
+    const data = await res.json();
+    showToast(`${orig}→${dest} warmed: ${data.summary?.success||0} windows cached`,'ok');
+    setTimeout(loadCacheStatus, 500);
+  } catch {
+    showToast('Warm-up only works on live Netlify deployment','err');
+  } finally {
+    btn.textContent = origText;
+    btn.disabled = false;
+  }
+}
+
+function getMockCacheStatus() {
+  const routes = [
+    ['JFK','LHR'],['JFK','CDG'],['JFK','FRA'],['JFK','AMS'],
+    ['EWR','LHR'],['BOS','LHR'],['MIA','LHR']
+  ];
+  return routes.map(([o,d]) => ({
+    route:`${o}→${d}`, origin:o, destination:d, cabin:'BUSINESS',
+    weekStart: new Date(Date.now()+7*86400000).toISOString().slice(0,10),
+    offerCount: 8+Math.floor(Math.random()*6),
+    ageHours: Math.round(Math.random()*20*10)/10,
+    isFresh: Math.random()>0.3,
+    hits: Math.floor(Math.random()*40),
+    source:'amadeus',
+  }));
+}
+
+</script>
+</body>
+</html>

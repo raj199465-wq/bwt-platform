@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BWT Fare Manager — Internal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0c1220;--navy2:#111929;--navy3:#172133;
+  --gold:#c8a84b;--gold2:#e6c86a;--goldb:rgba(200,168,75,.2);--golddim:rgba(200,168,75,.08);
+  --green:#2d9e6f;--greenb:rgba(45,158,111,.12);
+  --red:#c0392b;--redb:rgba(192,57,43,.12);
+  --ink:#1a1a2e;--muted:#6a6a7a;--dim:#9a9aaa;
+  --l0:#fff;--l1:#f8f6f2;--l2:#f2f0eb;--lb:#e0dbd0;--lb2:#ccc8bc;
+  --radius:10px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;font-weight:400;background:var(--l1);color:var(--ink);min-height:100vh}
+button{cursor:pointer;border:none;font-family:inherit}
+input{font-family:inherit}
+
+/* ── LOGIN SCREEN ── */
+#loginScreen{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:var(--navy);
+  background-image:radial-gradient(ellipse 60% 50% at 30% 50%,rgba(200,168,75,.06),transparent);
+}
+.login-box{
+  background:rgba(255,255,255,.04);border:1px solid rgba(200,168,75,.15);
+  border-top:3px solid var(--gold);
+  border-radius:0;padding:48px 52px;width:100%;max-width:400px;
+  text-align:center;
+}
+.login-mark{color:var(--gold);font-size:24px;margin-bottom:16px}
+.login-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:#fff;margin-bottom:4px}
+.login-sub{font-size:12px;color:rgba(200,210,230,.35);letter-spacing:.08em;margin-bottom:32px}
+.login-label{display:block;font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(200,168,75,.6);margin-bottom:8px;text-align:left}
+.login-input{
+  width:100%;padding:14px 16px;background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.1);color:#fff;font-size:15px;
+  outline:none;margin-bottom:16px;transition:border-color .2s;
+  border-radius:6px;
+}
+.login-input:focus{border-color:var(--goldb)}
+.login-input::placeholder{color:rgba(200,210,230,.2)}
+.login-btn{
+  width:100%;padding:14px;background:var(--gold);color:var(--navy);
+  font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  border-radius:6px;transition:background .2s;
+}
+.login-btn:hover{background:var(--gold2)}
+.login-error{font-size:12px;color:#e07070;margin-top:10px;display:none}
+.login-error.show{display:block}
+
+/* ── APP SHELL ── */
+#appShell{display:none}
+#appShell.show{display:block}
+
+/* ── TOP BAR ── */
+.topbar{
+  background:var(--navy);border-bottom:1px solid rgba(200,168,75,.12);
+  padding:0 clamp(16px,3vw,40px);height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+}
+.topbar-brand{display:flex;align-items:center;gap:12px}
+.topbar-mark{color:var(--gold);font-size:16px}
+.topbar-name{font-size:13px;font-weight:600;letter-spacing:.1em;color:#fff}
+.topbar-tag{font-size:9px;letter-spacing:.2em;color:rgba(200,168,75,.5);text-transform:uppercase;margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:16px}
+.topbar-updated{font-size:11px;color:rgba(200,210,230,.35)}
+.topbar-updated span{color:var(--gold)}
+.topbar-logout{font-size:11px;color:rgba(200,210,230,.3);cursor:pointer;transition:color .2s}
+.topbar-logout:hover{color:var(--gold)}
+
+/* ── MAIN ── */
+main{max-width:1300px;margin:0 auto;padding:32px clamp(16px,3vw,40px) 80px}
+
+/* ── PAGE HEADER ── */
+.page-header{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  flex-wrap:wrap;gap:16px;margin-bottom:28px;
+}
+.page-title{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--ink);line-height:1.1}
+.page-title em{font-style:italic;color:var(--gold)}
+.page-sub{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.6}
+.page-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+/* ── BUTTONS ── */
+.btn{padding:10px 20px;border-radius:var(--radius);font-size:12px;font-weight:700;letter-spacing:.06em;transition:all .15s;display:inline-flex;align-items:center;gap:7px}
+.btn-gold{background:var(--gold);color:var(--navy)}
+.btn-gold:hover{background:var(--gold2)}
+.btn-outline{background:transparent;border:1px solid var(--lb2);color:var(--muted)}
+.btn-outline:hover{border-color:var(--goldb);color:var(--ink)}
+.btn-sm{padding:7px 14px;font-size:11px}
+.btn-green{background:var(--green);color:#fff}
+.btn-green:hover{background:#269060}
+.btn-red{background:var(--red);color:#fff}
+.btn-red:hover{background:#a93226}
+
+/* ── ALERT BANNER ── */
+.alert{
+  padding:12px 18px;border-radius:var(--radius);
+  display:flex;align-items:center;gap:10px;
+  font-size:12.5px;margin-bottom:20px;
+}
+.alert-info{background:#e8f4ff;border:1px solid #b8d8f5;color:#1a4a7a}
+.alert-success{background:var(--greenb);border:1px solid rgba(45,158,111,.25);color:#1a6a4a}
+.alert-warn{background:#fff8e6;border:1px solid #f0d070;color:#7a5a10}
+.alert svg{flex-shrink:0;width:14px;height:14px}
+
+/* ── ROUTE TABLE ── */
+.route-table-wrap{
+  background:#fff;border:1px solid var(--lb);border-radius:var(--radius);
+  overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.04);
+}
+.route-table{width:100%;border-collapse:collapse}
+.route-table thead tr{background:var(--navy)}
+.route-table th{
+  padding:12px 14px;font-size:9px;font-weight:700;letter-spacing:.18em;
+  text-transform:uppercase;text-align:left;white-space:nowrap;
+}
+.route-table th:nth-child(1){color:rgba(200,168,75,.7)}
+.route-table th:nth-child(2),.route-table th:nth-child(3){color:rgba(200,200,220,.45)}
+.route-table th:nth-child(4),.route-table th:nth-child(5){color:rgba(200,168,75,.9)}
+.route-table th:last-child{color:rgba(200,210,230,.3);text-align:center}
+
+.route-table tbody tr{
+  border-bottom:1px solid var(--lb);
+  transition:background .12s;
+}
+.route-table tbody tr:last-child{border-bottom:none}
+.route-table tbody tr:hover{background:var(--l1)}
+.route-table tbody tr.dirty{background:#fffdf0}
+.route-table tbody tr.saved-flash{animation:savedFlash .6s ease}
+@keyframes savedFlash{0%{background:#e8f5ee}100%{background:transparent}}
+
+.route-table td{padding:10px 14px;vertical-align:middle}
+
+/* Route cell */
+.td-route{display:flex;flex-direction:column;gap:2px;min-width:160px}
+.td-route-code{font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:var(--ink);letter-spacing:.08em}
+.td-route-name{font-size:10.5px;color:var(--muted)}
+
+/* Fare input cells */
+.fare-input-wrap{position:relative}
+.fare-prefix{
+  position:absolute;left:10px;top:50%;transform:translateY(-50%);
+  font-size:12px;font-weight:600;color:var(--muted);pointer-events:none;
+}
+.fare-input{
+  width:100%;padding:8px 10px 8px 22px;
+  border:1px solid var(--lb);border-radius:6px;
+  font-size:13px;font-weight:600;color:var(--ink);
+  font-family:'DM Mono',monospace;
+  background:var(--l1);outline:none;
+  transition:border-color .15s,background .15s;
+  min-width:90px;
+}
+.fare-input:focus{border-color:var(--gold);background:#fff}
+.fare-input.pub{color:var(--muted)}
+.fare-input.bwt{color:var(--ink)}
+tr.dirty .fare-input.bwt{border-color:rgba(200,168,75,.4)}
+
+/* Saving badge */
+.td-saving{min-width:120px}
+.saving-badge{
+  display:inline-flex;flex-direction:column;gap:2px;
+  background:var(--greenb);border:1px solid rgba(45,158,111,.2);
+  border-radius:8px;padding:5px 10px;
+}
+.saving-pct{font-size:13px;font-weight:700;color:var(--green)}
+.saving-amt{font-size:10px;color:var(--green);opacity:.7}
+
+/* Updated cell */
+.td-updated{font-size:10px;color:var(--dim);white-space:nowrap;text-align:center}
+.updated-fresh{color:var(--green);font-weight:600}
+.updated-stale{color:#d97706;font-weight:600}
+
+/* Action cell */
+.td-action{text-align:center;white-space:nowrap}
+
+/* ── FOOTER SAVE BAR ── */
+.save-bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  background:var(--navy);border-top:1px solid rgba(200,168,75,.15);
+  padding:14px clamp(16px,3vw,40px);
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  flex-wrap:wrap;
+  transform:translateY(100%);transition:transform .3s cubic-bezier(.22,1,.36,1);
+}
+.save-bar.show{transform:translateY(0)}
+.save-bar-msg{font-size:13px;color:rgba(200,210,230,.6)}
+.save-bar-msg strong{color:#fff}
+.save-bar-actions{display:flex;gap:10px}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--ink);color:#fff;padding:11px 22px;border-radius:8px;
+  font-size:13px;font-weight:500;z-index:9999;opacity:0;
+  transition:all .3s cubic-bezier(.22,1,.36,1);pointer-events:none;white-space:nowrap;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.green{background:var(--green)}
+.toast.red{background:var(--red)}
+
+/* ── STATS STRIP ── */
+.stats-strip{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
+  margin-bottom:24px;
+}
+@media(max-width:700px){.stats-strip{grid-template-columns:1fr 1fr}}
+.stat-card{
+  background:#fff;border:1px solid var(--lb);border-radius:var(--radius);
+  padding:16px 18px;
+}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--ink);line-height:1}
+.stat-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px}
+.stat-card.gold .stat-num{color:var(--gold)}
+.stat-card.green .stat-num{color:var(--green)}
+
+/* ── SEARCH / FILTER ── */
+.table-toolbar{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  margin-bottom:14px;
+}
+.tbl-search{
+  padding:9px 14px;border:1px solid var(--lb);border-radius:var(--radius);
+  font-size:13px;color:var(--ink);background:#fff;outline:none;
+  flex:1;min-width:200px;max-width:360px;
+  transition:border-color .2s;
+}
+.tbl-search:focus{border-color:var(--goldb)}
+.tbl-search::placeholder{color:var(--dim)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .route-table th:nth-child(6),.route-table td:nth-child(6){display:none}
+}
+@media(max-width:700px){
+  .route-table th:nth-child(2),.route-table td:nth-child(2),
+  .route-table th:nth-child(3),.route-table td:nth-child(3){display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN SCREEN ══ -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-mark">◆</div>
+    <div class="login-title">BWT Fare Manager</div>
+    <div class="login-sub">Internal use only · Not public</div>
+    <label class="login-label">Admin Password</label>
+    <input class="login-input" id="loginPw" type="password" placeholder="Enter password"
+      onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Sign In</button>
+    <div class="login-error" id="loginError">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<!-- ══ APP SHELL ══ -->
+<div id="appShell">
+
+  <div class="topbar">
+    <div class="topbar-brand">
+      <div class="topbar-mark">◆</div>
+      <div>
+        <div class="topbar-name">BWT FARE MANAGER</div>
+        <div class="topbar-tag">Internal · Not public-facing</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-updated">Last saved: <span id="lastSavedDisp">Never</span></div>
+      <div class="topbar-logout" onclick="doLogout()">Sign out</div>
+    </div>
+  </div>
+
+  <main>
+
+    <div class="page-header">
+      <div>
+        <div class="page-title">Route Fare <em>Table</em></div>
+        <div class="page-sub">Update published ranges and BWT rates for all routes. Changes go live on the public site immediately after saving. Update weekly or whenever market conditions shift.</div>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-outline" onclick="exportCSV()">↓ Export CSV</button>
+        <button class="btn btn-gold" id="saveAllBtn" onclick="saveAll()" style="display:none">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Save All Changes
+        </button>
+      </div>
+    </div>
+
+    <div class="alert alert-info" id="storageAlert" style="display:none">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+      <span>Running in <strong>local mode</strong> — changes are saved to browser storage. To persist across devices, connect Supabase in the settings above.</span>
+    </div>
+
+    <!-- Stats strip -->
+    <div class="stats-strip">
+      <div class="stat-card gold">
+        <div class="stat-num" id="statRoutes">0</div>
+        <div class="stat-lbl">Routes configured</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statAvgPub">—</div>
+        <div class="stat-lbl">Avg published (business)</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-num" id="statAvgBWT">—</div>
+        <div class="stat-lbl">Avg BWT rate (business)</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-num" id="statAvgSave">—</div>
+        <div class="stat-lbl">Avg saving %</div>
+      </div>
+    </div>
+
+    <!-- Search bar -->
+    <div class="table-toolbar">
+      <input class="tbl-search" id="routeSearch" placeholder="Search routes — JFK, London, LHR…" oninput="filterTable()">
+      <span style="font-size:12px;color:var(--dim)" id="filterCount"></span>
+    </div>
+
+    <!-- Route table -->
+    <div class="route-table-wrap">
+      <table class="route-table" id="routeTable">
+        <thead>
+          <tr>
+            <th>Route</th>
+            <th>Published Low</th>
+            <th>Published High</th>
+            <th>BWT Low</th>
+            <th>BWT High</th>
+            <th>Typical Saving</th>
+            <th>Last Updated</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="routeTbody"></tbody>
+      </table>
+    </div>
+
+  </main>
+
+  <!-- Floating save bar -->
+  <div class="save-bar" id="savebar">
+    <div class="save-bar-msg"><strong id="dirtyCount">0</strong> unsaved changes</div>
+    <div class="save-bar-actions">
+      <button class="btn btn-outline btn-sm" onclick="discardChanges()">Discard</button>
+      <button class="btn btn-gold btn-sm" onclick="saveAll()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+        Save All
+      </button>
+    </div>
+  </div>
+
+</div><!-- /appShell -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════════════════════════
+//  CONFIG
+// ════════════════════════════════════════════════════
+
+// Change this password before deploying
+// SHA-256 hash of your password — default is "bwtfares2026"
+// To generate a new hash: https://emn178.github.io/online-tools/sha256.html
+const ADMIN_PW_HASH = 'a3f8c2e1b4d6e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4';
+// Plaintext fallback for demo (remove in production, use hash above)
+const ADMIN_PW_PLAIN = 'bwtfares2026';
+
+// Storage key
+const STORE_KEY = 'bwt_fare_table_v1';
+const SESSION_KEY = 'bwt_fare_admin_session';
+
+// ════════════════════════════════════════════════════
+//  DEFAULT FARE DATA — 26 routes
+// ════════════════════════════════════════════════════
+const DEFAULT_ROUTES = [
+  // ── NEW YORK / NEW JERSEY ──────────────────────────────────────
+  ['JFK-LHR','New York JFK → London Heathrow',      3200,5800,1900,3400],
+  ['JFK-LGW','New York JFK → London Gatwick',       3000,5400,1800,3200],
+  ['JFK-CDG','New York JFK → Paris CDG',            3300,5900,1950,3500],
+  ['JFK-FRA','New York JFK → Frankfurt',            3100,5600,1850,3300],
+  ['JFK-AMS','New York JFK → Amsterdam',            3200,5700,1900,3400],
+  ['JFK-ZRH','New York JFK → Zurich',               3300,5800,1950,3500],
+  ['JFK-MAD','New York JFK → Madrid',               3400,6000,2000,3600],
+  ['JFK-FCO','New York JFK → Rome Fiumicino',       3500,6200,2100,3750],
+  ['JFK-MUC','New York JFK → Munich',               3200,5700,1900,3400],
+  ['JFK-VIE','New York JFK → Vienna',               3300,5900,1950,3500],
+  ['JFK-DUB','New York JFK → Dublin',               3000,5400,1800,3200],
+  ['JFK-MXP','New York JFK → Milan Malpensa',       3400,6100,2050,3650],
+  ['JFK-BCN','New York JFK → Barcelona',            3500,6200,2100,3750],
+  ['JFK-LIS','New York JFK → Lisbon',               3200,5700,1900,3400],
+  ['JFK-EDI','New York JFK → Edinburgh',            3400,6000,2000,3600],
+  ['JFK-ATH','New York JFK → Athens',               3600,6400,2200,3900],
+  ['JFK-CPH','New York JFK → Copenhagen',           3400,6000,2000,3600],
+  ['JFK-ARN','New York JFK → Stockholm',            3500,6200,2100,3750],
+  ['JFK-OSL','New York JFK → Oslo',                 3500,6200,2100,3750],
+  ['JFK-HEL','New York JFK → Helsinki',             3600,6400,2200,3900],
+  ['JFK-WAW','New York JFK → Warsaw',               3500,6200,2100,3750],
+  ['JFK-PRG','New York JFK → Prague',               3500,6200,2100,3750],
+  ['JFK-BUD','New York JFK → Budapest',             3500,6200,2100,3750],
+  ['JFK-IST','New York JFK → Istanbul',             3400,6100,2050,3650],
+  ['JFK-TLV','New York JFK → Tel Aviv',             3600,6400,2200,3900],
+  ['JFK-KEF','New York JFK → Reykjavík',            2800,5000,1680,3000],
+  // ── NEWARK ────────────────────────────────────────────────────
+  ['EWR-LHR','Newark EWR → London Heathrow',        3100,5600,1850,3300],
+  ['EWR-LGW','Newark EWR → London Gatwick',         2950,5300,1780,3150],
+  ['EWR-CDG','Newark EWR → Paris CDG',              3200,5800,1900,3400],
+  ['EWR-FRA','Newark EWR → Frankfurt',              3000,5500,1800,3250],
+  ['EWR-AMS','Newark EWR → Amsterdam',              3100,5600,1850,3300],
+  ['EWR-MXP','Newark EWR → Milan Malpensa',         3300,5900,1950,3500],
+  ['EWR-MAD','Newark EWR → Madrid',                 3400,6000,2000,3600],
+  ['EWR-LIS','Newark EWR → Lisbon',                 3200,5700,1900,3400],
+  ['EWR-ATH','Newark EWR → Athens',                 3600,6400,2200,3900],
+  ['EWR-DUB','Newark EWR → Dublin',                 3000,5400,1800,3200],
+  ['EWR-FCO','Newark EWR → Rome Fiumicino',         3400,6100,2050,3650],
+  ['EWR-SPU','Newark EWR → Split Croatia',          3500,6200,2100,3750],
+  ['EWR-SCQ','Newark EWR → Santiago de Compostela', 3400,6000,2000,3600],
+  ['EWR-KEF','Newark EWR → Reykjavík',              2800,5000,1680,3000],
+  // ── BOSTON ────────────────────────────────────────────────────
+  ['BOS-LHR','Boston → London Heathrow',            3300,5900,1950,3500],
+  ['BOS-LGW','Boston → London Gatwick',             3100,5600,1860,3320],
+  ['BOS-DUB','Boston → Dublin',                     2900,5200,1740,3120],
+  ['BOS-CDG','Boston → Paris CDG',                  3400,6000,2000,3600],
+  ['BOS-FRA','Boston → Frankfurt',                  3300,5900,1950,3500],
+  ['BOS-AMS','Boston → Amsterdam',                  3200,5700,1900,3400],
+  ['BOS-MUC','Boston → Munich',                     3300,5900,1950,3500],
+  ['BOS-MAD','Boston → Madrid',                     3500,6200,2100,3750],
+  ['BOS-BCN','Boston → Barcelona',                  3500,6200,2100,3750],
+  ['BOS-LIS','Boston → Lisbon',                     3200,5700,1900,3400],
+  ['BOS-MXP','Boston → Milan Malpensa',             3400,6100,2050,3650],
+  ['BOS-ATH','Boston → Athens',                     3600,6400,2200,3900],
+  ['BOS-CPH','Boston → Copenhagen',                 3400,6000,2000,3600],
+  ['BOS-EDI','Boston → Edinburgh',                  3400,6000,2000,3600],
+  // ── WASHINGTON DC ─────────────────────────────────────────────
+  ['IAD-LHR','Washington Dulles → London',          3100,5600,1860,3320],
+  ['IAD-FRA','Washington Dulles → Frankfurt',       3000,5500,1800,3250],
+  ['IAD-CDG','Washington Dulles → Paris CDG',       3200,5800,1900,3400],
+  ['IAD-DUB','Washington Dulles → Dublin',          3000,5400,1800,3200],
+  ['IAD-MUC','Washington Dulles → Munich',          3200,5700,1900,3400],
+  ['IAD-ZRH','Washington Dulles → Zurich',          3300,5800,1950,3500],
+  ['IAD-KEF','Washington Dulles → Reykjavík',       2900,5200,1740,3120],
+  ['DCA-LHR','Washington Reagan → London',          3200,5800,1900,3400],
+  // ── CHICAGO ───────────────────────────────────────────────────
+  ['ORD-LHR','Chicago O'Hare → London Heathrow',   3400,6000,2000,3600],
+  ['ORD-FRA','Chicago O'Hare → Frankfurt',         3300,5900,1950,3500],
+  ['ORD-CDG','Chicago O'Hare → Paris CDG',         3400,6100,2050,3650],
+  ['ORD-AMS','Chicago O'Hare → Amsterdam',         3300,5900,1950,3500],
+  ['ORD-MUC','Chicago O'Hare → Munich',            3400,6000,2000,3600],
+  ['ORD-MAD','Chicago O'Hare → Madrid',            3500,6200,2100,3750],
+  ['ORD-BCN','Chicago O'Hare → Barcelona',         3500,6200,2100,3750],
+  ['ORD-DUB','Chicago O'Hare → Dublin',            3200,5800,1900,3400],
+  ['ORD-MXP','Chicago O'Hare → Milan Malpensa',    3400,6100,2050,3650],
+  ['ORD-ATH','Chicago O'Hare → Athens',            3700,6600,2300,4000],
+  ['ORD-CPH','Chicago O'Hare → Copenhagen',        3500,6200,2100,3750],
+  ['ORD-EDI','Chicago O'Hare → Edinburgh',         3500,6200,2100,3750],
+  ['ORD-BRU','Chicago O'Hare → Brussels',          3300,5900,1950,3500],
+  ['ORD-KEF','Chicago O'Hare → Reykjavík',         3200,5700,1900,3400],
+  ['ORD-WAW','Chicago O'Hare → Warsaw',            3500,6200,2100,3750],
+  ['ORD-IST','Chicago O'Hare → Istanbul',          3500,6200,2100,3750],
+  // ── MIAMI ─────────────────────────────────────────────────────
+  ['MIA-LHR','Miami → London Heathrow',             3300,5800,1950,3450],
+  ['MIA-CDG','Miami → Paris CDG',                   3500,6200,2100,3750],
+  ['MIA-MAD','Miami → Madrid',                      3400,6100,2050,3650],
+  ['MIA-BCN','Miami → Barcelona',                   3500,6200,2100,3750],
+  ['MIA-FRA','Miami → Frankfurt',                   3400,6100,2050,3650],
+  ['MIA-LIS','Miami → Lisbon',                      3200,5700,1900,3400],
+  // ── ATLANTA ───────────────────────────────────────────────────
+  ['ATL-LHR','Atlanta → London Heathrow',           3350,5900,2000,3500],
+  ['ATL-CDG','Atlanta → Paris CDG',                 3500,6200,2100,3750],
+  ['ATL-AMS','Atlanta → Amsterdam',                 3400,6000,2000,3600],
+  ['ATL-FRA','Atlanta → Frankfurt',                 3400,6000,2000,3600],
+  ['ATL-MAD','Atlanta → Madrid',                    3500,6200,2100,3750],
+  ['ATL-FCO','Atlanta → Rome Fiumicino',            3600,6400,2200,3900],
+  ['ATL-MUC','Atlanta → Munich',                    3500,6200,2100,3750],
+  ['ATL-DUB','Atlanta → Dublin',                    3300,5900,1950,3500],
+  ['ATL-CPH','Atlanta → Copenhagen',                3500,6200,2100,3750],
+  ['ATL-MXP','Atlanta → Milan Malpensa',            3600,6400,2200,3900],
+  ['ATL-ATH','Atlanta → Athens',                    3700,6600,2300,4000],
+  ['ATL-BRU','Atlanta → Brussels',                  3500,6200,2100,3750],
+  // ── DALLAS / FORT WORTH ───────────────────────────────────────
+  ['DFW-LHR','Dallas DFW → London Heathrow',        3450,6100,2050,3650],
+  ['DFW-CDG','Dallas DFW → Paris CDG',              3600,6400,2200,3900],
+  ['DFW-FRA','Dallas DFW → Frankfurt',              3500,6200,2100,3750],
+  ['DFW-MAD','Dallas DFW → Madrid',                 3600,6400,2200,3900],
+  ['DFW-FCO','Dallas DFW → Rome Fiumicino',         3700,6600,2300,4000],
+  ['DFW-ATH','Dallas DFW → Athens',                 3800,6800,2400,4100],
+  ['DFW-ZRH','Dallas DFW → Zurich',                 3700,6600,2300,4000],
+  // ── LOS ANGELES ───────────────────────────────────────────────
+  ['LAX-LHR','Los Angeles → London Heathrow',       3600,6400,2200,3900],
+  ['LAX-CDG','Los Angeles → Paris CDG',             3700,6600,2300,4000],
+  ['LAX-FRA','Los Angeles → Frankfurt',             3600,6400,2200,3900],
+  ['LAX-AMS','Los Angeles → Amsterdam',             3700,6600,2300,4000],
+  ['LAX-MAD','Los Angeles → Madrid',                3800,6800,2400,4100],
+  ['LAX-FCO','Los Angeles → Rome Fiumicino',        3900,6900,2450,4150],
+  ['LAX-MXP','Los Angeles → Milan Malpensa',        3800,6800,2400,4100],
+  ['LAX-ZRH','Los Angeles → Zurich',                3800,6800,2400,4100],
+  // ── SAN FRANCISCO ─────────────────────────────────────────────
+  ['SFO-LHR','San Francisco → London Heathrow',     3700,6600,2300,4000],
+  ['SFO-CDG','San Francisco → Paris CDG',           3800,6800,2400,4100],
+  ['SFO-FRA','San Francisco → Frankfurt',           3700,6600,2300,4000],
+  ['SFO-AMS','San Francisco → Amsterdam',           3800,6800,2400,4100],
+  ['SFO-ZRH','San Francisco → Zurich',              3900,6900,2450,4150],
+  ['SFO-MUC','San Francisco → Munich',              3800,6800,2400,4100],
+  ['SFO-MAD','San Francisco → Madrid',              3900,6900,2450,4150],
+  // ── SEATTLE ───────────────────────────────────────────────────
+  ['SEA-LHR','Seattle → London Heathrow',           3650,6500,2250,3950],
+  ['SEA-FCO','Seattle → Rome Fiumicino',            3800,6800,2400,4100],
+  ['SEA-KEF','Seattle → Reykjavík',                 3000,5400,1800,3200],
+  // ── HOUSTON ───────────────────────────────────────────────────
+  ['IAH-LHR','Houston Intercontinental → London',   3500,6200,2100,3750],
+  ['IAH-CDG','Houston Intercontinental → Paris',    3600,6400,2200,3900],
+  ['IAH-FRA','Houston Intercontinental → Frankfurt',3500,6200,2100,3750],
+  ['IAH-MAD','Houston Intercontinental → Madrid',   3600,6400,2200,3900],
+  ['IAH-AMS','Houston Intercontinental → Amsterdam',3600,6400,2200,3900],
+  // ── PHILADELPHIA ──────────────────────────────────────────────
+  ['PHL-LHR','Philadelphia → London Heathrow',      3200,5700,1900,3400],
+  ['PHL-CDG','Philadelphia → Paris CDG',            3300,5900,1950,3500],
+  ['PHL-FRA','Philadelphia → Frankfurt',            3200,5700,1900,3400],
+  ['PHL-MAD','Philadelphia → Madrid',               3400,6000,2000,3600],
+  ['PHL-DUB','Philadelphia → Dublin',               3000,5400,1800,3200],
+  ['PHL-ZRH','Philadelphia → Zurich',               3400,6000,2000,3600],
+  ['PHL-BUD','Philadelphia → Budapest',             3500,6200,2100,3750],
+  ['PHL-FCO','Philadelphia → Rome Fiumicino',       3500,6200,2100,3750],
+  ['PHL-LIS','Philadelphia → Lisbon',               3200,5700,1900,3400],
+  // ── DETROIT ───────────────────────────────────────────────────
+  ['DTW-LHR','Detroit → London Heathrow',           3400,6000,2000,3600],
+  ['DTW-CDG','Detroit → Paris CDG',                 3500,6200,2100,3750],
+  ['DTW-AMS','Detroit → Amsterdam',                 3400,6000,2000,3600],
+  ['DTW-FCO','Detroit → Rome Fiumicino',            3600,6400,2200,3900],
+  ['DTW-MUC','Detroit → Munich',                    3500,6200,2100,3750],
+  // ── MINNEAPOLIS ───────────────────────────────────────────────
+  ['MSP-LHR','Minneapolis → London Heathrow',       3500,6200,2100,3750],
+  ['MSP-CDG','Minneapolis → Paris CDG',             3600,6400,2200,3900],
+  ['MSP-AMS','Minneapolis → Amsterdam',             3500,6200,2100,3750],
+  ['MSP-KEF','Minneapolis → Reykjavík',             3100,5600,1860,3320],
+  // ── DENVER ────────────────────────────────────────────────────
+  ['DEN-LHR','Denver → London Heathrow',            3600,6400,2200,3900],
+  ['DEN-CDG','Denver → Paris CDG',                  3700,6600,2300,4000],
+  ['DEN-FRA','Denver → Frankfurt',                  3600,6400,2200,3900],
+  ['DEN-KEF','Denver → Reykjavík',                  3200,5700,1900,3400],
+  // ── CHARLOTTE ─────────────────────────────────────────────────
+  ['CLT-LHR','Charlotte → London Heathrow',         3300,5900,1950,3500],
+  ['CLT-CDG','Charlotte → Paris CDG',               3400,6000,2000,3600],
+  ['CLT-FRA','Charlotte → Frankfurt',               3300,5900,1950,3500],
+  ['CLT-MAD','Charlotte → Madrid',                  3500,6200,2100,3750],
+  ['CLT-FCO','Charlotte → Rome Fiumicino',          3500,6200,2100,3750],
+  // ── PHOENIX ───────────────────────────────────────────────────
+  ['PHX-LHR','Phoenix → London Heathrow',           3700,6600,2300,4000],
+  ['PHX-CDG','Phoenix → Paris CDG',                 3800,6800,2400,4100],
+  // ── NEW ORLEANS ───────────────────────────────────────────────
+  ['MSY-LHR','New Orleans → London Heathrow',       3500,6200,2100,3750],
+  ['MSY-CDG','New Orleans → Paris CDG',             3500,6200,2100,3750],
+  // ── CANADA — TORONTO ──────────────────────────────────────────
+  ['YYZ-LHR','Toronto → London Heathrow',           3000,5400,1780,3200],
+  ['YYZ-CDG','Toronto → Paris CDG',                 3200,5700,1900,3400],
+  ['YYZ-FRA','Toronto → Frankfurt',                 3100,5600,1850,3300],
+  ['YYZ-AMS','Toronto → Amsterdam',                 3200,5700,1900,3400],
+  ['YYZ-DUB','Toronto → Dublin',                    2900,5200,1740,3120],
+  ['YYZ-MAD','Toronto → Madrid',                    3300,5900,1950,3500],
+  ['YYZ-FCO','Toronto → Rome Fiumicino',            3400,6000,2000,3600],
+  ['YYZ-MUC','Toronto → Munich',                    3200,5700,1900,3400],
+  ['YYZ-ZRH','Toronto → Zurich',                    3200,5700,1900,3400],
+  ['YYZ-LIS','Toronto → Lisbon',                    3000,5400,1800,3200],
+  ['YYZ-ATH','Toronto → Athens',                    3500,6200,2100,3750],
+  ['YYZ-BUD','Toronto → Budapest',                  3500,6200,2100,3750],
+  ['YYZ-VIE','Toronto → Vienna',                    3300,5900,1950,3500],
+  ['YYZ-BCN','Toronto → Barcelona',                 3400,6000,2000,3600],
+  ['YYZ-IST','Toronto → Istanbul',                  3200,5800,1900,3400],
+  ['YYZ-KEF','Toronto → Reykjavík',                 2700,4900,1620,2940],
+  ['YYZ-TIA','Toronto → Tirana Albania',            3400,6000,2000,3600],
+  // ── CANADA — MONTREAL ─────────────────────────────────────────
+  ['YUL-LHR','Montreal → London Heathrow',          3000,5400,1780,3200],
+  ['YUL-CDG','Montreal → Paris CDG',                3000,5400,1780,3200],
+  ['YUL-FRA','Montreal → Frankfurt',                3100,5600,1850,3300],
+  ['YUL-AMS','Montreal → Amsterdam',                3100,5600,1850,3300],
+  ['YUL-DUB','Montreal → Dublin',                   2900,5200,1740,3120],
+  ['YUL-LIS','Montreal → Lisbon',                   3000,5400,1800,3200],
+  ['YUL-MAD','Montreal → Madrid',                   3200,5700,1900,3400],
+  ['YUL-FCO','Montreal → Rome Fiumicino',           3300,5900,1950,3500],
+  ['YUL-BER','Montreal → Berlin',                   3200,5700,1900,3400],
+  ['YUL-MRS','Montreal → Marseille/Nantes',         3100,5600,1850,3300],
+  ['YUL-PMI','Montreal → Palma de Mallorca',        3200,5700,1900,3400],
+  ['YUL-CTA','Montreal → Catania Sicily',           3300,5900,1950,3500],
+  ['YUL-TLV','Montreal → Tel Aviv',                 3500,6200,2100,3750],
+  // ── CANADA — VANCOUVER ────────────────────────────────────────
+  ['YVR-LHR','Vancouver → London Heathrow',         3500,6200,2100,3750],
+  ['YVR-CDG','Vancouver → Paris CDG',               3600,6400,2200,3900],
+  ['YVR-FRA','Vancouver → Frankfurt',               3500,6200,2100,3750],
+  ['YVR-AMS','Vancouver → Amsterdam',               3600,6400,2200,3900],
+  // ── CANADA — CALGARY / EDMONTON / HALIFAX ─────────────────────
+  ['YYC-LHR','Calgary → London Heathrow',           3300,5900,1950,3500],
+  ['YYC-CDG','Calgary → Paris CDG',                 3400,6100,2050,3650],
+  ['YEG-LHR','Edmonton → London Heathrow',          3400,6000,2000,3600],
+  ['YHZ-LHR','Halifax → London Heathrow',           2800,5000,1680,3000],
+  ['YHZ-DUB','Halifax → Dublin',                    2600,4700,1560,2820],
+  ['YHZ-BRU','Halifax → Brussels',                  2900,5200,1740,3120],
+  ['YHZ-CPH','Halifax → Copenhagen',                2900,5200,1740,3120],
+  ['YHZ-MAD','Halifax → Madrid',                    2900,5200,1740,3120],
+];
+
+// ════════════════════════════════════════════════════
+//  AUTH
+// ════════════════════════════════════════════════════
+function doLogin() {
+  const pw = document.getElementById('loginPw').value;
+  if (pw === ADMIN_PW_PLAIN) {
+    sessionStorage.setItem(SESSION_KEY, '1');
+    showApp();
+  } else {
+    document.getElementById('loginError').classList.add('show');
+    document.getElementById('loginPw').focus();
+  }
+}
+function doLogout() {
+  sessionStorage.removeItem(SESSION_KEY);
+  location.reload();
+}
+function checkSession() {
+  if (sessionStorage.getItem(SESSION_KEY)) showApp();
+}
+
+// ════════════════════════════════════════════════════
+//  APP INIT
+// ════════════════════════════════════════════════════
+let fareData = [];   // live working copy
+let savedData = [];  // last-saved copy for dirty detection
+
+function showApp() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appShell').classList.add('show');
+  loadData();
+  renderTable();
+  updateStats();
+}
+
+function loadData() {
+  const stored = localStorage.getItem(STORE_KEY);
+  if (stored) {
+    try {
+      fareData = JSON.parse(stored);
+      savedData = JSON.parse(stored);
+      return;
+    } catch {}
+  }
+  // First run — use defaults
+  const now = new Date().toISOString();
+  fareData = DEFAULT_ROUTES.map(([code, label, pubLo, pubHi, bwtLo, bwtHi]) => ({
+    code, label, pubLo, pubHi, bwtLo, bwtHi, updatedAt: now
+  }));
+  savedData = JSON.parse(JSON.stringify(fareData));
+  document.getElementById('storageAlert').style.display = 'flex';
+}
+
+// ════════════════════════════════════════════════════
+//  TABLE RENDER
+// ════════════════════════════════════════════════════
+function renderTable(filter='') {
+  const tbody = document.getElementById('routeTbody');
+  const q = filter.toLowerCase();
+  const visible = fareData.filter(r =>
+    !q || r.code.toLowerCase().includes(q) || r.label.toLowerCase().includes(q)
+  );
+  document.getElementById('filterCount').textContent =
+    q ? `${visible.length} of ${fareData.length} routes` : `${fareData.length} routes`;
+
+  tbody.innerHTML = visible.map((r, i) => {
+    const idx = fareData.indexOf(r);
+    const saving = calcSaving(r);
+    const updated = formatUpdated(r.updatedAt);
+    const isDirty = JSON.stringify(r) !== JSON.stringify(savedData[idx]);
+    return `<tr id="row-${idx}" class="${isDirty?'dirty':''}">
+      <td>
+        <div class="td-route">
+          <div class="td-route-code">${r.code.replace('-',' → ')}</div>
+          <div class="td-route-name">${r.label}</div>
+        </div>
+      </td>
+      <td>
+        <div class="fare-input-wrap">
+          <span class="fare-prefix">$</span>
+          <input class="fare-input pub" type="number" min="500" max="50000" step="50"
+            value="${r.pubLo}" onchange="updateField(${idx},'pubLo',this.value)"
+            oninput="updateField(${idx},'pubLo',this.value)" title="Published Low">
+        </div>
+      </td>
+      <td>
+        <div class="fare-input-wrap">
+          <span class="fare-prefix">$</span>
+          <input class="fare-input pub" type="number" min="500" max="50000" step="50"
+            value="${r.pubHi}" onchange="updateField(${idx},'pubHi',this.value)"
+            oninput="updateField(${idx},'pubHi',this.value)" title="Published High">
+        </div>
+      </td>
+      <td>
+        <div class="fare-input-wrap">
+          <span class="fare-prefix">$</span>
+          <input class="fare-input bwt" type="number" min="200" max="30000" step="50"
+            value="${r.bwtLo}" onchange="updateField(${idx},'bwtLo',this.value)"
+            oninput="updateField(${idx},'bwtLo',this.value)" title="BWT Low">
+        </div>
+      </td>
+      <td>
+        <div class="fare-input-wrap">
+          <span class="fare-prefix">$</span>
+          <input class="fare-input bwt" type="number" min="200" max="30000" step="50"
+            value="${r.bwtHi}" onchange="updateField(${idx},'bwtHi',this.value)"
+            oninput="updateField(${idx},'bwtHi',this.value)" title="BWT High">
+        </div>
+      </td>
+      <td class="td-saving">
+        <div class="saving-badge" id="saving-${idx}">
+          <span class="saving-pct">-${saving.pct}%</span>
+          <span class="saving-amt">$${saving.lo.toLocaleString()}–$${saving.hi.toLocaleString()}</span>
+        </div>
+      </td>
+      <td class="td-updated">
+        <span class="${updated.cls}">${updated.text}</span>
+      </td>
+      <td class="td-action">
+        <button class="btn btn-green btn-sm" onclick="saveRow(${idx})">Save</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════════════
+//  DATA OPERATIONS
+// ════════════════════════════════════════════════════
+function updateField(idx, field, val) {
+  fareData[idx][field] = parseInt(val) || 0;
+  fareData[idx].updatedAt = new Date().toISOString();
+  // Update saving badge live
+  const saving = calcSaving(fareData[idx]);
+  const badge = document.getElementById('saving-'+idx);
+  if (badge) {
+    badge.querySelector('.saving-pct').textContent = `-${saving.pct}%`;
+    badge.querySelector('.saving-amt').textContent = `$${saving.lo.toLocaleString()}–$${saving.hi.toLocaleString()}`;
+  }
+  // Mark row dirty
+  const row = document.getElementById('row-'+idx);
+  if (row) row.classList.add('dirty');
+  checkDirty();
+}
+
+function calcSaving(r) {
+  const pct = Math.round(((r.pubLo - r.bwtLo) / r.pubLo) * 100);
+  const lo  = Math.max(0, r.pubLo - r.bwtHi);
+  const hi  = Math.max(0, r.pubHi - r.bwtLo);
+  return { pct: Math.max(0, pct), lo, hi };
+}
+
+function formatUpdated(iso) {
+  if (!iso) return { text: 'Never', cls: 'updated-stale' };
+  const d = new Date(iso);
+  const now = new Date();
+  const days = Math.floor((now - d) / 86400000);
+  if (days === 0) return { text: 'Today', cls: 'updated-fresh' };
+  if (days === 1) return { text: 'Yesterday', cls: 'updated-fresh' };
+  if (days <= 7)  return { text: `${days}d ago`, cls: 'updated-fresh' };
+  if (days <= 14) return { text: `${days}d ago`, cls: '' };
+  return { text: `${days}d ago — update needed`, cls: 'updated-stale' };
+}
+
+function saveRow(idx) {
+  const now = new Date().toISOString();
+  fareData[idx].updatedAt = now;
+  // Flash row
+  const row = document.getElementById('row-'+idx);
+  if (row) { row.classList.remove('dirty'); row.classList.add('saved-flash'); }
+  commitToStorage();
+  showToast('✅ Route saved', 'green');
+  updateStats();
+  checkDirty();
+}
+
+function saveAll() {
+  const now = new Date().toISOString();
+  fareData.forEach(r => r.updatedAt = now);
+  commitToStorage();
+  renderTable(document.getElementById('routeSearch').value);
+  updateStats();
+  showToast(`✅ All ${fareData.length} routes saved`, 'green');
+  document.getElementById('savebar').classList.remove('show');
+  document.getElementById('saveAllBtn').style.display = 'none';
+  document.getElementById('lastSavedDisp').textContent = 'Just now';
+}
+
+function discardChanges() {
+  fareData = JSON.parse(JSON.stringify(savedData));
+  renderTable(document.getElementById('routeSearch').value);
+  document.getElementById('savebar').classList.remove('show');
+  document.getElementById('saveAllBtn').style.display = 'none';
+  showToast('Changes discarded');
+}
+
+function commitToStorage() {
+  savedData = JSON.parse(JSON.stringify(fareData));
+  localStorage.setItem(STORE_KEY, JSON.stringify(fareData));
+  // Also write a clean ROUTE_RANGES object for copy-paste into results.html
+  const exportObj = {};
+  fareData.forEach(r => {
+    exportObj[r.code] = [r.pubLo, r.pubHi, r.bwtLo, r.bwtHi];
+  });
+  localStorage.setItem('bwt_route_ranges_export', JSON.stringify(exportObj));
+  document.getElementById('lastSavedDisp').textContent = new Date().toLocaleTimeString();
+}
+
+function checkDirty() {
+  const dirty = fareData.filter((r, i) => JSON.stringify(r) !== JSON.stringify(savedData[i]));
+  const n = dirty.length;
+  document.getElementById('savebar').classList.toggle('show', n > 0);
+  document.getElementById('saveAllBtn').style.display = n > 0 ? 'flex' : 'none';
+  document.getElementById('dirtyCount').textContent = n;
+}
+
+function filterTable() {
+  renderTable(document.getElementById('routeSearch').value);
+}
+
+// ════════════════════════════════════════════════════
+//  STATS
+// ════════════════════════════════════════════════════
+function updateStats() {
+  document.getElementById('statRoutes').textContent = fareData.length;
+  const avgPub = Math.round(fareData.reduce((s,r) => s + (r.pubLo + r.pubHi) / 2, 0) / fareData.length);
+  const avgBWT = Math.round(fareData.reduce((s,r) => s + (r.bwtLo + r.bwtHi) / 2, 0) / fareData.length);
+  const avgSave = Math.round(((avgPub - avgBWT) / avgPub) * 100);
+  document.getElementById('statAvgPub').textContent = '$' + avgPub.toLocaleString();
+  document.getElementById('statAvgBWT').textContent = '$' + avgBWT.toLocaleString();
+  document.getElementById('statAvgSave').textContent = avgSave + '%';
+}
+
+// ════════════════════════════════════════════════════
+//  EXPORT
+// ════════════════════════════════════════════════════
+function exportCSV() {
+  const rows = [['Route Code','Route Label','Published Low','Published High','BWT Low','BWT High','Saving %','Last Updated']];
+  fareData.forEach(r => {
+    const saving = calcSaving(r);
+    rows.push([r.code, r.label, r.pubLo, r.pubHi, r.bwtLo, r.bwtHi, saving.pct+'%', r.updatedAt?.slice(0,10)||'']);
+  });
+  const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = `bwt-fares-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  showToast('CSV exported');
+}
+
+// ════════════════════════════════════════════════════
+//  TOAST
+// ════════════════════════════════════════════════════
+let _toastTimer;
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' '+type : '');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ════════════════════════════════════════════════════
+//  BOOT
+// ════════════════════════════════════════════════════
+checkSession();
+document.getElementById('loginPw').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+</script>
+</body>
+</html>

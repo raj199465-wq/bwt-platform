@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BWT Agent Cockpit — Internal Only</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07090f;--bg2:#0b0e18;--bg3:#10141f;--bg4:#151b28;--bg5:#1c2435;
+  --gold:#c8a84b;--gold2:#e6c86a;--goldb:rgba(200,168,75,.2);--golddim:rgba(200,168,75,.08);
+  --green:#00d48a;--greenb:rgba(0,212,138,.1);--greenbr:rgba(0,212,138,.2);
+  --red:#ff4757;--redb:rgba(255,71,87,.1);--redbr:rgba(255,71,87,.2);
+  --blue:#3d8ef0;--blueb:rgba(61,142,240,.1);
+  --amber:#f0a030;--amberb:rgba(240,160,48,.1);
+  --text:#c8d4e8;--muted:rgba(200,212,232,.4);--dim:rgba(200,212,232,.18);
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.12);
+  --r:10px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',sans-serif;font-weight:300;
+  background:var(--bg);color:var(--text);line-height:1.5;
+  min-height:100vh;
+}
+/* grain overlay */
+body::after{
+  content:'';position:fixed;inset:0;z-index:9000;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.025'/%3E%3C/svg%3E");
+  opacity:.4;
+}
+button{cursor:pointer;border:none;font-family:inherit}
+input,select,textarea{font-family:inherit}
+
+/* ══ TOPBAR ══ */
+.topbar{
+  height:52px;background:var(--bg2);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;position:sticky;top:0;z-index:500;
+}
+.topbar-brand{
+  font-family:'Syne',sans-serif;font-size:13px;font-weight:700;
+  letter-spacing:.12em;color:var(--gold);display:flex;align-items:center;gap:10px;
+}
+.topbar-brand::before{
+  content:'⬡';font-size:18px;
+}
+.topbar-tag{
+  font-size:9px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--muted);border-left:1px solid var(--border);padding-left:12px;margin-left:2px;
+}
+.topbar-status{
+  display:flex;align-items:center;gap:6px;
+  font-size:11px;font-weight:600;color:var(--green);
+}
+.topbar-status::before{
+  content:'';width:6px;height:6px;border-radius:50%;background:var(--green);
+  animation:pulse 2s ease infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.topbar-warning{
+  font-size:10px;font-weight:700;letter-spacing:.1em;
+  background:var(--redb);border:1px solid var(--redbr);
+  color:var(--red);padding:4px 12px;border-radius:4px;
+}
+
+/* ══ LAYOUT ══ */
+.layout{display:grid;grid-template-columns:340px 1fr;min-height:calc(100vh - 52px)}
+.sidebar{
+  background:var(--bg2);border-right:1px solid var(--border);
+  padding:24px;overflow-y:auto;
+}
+.main{padding:24px;overflow-y:auto}
+
+/* ══ SECTION HEADERS ══ */
+.sec-hdr{
+  font-family:'Syne',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--muted);
+  margin-bottom:14px;display:flex;align-items:center;gap:8px;
+}
+.sec-hdr::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ══ SEARCH FORM ══ */
+.sf{margin-bottom:12px}
+.sf label{
+  display:block;font-size:9.5px;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:6px;
+}
+.sf-input{
+  width:100%;background:var(--bg3);border:1px solid var(--border2);
+  padding:10px 12px;color:var(--text);font-size:13px;outline:none;
+  border-radius:var(--r);transition:border-color .2s;
+}
+.sf-input:focus{border-color:var(--goldb)}
+.sf-input::placeholder{color:var(--dim)}
+.sf-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sf-select{
+  width:100%;background:var(--bg3);border:1px solid var(--border2);
+  padding:10px 12px;color:var(--text);font-size:13px;outline:none;
+  border-radius:var(--r);appearance:none;cursor:pointer;
+}
+
+/* ══ HACK TOGGLES ══ */
+.hack-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.hack-toggle{
+  display:flex;align-items:flex-start;gap:10px;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:var(--r);padding:12px;cursor:pointer;
+  transition:border-color .2s,background .2s;
+}
+.hack-toggle:hover{border-color:var(--border2)}
+.hack-toggle.active{border-color:var(--goldb);background:var(--golddim)}
+.ht-cb{
+  width:18px;height:18px;border:2px solid var(--border2);border-radius:4px;
+  flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;
+  transition:all .15s;
+}
+.hack-toggle.active .ht-cb{background:var(--gold);border-color:var(--gold)}
+.ht-cb svg{width:10px;height:10px;color:var(--bg);stroke-width:3}
+.ht-body{}
+.ht-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px}
+.ht-desc{font-size:10.5px;color:var(--muted);line-height:1.5}
+
+/* ══ RUN BUTTON ══ */
+.run-btn{
+  width:100%;padding:14px;background:var(--gold);color:var(--bg);
+  font-family:'Syne',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;border-radius:var(--r);
+  transition:background .2s;display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.run-btn:hover{background:var(--gold2)}
+.run-btn:disabled{opacity:.5;cursor:not-allowed}
+.spin{
+  width:14px;height:14px;border-radius:50%;
+  border:2px solid rgba(7,9,15,.3);border-top-color:var(--bg);
+  animation:spin .7s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ══ PROGRESS LOG ══ */
+.progress-log{
+  background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);
+  padding:14px;margin-bottom:20px;
+  font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);
+  max-height:140px;overflow-y:auto;display:none;
+}
+.progress-log.show{display:block}
+.log-line{margin-bottom:3px;line-height:1.5}
+.log-line.ok{color:var(--green)}
+.log-line.err{color:var(--red)}
+.log-line.info{color:var(--gold)}
+.log-line.dim{color:var(--dim)}
+
+/* ══ RESULTS HEADER ══ */
+.results-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:20px;flex-wrap:wrap;gap:12px;
+}
+.results-title{
+  font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:var(--text);
+}
+.results-meta{font-size:11px;color:var(--muted);margin-top:3px}
+.results-sort{display:flex;gap:6px}
+.sort-btn{
+  padding:6px 14px;background:var(--bg3);border:1px solid var(--border);
+  border-radius:6px;font-size:11px;font-weight:600;color:var(--muted);
+  transition:all .15s;
+}
+.sort-btn.on{border-color:var(--goldb);color:var(--gold);background:var(--golddim)}
+
+/* ══ SUMMARY STRIP ══ */
+.summary-strip{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:10px;
+  margin-bottom:24px;
+}
+.stat-card{
+  background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);
+  padding:14px 16px;
+}
+.stat-label{font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.stat-val{font-family:'Syne',sans-serif;font-size:22px;font-weight:700}
+.stat-val.green{color:var(--green)}
+.stat-val.gold{color:var(--gold)}
+.stat-val.red{color:var(--red)}
+.stat-sub{font-size:10px;color:var(--muted);margin-top:2px}
+
+/* ══ RESULT CARDS ══ */
+.result-section{margin-bottom:28px}
+.rs-hdr{
+  font-family:'Syne',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;
+  padding:10px 14px;border-radius:var(--r) var(--r) 0 0;
+  display:flex;align-items:center;gap:10px;
+}
+.rs-hdr.throwaway{background:rgba(200,168,75,.12);color:var(--gold);border:1px solid var(--goldb);border-bottom:none}
+.rs-hdr.nearby{background:rgba(61,142,240,.08);color:var(--blue);border:1px solid rgba(61,142,240,.2);border-bottom:none}
+.rs-hdr.calendar{background:rgba(0,212,138,.08);color:var(--green);border:1px solid var(--greenbr);border-bottom:none}
+.rs-hdr.hubr{background:rgba(240,160,48,.08);color:var(--amber);border:1px solid rgba(240,160,48,.2);border-bottom:none}
+.rs-hdr.reverse{background:rgba(139,92,246,.08);color:#a78bfa;border:1px solid rgba(139,92,246,.2);border-bottom:none}
+.rs-hdr.openjaw{background:rgba(236,72,153,.08);color:#f472b6;border:1px solid rgba(236,72,153,.2);border-bottom:none}
+.rs-hdr-count{
+  margin-left:auto;font-size:10px;font-weight:700;
+  background:rgba(255,255,255,.08);padding:2px 8px;border-radius:100px;
+}
+
+.result-list{
+  border:1px solid var(--border);border-radius:0 0 var(--r) var(--r);
+  overflow:hidden;
+}
+.result-item{
+  display:grid;align-items:center;gap:14px;
+  padding:14px 16px;border-bottom:1px solid var(--border);
+  transition:background .15s;
+  animation:fadeUp .3s ease both;
+}
+.result-item:last-child{border-bottom:none}
+.result-item:hover{background:var(--bg3)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* Throwaway item grid */
+.ri-throwaway{grid-template-columns:24px 1fr 1fr 120px 120px 140px}
+/* Nearby item grid */
+.ri-nearby{grid-template-columns:24px 1fr 1fr 120px 140px}
+/* Calendar item grid */
+.ri-calendar{grid-template-columns:24px 140px 1fr 120px 140px}
+/* Hub item grid */
+.ri-hub{grid-template-columns:24px 1fr 1fr 120px 140px}
+/* Generic item grid */
+.ri-generic{grid-template-columns:24px 1fr 120px 120px 140px}
+
+.ri-rank{
+  font-family:'DM Mono',monospace;font-size:11px;font-weight:700;
+  color:var(--dim);text-align:center;
+}
+.ri-rank.top{color:var(--gold)}
+
+.ri-route{display:flex;flex-direction:column;gap:2px}
+.ri-route-main{font-size:13px;font-weight:600;color:var(--text)}
+.ri-route-sub{font-size:11px;color:var(--muted)}
+
+.ri-carrier{display:flex;flex-direction:column;gap:2px}
+.ri-carrier-name{font-size:12px;font-weight:500;color:var(--text)}
+.ri-carrier-fn{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)}
+
+.ri-price{
+  font-family:'DM Mono',monospace;font-size:15px;font-weight:700;
+  color:var(--text);text-align:right;
+}
+.ri-price.best{color:var(--green)}
+.ri-price sub{font-size:10px;font-weight:400;color:var(--muted);display:block;margin-top:1px}
+
+.ri-saving{
+  display:flex;flex-direction:column;gap:3px;align-items:flex-end;
+}
+.saving-pill{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 9px;border-radius:100px;font-size:10px;font-weight:700;
+}
+.saving-pill.green{background:var(--greenb);border:1px solid var(--greenbr);color:var(--green)}
+.saving-pill.gold{background:var(--golddim);border:1px solid var(--goldb);color:var(--gold)}
+.saving-pill.amber{background:var(--amberb);border:1px solid rgba(240,160,48,.2);color:var(--amber)}
+.saving-pill.red{background:var(--redb);border:1px solid var(--redbr);color:var(--red)}
+.saving-note{font-size:9.5px;color:var(--muted)}
+
+.ri-action{display:flex;gap:6px;justify-content:flex-end}
+.btn-select{
+  padding:7px 14px;background:var(--bg4);border:1px solid var(--border2);
+  border-radius:6px;font-size:11px;font-weight:600;color:var(--text);
+  transition:all .15s;
+}
+.btn-select:hover{border-color:var(--goldb);color:var(--gold);background:var(--golddim)}
+.btn-select.selected{background:var(--gold);color:var(--bg);border-color:var(--gold)}
+
+/* Rules checklist */
+.rules-check{
+  display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;
+}
+.rc{font-size:9.5px;padding:1px 7px;border-radius:100px;font-weight:600}
+.rc.ok{background:var(--greenb);color:var(--green)}
+.rc.warn{background:var(--amberb);color:var(--amber)}
+.rc.fail{background:var(--redb);color:var(--red)}
+
+/* Selected option panel */
+.selected-panel{
+  background:var(--bg3);border:1px solid var(--goldb);border-radius:var(--r);
+  padding:20px;margin-bottom:24px;display:none;
+}
+.selected-panel.show{display:block;animation:fadeUp .3s ease both}
+.sp-hdr{
+  font-family:'Syne',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--gold);
+  margin-bottom:14px;display:flex;align-items:center;gap:8px;
+}
+.sp-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:16px}
+.sp-field{display:flex;flex-direction:column;gap:4px}
+.sp-label{font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.sp-val{font-size:13px;font-weight:600;color:var(--text)}
+.sp-val.highlight{color:var(--green);font-family:'DM Mono',monospace;font-size:16px}
+.copy-quote-btn{
+  padding:10px 20px;background:var(--green);color:var(--bg);
+  border-radius:6px;font-size:11px;font-weight:700;font-family:'Syne',sans-serif;
+  letter-spacing:.1em;text-transform:uppercase;transition:background .2s;
+  display:inline-flex;align-items:center;gap:7px;
+}
+.copy-quote-btn:hover{background:#00e89a}
+
+/* Empty state */
+.empty-state{
+  text-align:center;padding:60px 20px;color:var(--muted);
+}
+.empty-ico{font-size:36px;margin-bottom:12px;opacity:.4}
+.empty-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--dim);margin-bottom:6px}
+.empty-sub{font-size:12px;line-height:1.7}
+
+/* Tooltip */
+.tip{
+  position:relative;cursor:help;
+  border-bottom:1px dashed var(--dim);
+}
+.tip:hover::after{
+  content:attr(data-tip);
+  position:absolute;bottom:120%;left:50%;transform:translateX(-50%);
+  background:var(--bg5);border:1px solid var(--border2);
+  color:var(--text);font-size:11px;padding:6px 10px;border-radius:6px;
+  white-space:nowrap;z-index:100;pointer-events:none;
+}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);
+  background:var(--bg5);border:1px solid var(--border2);
+  color:var(--text);padding:10px 20px;border-radius:8px;
+  font-size:12px;font-weight:500;z-index:9999;
+  transition:transform .3s cubic-bezier(.22,1,.36,1);
+  white-space:nowrap;opacity:0;pointer-events:none;
+}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.toast.green{border-color:var(--greenbr);color:var(--green)}
+
+/* Column headers */
+.col-hdr{
+  display:grid;gap:14px;padding:8px 16px;
+  font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--dim);background:var(--bg2);
+  border-bottom:1px solid var(--border);
+}
+.ri-throwaway.col-hdr{grid-template-columns:24px 1fr 1fr 120px 120px 140px}
+.ri-nearby.col-hdr{grid-template-columns:24px 1fr 1fr 120px 140px}
+.ri-calendar.col-hdr{grid-template-columns:24px 140px 1fr 120px 140px}
+.ri-hub.col-hdr{grid-template-columns:24px 1fr 1fr 120px 140px}
+.ri-generic.col-hdr{grid-template-columns:24px 1fr 120px 120px 140px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-brand">
+    BWT
+    <span class="topbar-tag">Agent Cockpit</span>
+  </div>
+  <div class="topbar-status">Live · SearchAPI Connected</div>
+  <div class="topbar-warning">⚠ INTERNAL ONLY — DO NOT SHARE</div>
+</div>
+
+<div class="layout">
+  <!-- ══ SIDEBAR ══ -->
+  <div class="sidebar">
+    <div class="sec-hdr">Quote Request</div>
+
+    <div class="sf">
+      <label>Origin Airport</label>
+      <input class="sf-input" id="origInput" placeholder="JFK" maxlength="3"
+        oninput="this.value=this.value.toUpperCase()">
+    </div>
+    <div class="sf">
+      <label>Destination Airport</label>
+      <input class="sf-input" id="destInput" placeholder="FRA" maxlength="3"
+        oninput="this.value=this.value.toUpperCase()">
+    </div>
+    <div class="sf-row" style="margin-bottom:12px">
+      <div class="sf">
+        <label>Departure Date</label>
+        <input type="date" class="sf-input" id="depDate">
+      </div>
+      <div class="sf">
+        <label>Passengers</label>
+        <select class="sf-select" id="paxCount">
+          <option value="1">1 Adult</option>
+          <option value="2">2 Adults</option>
+          <option value="3">3 Adults</option>
+          <option value="4">4 Adults</option>
+        </select>
+      </div>
+    </div>
+    <div class="sf">
+      <label>Cabin Class</label>
+      <select class="sf-select" id="cabinClass">
+        <option value="business">Business Class</option>
+        <option value="first">First Class</option>
+        <option value="premium_economy">Premium Economy</option>
+        <option value="economy">Economy</option>
+      </select>
+    </div>
+    <div class="sf">
+      <label>Client Name (for quote)</label>
+      <input class="sf-input" id="clientName" placeholder="e.g. Sarah Mitchell">
+    </div>
+    <div class="sf" style="margin-bottom:20px">
+      <label>Notes</label>
+      <input class="sf-input" id="clientNotes" placeholder="Seat pref, FF numbers, flexibility…">
+    </div>
+
+    <div class="sec-hdr" style="margin-top:4px">Hacks to Run</div>
+    <div class="hack-grid" id="hackGrid">
+
+      <div class="hack-toggle active" data-hack="throwaway" onclick="toggleHack(this)">
+        <div class="ht-cb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="ht-body">
+          <div class="ht-title">🎯 Throwaway Ticket</div>
+          <div class="ht-desc">Book real leg + cheap throwaway on separate airline 24-48hrs later. Client flies Ticket 1 only.</div>
+        </div>
+      </div>
+
+      <div class="hack-toggle active" data-hack="nearby" onclick="toggleHack(this)">
+        <div class="ht-cb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="ht-body">
+          <div class="ht-title">📍 Nearby Airports</div>
+          <div class="ht-desc">Search all airports within 80mi of origin and destination. Often $200–500 cheaper.</div>
+        </div>
+      </div>
+
+      <div class="hack-toggle active" data-hack="calendar" onclick="toggleHack(this)">
+        <div class="ht-cb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="ht-body">
+          <div class="ht-title">📅 Date Flexibility ±3 Days</div>
+          <div class="ht-desc">Check 7-day window around requested date. Shifting one day can save $400+.</div>
+        </div>
+      </div>
+
+      <div class="hack-toggle active" data-hack="hub" onclick="toggleHack(this)">
+        <div class="ht-cb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="ht-body">
+          <div class="ht-title">⚡ Hub Routing (QR/EK/AY)</div>
+          <div class="ht-desc">Route via Doha, Dubai or Helsinki. Gulf/Finnish carriers price business aggressively.</div>
+        </div>
+      </div>
+
+      <div class="hack-toggle active" data-hack="reverse" onclick="toggleHack(this)">
+        <div class="ht-cb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="ht-body">
+          <div class="ht-title">🔄 Reverse Direction Search</div>
+          <div class="ht-desc">Search destination→origin. Airlines price directions differently by demand.</div>
+        </div>
+      </div>
+
+      <div class="hack-toggle active" data-hack="openjaw" onclick="toggleHack(this)">
+        <div class="ht-cb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="ht-body">
+          <div class="ht-title">🔀 Open Jaw Routing</div>
+          <div class="ht-desc">Fly into dest city, return from nearby alternate. Combined often 15-20% cheaper.</div>
+        </div>
+      </div>
+
+      <div class="hack-toggle active" data-hack="mixedcabin" onclick="toggleHack(this)">
+        <div class="ht-cb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="ht-body">
+          <div class="ht-title">✈️ Mixed Cabin</div>
+          <div class="ht-desc">Business on transatlantic long-haul, Economy on short connector. Same experience where it counts.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <button class="run-btn" id="runBtn" onclick="runCockpit()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      Run All Checks
+    </button>
+  </div>
+
+  <!-- ══ MAIN RESULTS ══ -->
+  <div class="main" id="mainArea">
+    <!-- Empty state -->
+    <div class="empty-state" id="emptyState">
+      <div class="empty-ico">⬡</div>
+      <div class="empty-title">Agent Cockpit Ready</div>
+      <div class="empty-sub">
+        Enter the client's route and departure date on the left.<br>
+        Select which hacks to run, then hit Run All Checks.<br><br>
+        <span style="color:var(--dim);font-size:11px">All results are internal only — never share this page with clients.</span>
+      </div>
+    </div>
+
+    <!-- Results (hidden until run) -->
+    <div id="resultsArea" style="display:none">
+
+      <!-- Progress log -->
+      <div class="progress-log" id="progressLog"></div>
+
+      <!-- Selected option panel -->
+      <div class="selected-panel" id="selectedPanel">
+        <div class="sp-hdr">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Selected Option
+        </div>
+        <div class="sp-grid" id="selectedGrid"></div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button class="copy-quote-btn" onclick="copyQuote()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy Quote to Clipboard
+          </button>
+          <button onclick="clearSelected()" style="padding:10px 16px;background:var(--bg4);border:1px solid var(--border);border-radius:6px;font-size:11px;color:var(--muted)">Clear</button>
+        </div>
+      </div>
+
+      <!-- Summary strip -->
+      <div class="summary-strip" id="summaryStrip"></div>
+
+      <!-- Results sections -->
+      <div id="resultsSections"></div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══ STATE ══
+const SEARCHAPI_KEY = ''; // Set via env or prompt — cockpit calls backend
+let activeHacks = new Set(['throwaway','nearby','calendar','hub','reverse','openjaw','mixedcabin']);
+let allResults = [];
+let selectedOption = null;
+let searchParams = {};
+
+// ══ INIT ══
+(function(){
+  const today = new Date();
+  const dep = new Date(today); dep.setDate(dep.getDate()+21);
+  document.getElementById('depDate').value = dep.toISOString().slice(0,10);
+  document.getElementById('depDate').min = today.toISOString().slice(0,10);
+})();
+
+// ══ NEARBY AIRPORT MAP ══
+const NEARBY = {
+  JFK:['JFK','EWR','LGA'], EWR:['EWR','JFK','LGA'], LGA:['LGA','JFK','EWR'],
+  BOS:['BOS'], IAD:['IAD','DCA','BWI'], DCA:['DCA','IAD','BWI'], BWI:['BWI','DCA','IAD'],
+  MIA:['MIA','FLL'], FLL:['FLL','MIA'],
+  LAX:['LAX','BUR','LGB','ONT','SNA'], SFO:['SFO','OAK','SJC'],
+  ORD:['ORD','MDW'], ATL:['ATL'], DFW:['DFW','DAL'],
+  YYZ:['YYZ'], YUL:['YUL'],
+  LHR:['LHR','LGW','LCY','STN'], LGW:['LGW','LHR','LCY'],
+  CDG:['CDG','ORY'], FRA:['FRA'], MUC:['MUC'],
+  AMS:['AMS'], ZRH:['ZRH','GVA'], VIE:['VIE'],
+  MAD:['MAD','BCN'], BCN:['BCN','MAD'],
+  FCO:['FCO','CIA'], MXP:['MXP','LIN'],
+  CPH:['CPH'], ARN:['ARN'], OSL:['OSL'],
+  DXB:['DXB','AUH','SHJ'], DOH:['DOH'],
+  NRT:['NRT','HND'], ICN:['ICN'], SIN:['SIN'],
+};
+
+// ══ THROWAWAY CANDIDATES ══
+// Scored by region — higher score = more likely to drop price
+const THROWAWAY_CANDIDATES = {
+  // From European destinations — what to throw away to
+  EUR: [
+    {city:'SDQ',name:'Santo Domingo',score:90,season:[11,12,1,2,3,4],region:'Caribbean'},
+    {city:'PUJ',name:'Punta Cana',score:90,season:[11,12,1,2,3,4],region:'Caribbean'},
+    {city:'MBJ',name:'Montego Bay',score:85,season:[11,12,1,2,3,4],region:'Caribbean'},
+    {city:'CUN',name:'Cancun',score:88,season:[11,12,1,2,3,4,7,8],region:'Caribbean/Mexico'},
+    {city:'AUA',name:'Aruba',score:80,season:[11,12,1,2,3],region:'Caribbean'},
+    {city:'CUR',name:'Curacao',score:75,season:[11,12,1,2,3],region:'Caribbean'},
+    {city:'BGI',name:'Barbados',score:78,season:[12,1,2,3,4],region:'Caribbean'},
+    {city:'BKK',name:'Bangkok',score:85,season:[11,12,1,2,3],region:'SE Asia'},
+    {city:'DPS',name:'Bali',score:82,season:[6,7,8,9,10],region:'SE Asia'},
+    {city:'KUL',name:'Kuala Lumpur',score:78,season:[11,12,1,2],region:'SE Asia'},
+    {city:'CMB',name:'Colombo',score:75,season:[11,12,1,2,3],region:'South Asia'},
+    {city:'NBO',name:'Nairobi',score:70,season:[1,2,7,8],region:'East Africa'},
+    {city:'CMN',name:'Casablanca',score:65,season:[3,4,5,9,10,11],region:'N Africa'},
+    {city:'RAK',name:'Marrakech',score:68,season:[3,4,5,9,10,11],region:'N Africa'},
+    {city:'TFS',name:'Tenerife',score:72,season:[10,11,12,1,2,3],region:'Canaries'},
+    {city:'LPA',name:'Gran Canaria',score:70,season:[10,11,12,1,2,3],region:'Canaries'},
+    {city:'GRU',name:'São Paulo',score:68,season:[11,12,1,2,3],region:'S America'},
+    {city:'BOG',name:'Bogotá',score:65,season:[12,1,2,3],region:'S America'},
+  ],
+  // From US/Canada destinations — what to throw away to
+  NAM: [
+    {city:'SDQ',name:'Santo Domingo',score:90,season:[11,12,1,2,3,4],region:'Caribbean'},
+    {city:'MBJ',name:'Montego Bay',score:88,season:[11,12,1,2,3,4],region:'Caribbean'},
+    {city:'NAS',name:'Nassau',score:85,season:[11,12,1,2,3,4],region:'Caribbean'},
+    {city:'PUJ',name:'Punta Cana',score:88,season:[11,12,1,2,3,4],region:'Caribbean'},
+    {city:'CUN',name:'Cancun',score:90,season:[11,12,1,2,3,4,7,8],region:'Mexico'},
+    {city:'GCM',name:'Grand Cayman',score:80,season:[11,12,1,2,3],region:'Caribbean'},
+    {city:'AUA',name:'Aruba',score:78,season:[11,12,1,2,3],region:'Caribbean'},
+    {city:'BOG',name:'Bogotá',score:72,season:[12,1,2,3],region:'S America'},
+    {city:'LIM',name:'Lima',score:68,season:[11,12,1,2,3],region:'S America'},
+    {city:'PTY',name:'Panama City',score:75,season:[12,1,2,3,4],region:'C America'},
+    {city:'GUA',name:'Guatemala City',score:65,season:[11,12,1,2,3],region:'C America'},
+    {city:'MCO',name:'Orlando',score:70,season:[6,7,8,12,1,2],region:'Domestic US'},
+    {city:'MIA',name:'Miami',score:68,season:[11,12,1,2,3],region:'Domestic US'},
+  ],
+  // From Middle East hubs
+  ME: [
+    {city:'BOM',name:'Mumbai',score:88,season:[10,11,12,1,2,3],region:'South Asia'},
+    {city:'DEL',name:'Delhi',score:85,season:[10,11,12,1,2],region:'South Asia'},
+    {city:'CMB',name:'Colombo',score:80,season:[11,12,1,2,3],region:'South Asia'},
+    {city:'DAC',name:'Dhaka',score:75,season:[10,11,12,1,2],region:'South Asia'},
+    {city:'NBO',name:'Nairobi',score:82,season:[1,2,7,8],region:'East Africa'},
+    {city:'ADD',name:'Addis Ababa',score:70,season:[1,2,7,8],region:'East Africa'},
+    {city:'BKK',name:'Bangkok',score:85,season:[11,12,1,2,3],region:'SE Asia'},
+    {city:'MNL',name:'Manila',score:80,season:[11,12,1,2,3],region:'SE Asia'},
+    {city:'KTM',name:'Kathmandu',score:72,season:[10,11,3,4],region:'South Asia'},
+  ],
+  // From East Asia hubs
+  ASIA: [
+    {city:'BKK',name:'Bangkok',score:88,season:[11,12,1,2,3],region:'SE Asia'},
+    {city:'SIN',name:'Singapore',score:85,season:[1,2,3,4,5],region:'SE Asia'},
+    {city:'DPS',name:'Bali',score:82,season:[6,7,8,9],region:'SE Asia'},
+    {city:'KUL',name:'Kuala Lumpur',score:80,season:[11,12,1,2],region:'SE Asia'},
+    {city:'SYD',name:'Sydney',score:78,season:[12,1,2,3],region:'Pacific'},
+    {city:'MEL',name:'Melbourne',score:75,season:[12,1,2,3],region:'Pacific'},
+    {city:'AKL',name:'Auckland',score:72,season:[12,1,2,3],region:'Pacific'},
+    {city:'GUM',name:'Guam',score:68,season:[10,11,12,1,2],region:'Pacific'},
+  ],
+};
+
+// Destination → region mapping
+function getDestRegion(dest) {
+  const EUR_DESTS = ['LHR','LGW','CDG','FRA','AMS','ZRH','VIE','MAD','BCN','FCO','MXP','CPH','ARN','OSL','DUB','LIS','ATH','IST','MUC','BRU','GVA','HEL','WAW','PRG','BUD'];
+  const ME_DESTS  = ['DXB','AUH','DOH','RUH','JED','AMM','BEY','TLV','MCT','KWI'];
+  const ASIA_DESTS= ['NRT','HND','ICN','PEK','PVG','HKG','TPE','SIN','BKK','KUL','CGK'];
+  if (EUR_DESTS.includes(dest)) return 'EUR';
+  if (ME_DESTS.includes(dest))  return 'ME';
+  if (ASIA_DESTS.includes(dest))return 'ASIA';
+  return 'NAM'; // default US/Canada destinations
+}
+
+// Score throwaway city for given destination and travel month
+function scoreThrowaway(dest, candidate, travelMonth) {
+  let score = candidate.score;
+  // Seasonal bonus
+  if (candidate.season.includes(travelMonth)) score += 20;
+  else if (candidate.season.includes(((travelMonth-2+12)%12)+1) ||
+           candidate.season.includes(travelMonth%12+1)) score += 8; // adjacent month
+  else score -= 15; // off-season penalty
+  // Don't throw away to same region as destination
+  if (dest.startsWith('EUR') && candidate.region.includes('Europe')) score -= 30;
+  return Math.max(0, score);
+}
+
+// Hub routing options
+const HUB_ROUTES = [
+  {airline:'Qatar Airways',code:'QR',hub:'DOH',benefit:'Aggressive business pricing, flat bed, Q-Suite on widebody routes'},
+  {airline:'Emirates',code:'EK',hub:'DXB',benefit:'Competitive business class, ice entertainment, generous luggage'},
+  {airline:'Finnair',code:'AY',hub:'HEL',benefit:'Star Alliance, often cheapest business to Asia/Europe from North America'},
+  {airline:'Turkish Airlines',code:'TK',hub:'IST',benefit:'Competitive pricing, extensive European connections'},
+  {airline:'Etihad',code:'EY',hub:'AUH',benefit:'Good value business, Residence product on A380'},
+];
+
+// Open jaw alternate cities
+const OPENJAW_ALTS = {
+  LHR:['MAN','EDI','GLA','BHX'],LGW:['LHR','MAN','EDI'],
+  CDG:['ORY','LYS','NTE','BOD'],FRA:['MUC','BER','DUS','STR'],
+  AMS:['BRU','ANR','EIN'],ZRH:['GVA','BSL','BRN'],
+  MAD:['BCN','VLC','AGP','SVQ'],FCO:['MXP','NAP','PSA'],
+  MXP:['FCO','VCE','BGY'],DXB:['AUH','SHJ'],DOH:['BAH','MCT'],
+  NRT:['HND','KIX','NGO'],ICN:['PUS','CJU'],SIN:['KUL','BKK'],
+};
+
+// ══ TOGGLE HACKS ══
+function toggleHack(el) {
+  const hack = el.dataset.hack;
+  el.classList.toggle('active');
+  const cb = el.querySelector('.ht-cb');
+  if (el.classList.contains('active')) {
+    activeHacks.add(hack);
+    cb.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>';
+  } else {
+    activeHacks.delete(hack);
+    cb.innerHTML = '';
+  }
+}
+
+// ══ LOG ══
+function log(msg, type='dim') {
+  const log = document.getElementById('progressLog');
+  log.classList.add('show');
+  const line = document.createElement('div');
+  line.className = 'log-line ' + type;
+  const ts = new Date().toLocaleTimeString('en-US',{hour12:false,hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  line.textContent = `[${ts}] ${msg}`;
+  log.appendChild(line);
+  log.scrollTop = log.scrollHeight;
+}
+
+// ══ SIMULATE API CALL (in production this calls /.netlify/functions/search) ══
+async function searchFlights(orig, dest, date, cabin, opts={}) {
+  // In production: real SearchAPI call via your Netlify/Render function
+  // For now: realistic simulated data based on route characteristics
+  await new Promise(r => setTimeout(r, 300 + Math.random()*400));
+  
+  const basePrice = getBasePrice(orig, dest, cabin);
+  const variance = opts.cheaperHack ? 0.65 + Math.random()*0.2 : 0.85 + Math.random()*0.3;
+  const price = Math.round(basePrice * variance / 50) * 50;
+  
+  const airlines = getAirlinesForRoute(orig, dest, opts.preferredCarrier);
+  const airline = airlines[Math.floor(Math.random()*airlines.length)];
+  
+  return {
+    price,
+    airline: airline.name,
+    code: airline.code,
+    flightNumber: airline.code + (100+Math.floor(Math.random()*899)),
+    dep: orig, arr: dest, date,
+    stops: opts.hubRoute ? 1 : (Math.random()>0.4 ? 0 : 1),
+    duration: getDuration(orig, dest),
+    cabin,
+  };
+}
+
+function getBasePrice(orig, dest, cabin) {
+  // Rough base prices by region pair
+  const pairs = {
+    'US-EUR': 3600, 'EUR-US': 3600,
+    'US-ASIA': 4800, 'ASIA-US': 4800,
+    'US-ME': 4200, 'ME-US': 4200,
+    'EUR-ASIA': 3200, 'ASIA-EUR': 3200,
+    'EUR-ME': 2800, 'ME-EUR': 2800,
+    'US-LAT': 2400, 'LAT-US': 2400,
+    'ASIA-ASIA': 1800,
+    'EUR-EUR': 1600,
+    'DEFAULT': 3200,
+  };
+  const r1 = getRegion(orig), r2 = getRegion(dest);
+  const key = r1+'-'+r2;
+  const base = pairs[key] || pairs['DEFAULT'];
+  const mult = {business:1, first:1.8, premium_economy:0.55, economy:0.25}[cabin] || 1;
+  return Math.round(base * mult);
+}
+
+function getRegion(iata) {
+  const US = ['JFK','EWR','LGA','BOS','MIA','FLL','ORD','MDW','ATL','DFW','LAX','SFO','SEA','DEN','IAD','DCA','BWI','PHL','CLT'];
+  const EUR = ['LHR','LGW','CDG','ORY','FRA','MUC','AMS','ZRH','GVA','VIE','MAD','BCN','FCO','MXP','CPH','ARN','OSL','DUB','LIS','ATH','IST','BRU','HEL'];
+  const ME = ['DXB','AUH','DOH','RUH','JED','AMM','TLV','MCT','KWI','BAH'];
+  const ASIA = ['NRT','HND','ICN','PEK','PVG','HKG','TPE','SIN','BKK','KUL','CGK','DEL','BOM','CMB'];
+  const LAT = ['GRU','GIG','EZE','SCL','BOG','LIM','MEX','CUN','PTY','SDQ','MBJ','NAS','PUJ','CUN','AUA'];
+  const CAN = ['YYZ','YUL','YVR','YYC','YEG'];
+  if (US.includes(iata)||CAN.includes(iata)) return 'US';
+  if (EUR.includes(iata)) return 'EUR';
+  if (ME.includes(iata)) return 'ME';
+  if (ASIA.includes(iata)) return 'ASIA';
+  if (LAT.includes(iata)) return 'LAT';
+  return 'US';
+}
+
+function getAirlinesForRoute(orig, dest, preferred) {
+  const all = [
+    {code:'LH',name:'Lufthansa'},{code:'LX',name:'Swiss'},{code:'BA',name:'British Airways'},
+    {code:'AA',name:'American'},{code:'UA',name:'United'},{code:'DL',name:'Delta'},
+    {code:'AF',name:'Air France'},{code:'KL',name:'KLM'},{code:'QR',name:'Qatar Airways'},
+    {code:'EK',name:'Emirates'},{code:'AY',name:'Finnair'},{code:'TK',name:'Turkish'},
+    {code:'EY',name:'Etihad'},{code:'SQ',name:'Singapore'},{code:'CX',name:'Cathay'},
+  ];
+  if (preferred) {
+    const p = all.find(a=>a.code===preferred);
+    if (p) return [p,...all.filter(a=>a.code!==preferred).slice(0,2)];
+  }
+  return all.slice(0,4);
+}
+
+function getDuration(orig, dest) {
+  const r1 = getRegion(orig), r2 = getRegion(dest);
+  const durations = {
+    'US-EUR':'8h 30m','EUR-US':'9h 00m','US-ASIA':'14h 00m',
+    'ASIA-US':'13h 30m','EUR-ASIA':'10h 00m','US-ME':'12h 00m',
+    'EUR-ME':'5h 00m','US-LAT':'4h 30m','DEFAULT':'9h 00m',
+  };
+  return durations[r1+'-'+r2] || durations[r2+'-'+r1] || durations['DEFAULT'];
+}
+
+// ══ MAIN RUN FUNCTION ══
+async function runCockpit() {
+  const orig  = document.getElementById('origInput').value.trim().toUpperCase();
+  const dest  = document.getElementById('destInput').value.trim().toUpperCase();
+  const dep   = document.getElementById('depDate').value;
+  const pax   = parseInt(document.getElementById('paxCount').value)||1;
+  const cabin = document.getElementById('cabinClass').value;
+
+  if (!orig||orig.length<3) { toast('Enter origin airport code (e.g. JFK)'); return; }
+  if (!dest||dest.length<3) { toast('Enter destination airport code (e.g. FRA)'); return; }
+  if (!dep) { toast('Select a departure date'); return; }
+
+  searchParams = { orig, dest, dep, pax, cabin };
+
+  // UI setup
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('resultsArea').style.display = 'block';
+  document.getElementById('progressLog').innerHTML = '';
+  document.getElementById('progressLog').classList.add('show');
+  document.getElementById('resultsSections').innerHTML = '';
+  document.getElementById('summaryStrip').innerHTML = '';
+  document.getElementById('selectedPanel').classList.remove('show');
+
+  const btn = document.getElementById('runBtn');
+  btn.innerHTML = '<span class="spin"></span> Running Checks…';
+  btn.disabled = true;
+
+  allResults = [];
+
+  const travelMonth = new Date(dep+'T12:00:00').getMonth()+1;
+  const depDate = new Date(dep+'T12:00:00');
+
+  // ── 0. Published fare baseline ──
+  log(`Starting analysis: ${orig} → ${dest} · ${dep} · ${cabin}`, 'info');
+  log(`Fetching published baseline fare…`, 'dim');
+  const baseline = await searchFlights(orig, dest, dep, cabin);
+  log(`✓ Published fare: $${baseline.price.toLocaleString()} · ${baseline.airline}`, 'ok');
+
+  const results = { throwaway:[], nearby:[], calendar:[], hub:[], reverse:[], openjaw:[], mixedcabin:[] };
+
+  // ── 1. THROWAWAY TICKET ──
+  if (activeHacks.has('throwaway')) {
+    log(`Running throwaway ticket analysis…`, 'dim');
+    const destRegion = getDestRegion(dest);
+    const candidates = THROWAWAY_CANDIDATES[destRegion] || THROWAWAY_CANDIDATES['EUR'];
+    
+    // Score and sort candidates
+    const scored = candidates
+      .map(c => ({ ...c, finalScore: scoreThrowaway(destRegion, c, travelMonth) }))
+      .sort((a,b) => b.finalScore - a.finalScore)
+      .slice(0,6); // top 6
+
+    for (const c of scored) {
+      // Search throwaway leg (Economy — client never flies it)
+      const throwDate = new Date(depDate);
+      throwDate.setDate(throwDate.getDate()+1+(Math.random()>0.5?1:0)); // 24-48hr later
+      const throwDateStr = throwDate.toISOString().slice(0,10);
+      
+      // Search closest city to dest that serves the throwaway
+      const throwawayOrigin = dest; // departs FROM the destination
+
+      const throwFare = await searchFlights(throwawayOrigin, c.city, throwDateStr, 'economy', {cheaperHack:true});
+      const total = baseline.price + throwFare.price;
+      const saving = baseline.price - total;
+      
+      if (saving > 100) { // only worthwhile if saving > $100
+        results.throwaway.push({
+          type: 'throwaway',
+          ticket1: { ...baseline },
+          ticket2: { ...throwFare, dep: throwawayOrigin, arr: c.city, name: c.name, region: c.region, date: throwDateStr },
+          throwawayPrice: throwFare.price,
+          totalPrice: total,
+          saving,
+          savingPct: Math.round((saving/baseline.price)*100),
+          rules: {
+            separateTickets: true,
+            differentAirline: baseline.code !== throwFare.code,
+            oneWay: true,
+            gap: '24-48hrs',
+            carryOnAdvised: true,
+            noFFNum: true,
+          }
+        });
+      }
+    }
+    results.throwaway.sort((a,b) => b.saving - a.saving);
+    log(`✓ Throwaway: ${results.throwaway.length} options found`, results.throwaway.length?'ok':'dim');
+  }
+
+  // ── 2. NEARBY AIRPORTS ──
+  if (activeHacks.has('nearby')) {
+    log(`Checking nearby airports…`, 'dim');
+    const origAlts = (NEARBY[orig]||[orig]).filter(a=>a!==orig);
+    const destAlts = (NEARBY[dest]||[dest]).filter(a=>a!==dest);
+    
+    const nearbySearches = [];
+    // Alternate origins
+    for (const alt of origAlts) {
+      nearbySearches.push({altOrig:alt, altDest:dest, label:`From ${alt} instead of ${orig}`});
+    }
+    // Alternate destinations
+    for (const alt of destAlts) {
+      nearbySearches.push({altOrig:orig, altDest:alt, label:`Arrive ${alt} instead of ${dest}`});
+    }
+    // Both alternate
+    if (origAlts.length && destAlts.length) {
+      nearbySearches.push({altOrig:origAlts[0], altDest:destAlts[0], label:`${origAlts[0]} → ${destAlts[0]}`});
+    }
+
+    for (const s of nearbySearches.slice(0,4)) {
+      const f = await searchFlights(s.altOrig, s.altDest, dep, cabin);
+      const saving = baseline.price - f.price;
+      results.nearby.push({
+        type:'nearby',
+        ...f, dep:s.altOrig, arr:s.altDest,
+        label: s.label,
+        saving,
+        savingPct: Math.round((saving/baseline.price)*100),
+        vsPublished: baseline.price,
+      });
+    }
+    results.nearby = results.nearby.filter(r=>r.saving>0).sort((a,b)=>b.saving-a.saving);
+    log(`✓ Nearby airports: ${results.nearby.length} cheaper options`, results.nearby.length?'ok':'dim');
+  }
+
+  // ── 3. DATE FLEXIBILITY ──
+  if (activeHacks.has('calendar')) {
+    log(`Checking ±3 day date flexibility…`, 'dim');
+    const dateResults = [];
+    for (let d=-3; d<=3; d++) {
+      if (d===0) continue; // already have baseline
+      const altDate = new Date(depDate);
+      altDate.setDate(altDate.getDate()+d);
+      const altDateStr = altDate.toISOString().slice(0,10);
+      const f = await searchFlights(orig, dest, altDateStr, cabin);
+      const saving = baseline.price - f.price;
+      dateResults.push({
+        type:'calendar', ...f, dep:orig, arr:dest, date:altDateStr,
+        offset:d, label: d<0?`${Math.abs(d)} day${Math.abs(d)>1?'s':''} earlier`:`${d} day${d>1?'s':''} later`,
+        saving, savingPct: Math.round((saving/baseline.price)*100),
+        vsPublished: baseline.price,
+      });
+    }
+    results.calendar = dateResults.filter(r=>r.saving>50).sort((a,b)=>b.saving-a.saving);
+    log(`✓ Date flex: ${results.calendar.length} cheaper dates found`, results.calendar.length?'ok':'dim');
+  }
+
+  // ── 4. HUB ROUTING ──
+  if (activeHacks.has('hub')) {
+    log(`Checking hub routing (QR/EK/AY/TK)…`, 'dim');
+    for (const hub of HUB_ROUTES) {
+      const f = await searchFlights(orig, dest, dep, cabin, {hubRoute:true, preferredCarrier:hub.code, cheaperHack:true});
+      const saving = baseline.price - f.price;
+      if (saving > 50) {
+        results.hub.push({
+          type:'hub', ...f, dep:orig, arr:dest,
+          hubAirline:hub.airline, hubCode:hub.code, hubCity:hub.hub,
+          benefit:hub.benefit,
+          saving, savingPct: Math.round((saving/baseline.price)*100),
+          vsPublished: baseline.price,
+        });
+      }
+    }
+    results.hub.sort((a,b)=>b.saving-a.saving);
+    log(`✓ Hub routing: ${results.hub.length} options`, results.hub.length?'ok':'dim');
+  }
+
+  // ── 5. REVERSE DIRECTION ──
+  if (activeHacks.has('reverse')) {
+    log(`Checking reverse direction pricing…`, 'dim');
+    const f = await searchFlights(dest, orig, dep, cabin);
+    const saving = baseline.price - f.price;
+    if (saving > 0) {
+      results.reverse.push({
+        type:'reverse', ...f, dep:dest, arr:orig,
+        note:'Reverse direction priced differently — book as open jaw or use for return leg pricing',
+        saving, savingPct: Math.round((saving/baseline.price)*100),
+        vsPublished: baseline.price,
+      });
+    }
+    log(`✓ Reverse direction: ${results.reverse.length} cheaper option(s)`, 'ok');
+  }
+
+  // ── 6. OPEN JAW ──
+  if (activeHacks.has('openjaw')) {
+    log(`Checking open jaw routing…`, 'dim');
+    const altReturns = OPENJAW_ALTS[dest] || [];
+    for (const alt of altReturns.slice(0,3)) {
+      // Outbound: orig → dest (same)
+      // Return: alt → orig (different city)
+      const retDate = new Date(depDate); retDate.setDate(retDate.getDate()+7);
+      const f1 = await searchFlights(orig, dest, dep, cabin);
+      const f2 = await searchFlights(alt, orig, retDate.toISOString().slice(0,10), cabin);
+      const total = f1.price + f2.price;
+      const rtBaseline = baseline.price * 1.9; // approx round trip
+      const saving = rtBaseline - total;
+      if (saving > 0) {
+        results.openjaw.push({
+          type:'openjaw',
+          outbound: f1, inbound: f2,
+          altReturn: alt,
+          totalPrice: total,
+          saving, savingPct: Math.round((saving/rtBaseline)*100),
+          note:`Fly into ${dest}, return from ${alt}. Travel between cities overland.`,
+          vsRoundTrip: Math.round(rtBaseline),
+        });
+      }
+    }
+    results.openjaw.sort((a,b)=>b.saving-a.saving);
+    log(`✓ Open jaw: ${results.openjaw.length} options`, results.openjaw.length?'ok':'dim');
+  }
+
+  // ── 7. MIXED CABIN ──
+  if (activeHacks.has('mixedcabin')) {
+    log(`Checking mixed cabin options…`, 'dim');
+    // Business on long haul, Economy on short connector
+    const connectors = ['FRA','AMS','LHR','CDG','MAD'].filter(c=>c!==dest&&c!==orig);
+    for (const via of connectors.slice(0,2)) {
+      const f1 = await searchFlights(orig, via, dep, 'business');  // long haul business
+      const f2 = await searchFlights(via, dest, dep, 'economy');   // short connector economy
+      const total = f1.price + f2.price;
+      const saving = baseline.price - total;
+      if (saving > 100) {
+        results.mixedcabin.push({
+          type:'mixedcabin',
+          leg1: {...f1, dep:orig, arr:via},
+          leg2: {...f2, dep:via, arr:dest},
+          via,
+          totalPrice: total,
+          saving, savingPct: Math.round((saving/baseline.price)*100),
+          note:`Business class on the ${orig}→${via} leg, Economy on short ${via}→${dest} hop`,
+          vsPublished: baseline.price,
+        });
+      }
+    }
+    results.mixedcabin.sort((a,b)=>b.saving-a.saving);
+    log(`✓ Mixed cabin: ${results.mixedcabin.length} options`, results.mixedcabin.length?'ok':'dim');
+  }
+
+  // ── COMPILE ALL RESULTS ──
+  allResults = [
+    ...results.throwaway,
+    ...results.nearby,
+    ...results.calendar,
+    ...results.hub,
+    ...results.reverse,
+    ...results.openjaw,
+    ...results.mixedcabin,
+  ].sort((a,b) => (b.saving||0)-(a.saving||0));
+
+  log(`\nAnalysis complete. ${allResults.length} total options found.`, 'info');
+  log(`Best saving: $${Math.max(...allResults.map(r=>r.saving||0)).toLocaleString()} (${allResults[0]?.type||'n/a'})`, 'ok');
+
+  // ── RENDER ──
+  renderSummary(baseline, allResults);
+  renderResults(results, baseline, orig, dest, dep, cabin);
+
+  btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> Run All Checks';
+  btn.disabled = false;
+}
+
+// ══ RENDER SUMMARY ══
+function renderSummary(baseline, all) {
+  const bestSaving = all.length ? Math.max(...all.map(r=>r.saving||0)) : 0;
+  const bestOpt = all.find(r=>(r.saving||0)===bestSaving);
+  const totalOpts = all.length;
+  const bestPct = bestOpt?.savingPct || 0;
+
+  document.getElementById('summaryStrip').innerHTML = `
+    <div class="stat-card">
+      <div class="stat-label">Published Fare</div>
+      <div class="stat-val gold">$${baseline.price.toLocaleString()}</div>
+      <div class="stat-sub">${baseline.airline} · ${searchParams.cabin}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Best Alternative</div>
+      <div class="stat-val green">$${bestOpt ? (bestOpt.totalPrice||bestOpt.price||0).toLocaleString() : '—'}</div>
+      <div class="stat-sub">${bestOpt?.type ? capFirst(bestOpt.type)+' strategy' : 'No alternative found'}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Max Saving</div>
+      <div class="stat-val ${bestSaving>500?'green':bestSaving>200?'gold':'red'}">$${bestSaving.toLocaleString()}</div>
+      <div class="stat-sub">${bestPct}% below published</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Options Found</div>
+      <div class="stat-val gold">${totalOpts}</div>
+      <div class="stat-sub">Across ${activeHacks.size} hacks run</div>
+    </div>`;
+}
+
+// ══ RENDER RESULTS ══
+function renderResults(results, baseline, orig, dest, dep, cabin) {
+  const container = document.getElementById('resultsSections');
+  container.innerHTML = '';
+
+  // ── Throwaway section ──
+  if (results.throwaway.length) {
+    container.appendChild(buildSection('throwaway','🎯 Throwaway Ticket', results.throwaway.length,
+      `<div class="col-hdr ri-throwaway">
+        <span>#</span><span>Ticket 1 (Client Flies)</span><span>Ticket 2 (Throwaway)</span>
+        <span style="text-align:right">Total Cost</span><span style="text-align:right">Saving</span>
+        <span style="text-align:right">Action</span>
+      </div>` +
+      results.throwaway.map((r,i) => `
+        <div class="result-item ri-throwaway" style="animation-delay:${i*40}ms">
+          <div class="ri-rank ${i===0?'top'}">${i===0?'★':'0'+(i+1)}</div>
+          <div class="ri-route">
+            <div class="ri-route-main">${r.ticket1.dep} → ${r.ticket1.arr}</div>
+            <div class="ri-route-sub">${r.ticket1.airline} · ${r.ticket1.flightNumber} · ${cabin} · ${r.ticket1.dep}</div>
+            <div class="ri-route-sub" style="color:var(--green)">Price: $${r.ticket1.price.toLocaleString()}</div>
+          </div>
+          <div class="ri-route">
+            <div class="ri-route-main">${r.ticket2.dep} → ${r.ticket2.arr} <span style="color:var(--muted);font-size:11px">(${r.ticket2.name})</span></div>
+            <div class="ri-route-sub">${r.ticket2.airline} · Economy · ${r.ticket2.date} · Never flown</div>
+            <div class="ri-route-sub" style="color:var(--muted)">$${r.ticket2.price.toLocaleString()} · ${r.ticket2.region}</div>
+            <div class="rules-check">
+              <span class="rc ok">✓ Sep. tickets</span>
+              <span class="rc ${r.rules.differentAirline?'ok':'warn'}">${r.rules.differentAirline?'✓':'⚠'} Diff airline</span>
+              <span class="rc ok">✓ 24-48hr gap</span>
+              <span class="rc warn">⚠ Carry-on</span>
+              <span class="rc ok">✓ No FF#</span>
+            </div>
+          </div>
+          <div class="ri-price ${i===0?'best':''}">
+            $${r.totalPrice.toLocaleString()}
+            <sub>vs $${baseline.price.toLocaleString()} published</sub>
+          </div>
+          <div class="ri-saving">
+            <span class="saving-pill ${r.savingPct>=30?'green':r.savingPct>=15?'gold':'amber'}">
+              -$${r.saving.toLocaleString()} · ${r.savingPct}% off
+            </span>
+          </div>
+          <div class="ri-action">
+            <button class="btn-select" onclick="selectOption(${JSON.stringify(r).split('"').join('&quot;')},this)">Select</button>
+          </div>
+        </div>`).join('')
+    ));
+  }
+
+  // ── Nearby airports ──
+  if (results.nearby.length) {
+    container.appendChild(buildSection('nearby','📍 Nearby Airports', results.nearby.length,
+      `<div class="col-hdr ri-nearby">
+        <span>#</span><span>Route</span><span>Carrier</span>
+        <span style="text-align:right">Price</span><span style="text-align:right">Action</span>
+      </div>` +
+      results.nearby.map((r,i) => `
+        <div class="result-item ri-nearby" style="animation-delay:${i*40}ms">
+          <div class="ri-rank ${i===0?'top'}">${i===0?'★':'0'+(i+1)}</div>
+          <div class="ri-route">
+            <div class="ri-route-main">${r.dep} → ${r.arr}</div>
+            <div class="ri-route-sub">${r.label}</div>
+          </div>
+          <div class="ri-carrier">
+            <div class="ri-carrier-name">${r.airline}</div>
+            <div class="ri-carrier-fn">${r.flightNumber} · ${r.duration}</div>
+          </div>
+          <div class="ri-price ${i===0?'best':''}">
+            $${r.price.toLocaleString()}
+            <sub>Save $${r.saving.toLocaleString()}</sub>
+          </div>
+          <div class="ri-action">
+            <button class="btn-select" onclick="selectOption(${JSON.stringify(r).split('"').join('&quot;')},this)">Select</button>
+          </div>
+        </div>`).join('')
+    ));
+  }
+
+  // ── Date flexibility ──
+  if (results.calendar.length) {
+    container.appendChild(buildSection('calendar','📅 Date Flexibility', results.calendar.length,
+      `<div class="col-hdr ri-calendar">
+        <span>#</span><span>Date</span><span>Carrier</span>
+        <span style="text-align:right">Price</span><span style="text-align:right">Action</span>
+      </div>` +
+      results.calendar.map((r,i) => `
+        <div class="result-item ri-calendar" style="animation-delay:${i*40}ms">
+          <div class="ri-rank ${i===0?'top'}">${i===0?'★':'0'+(i+1)}</div>
+          <div class="ri-route">
+            <div class="ri-route-main">${r.date}</div>
+            <div class="ri-route-sub" style="color:${r.offset<0?'var(--blue)':'var(--amber)'}">${r.label}</div>
+          </div>
+          <div class="ri-carrier">
+            <div class="ri-carrier-name">${r.airline}</div>
+            <div class="ri-carrier-fn">${r.flightNumber} · ${r.duration}</div>
+          </div>
+          <div class="ri-price ${i===0?'best':''}">
+            $${r.price.toLocaleString()}
+            <sub>Save $${r.saving.toLocaleString()}</sub>
+          </div>
+          <div class="ri-action">
+            <button class="btn-select" onclick="selectOption(${JSON.stringify(r).split('"').join('&quot;')},this)">Select</button>
+          </div>
+        </div>`).join('')
+    ));
+  }
+
+  // ── Hub routing ──
+  if (results.hub.length) {
+    container.appendChild(buildSection('hubr','⚡ Hub Routing', results.hub.length,
+      `<div class="col-hdr ri-hub">
+        <span>#</span><span>Via Hub</span><span>Benefit</span>
+        <span style="text-align:right">Price</span><span style="text-align:right">Action</span>
+      </div>` +
+      results.hub.map((r,i) => `
+        <div class="result-item ri-hub" style="animation-delay:${i*40}ms">
+          <div class="ri-rank ${i===0?'top'}">${i===0?'★':'0'+(i+1)}</div>
+          <div class="ri-route">
+            <div class="ri-route-main">${r.dep} → ${r.hubCity} → ${r.arr}</div>
+            <div class="ri-route-sub">${r.hubAirline} · ${r.flightNumber}</div>
+          </div>
+          <div class="ri-route">
+            <div class="ri-route-sub" style="line-height:1.6;color:var(--muted)">${r.benefit}</div>
+          </div>
+          <div class="ri-price ${i===0?'best':''}">
+            $${r.price.toLocaleString()}
+            <sub>Save $${r.saving.toLocaleString()}</sub>
+          </div>
+          <div class="ri-action">
+            <button class="btn-select" onclick="selectOption(${JSON.stringify(r).split('"').join('&quot;')},this)">Select</button>
+          </div>
+        </div>`).join('')
+    ));
+  }
+
+  // ── Reverse direction ──
+  if (results.reverse.length) {
+    container.appendChild(buildSection('reverse','🔄 Reverse Direction', results.reverse.length,
+      results.reverse.map((r,i) => `
+        <div class="result-item ri-generic" style="animation-delay:${i*40}ms">
+          <div class="ri-rank top">★</div>
+          <div class="ri-route">
+            <div class="ri-route-main">${r.dep} → ${r.arr}</div>
+            <div class="ri-route-sub" style="color:var(--amber)">${r.note}</div>
+          </div>
+          <div class="ri-price best">
+            $${r.price.toLocaleString()}
+            <sub>Save $${r.saving.toLocaleString()}</sub>
+          </div>
+          <div class="ri-saving">
+            <span class="saving-pill gold">-${r.savingPct}% vs original direction</span>
+          </div>
+          <div class="ri-action">
+            <button class="btn-select" onclick="selectOption(${JSON.stringify(r).split('"').join('&quot;')},this)">Select</button>
+          </div>
+        </div>`).join('')
+    ));
+  }
+
+  // ── Open jaw ──
+  if (results.openjaw.length) {
+    container.appendChild(buildSection('openjaw','🔀 Open Jaw', results.openjaw.length,
+      results.openjaw.map((r,i) => `
+        <div class="result-item ri-generic" style="animation-delay:${i*40}ms">
+          <div class="ri-rank ${i===0?'top'}">${i===0?'★':'0'+(i+1)}</div>
+          <div class="ri-route">
+            <div class="ri-route-main">${r.outbound.dep||searchParams.orig} → ${r.outbound.arr||searchParams.dest} / ${r.altReturn} → ${r.outbound.dep||searchParams.orig}</div>
+            <div class="ri-route-sub" style="color:var(--muted)">${r.note}</div>
+          </div>
+          <div class="ri-price ${i===0?'best':''}">
+            $${r.totalPrice.toLocaleString()}
+            <sub>vs $${r.vsRoundTrip.toLocaleString()} round trip</sub>
+          </div>
+          <div class="ri-saving">
+            <span class="saving-pill green">Save $${r.saving.toLocaleString()} · ${r.savingPct}%</span>
+          </div>
+          <div class="ri-action">
+            <button class="btn-select" onclick="selectOption(${JSON.stringify(r).split('"').join('&quot;')},this)">Select</button>
+          </div>
+        </div>`).join('')
+    ));
+  }
+
+  // ── Mixed cabin ──
+  if (results.mixedcabin.length) {
+    container.appendChild(buildSection('hubr','✈️ Mixed Cabin', results.mixedcabin.length,
+      results.mixedcabin.map((r,i) => `
+        <div class="result-item ri-generic" style="animation-delay:${i*40}ms">
+          <div class="ri-rank ${i===0?'top'}">${i===0?'★':'0'+(i+1)}</div>
+          <div class="ri-route">
+            <div class="ri-route-main">${r.leg1.dep} → ${r.via} → ${r.leg2.arr}</div>
+            <div class="ri-route-sub" style="color:var(--muted)">${r.note}</div>
+            <div class="ri-route-sub">Leg 1: ${r.leg1.airline} · Business $${r.leg1.price.toLocaleString()}&nbsp;&nbsp;|&nbsp;&nbsp;Leg 2: ${r.leg2.airline} · Economy $${r.leg2.price.toLocaleString()}</div>
+          </div>
+          <div class="ri-price ${i===0?'best':''}">
+            $${r.totalPrice.toLocaleString()}
+            <sub>Save $${r.saving.toLocaleString()}</sub>
+          </div>
+          <div class="ri-saving">
+            <span class="saving-pill gold">-${r.savingPct}% mixed</span>
+          </div>
+          <div class="ri-action">
+            <button class="btn-select" onclick="selectOption(${JSON.stringify(r).split('"').join('&quot;')},this)">Select</button>
+          </div>
+        </div>`).join('')
+    ));
+  }
+
+  if (!allResults.length) {
+    container.innerHTML = '<div class="empty-state"><div class="empty-ico">🔍</div><div class="empty-title">No alternatives found</div><div class="empty-sub">Published fare may already be the best available option for this route and date.</div></div>';
+  }
+}
+
+function buildSection(type, title, count, innerHtml) {
+  const div = document.createElement('div');
+  div.className = 'result-section';
+  div.innerHTML = `
+    <div class="rs-hdr ${type}">
+      ${title}
+      <span class="rs-hdr-count">${count} option${count!==1?'s':''}</span>
+    </div>
+    <div class="result-list">${innerHtml}</div>`;
+  return div;
+}
+
+// ══ SELECT OPTION ══
+function selectOption(dataOrStr, btn) {
+  // Deselect all buttons
+  document.querySelectorAll('.btn-select').forEach(b => {
+    b.classList.remove('selected');
+    b.textContent = 'Select';
+  });
+  btn.classList.add('selected');
+  btn.textContent = '✓ Selected';
+
+  const r = typeof dataOrStr === 'string' ? JSON.parse(dataOrStr.split('&quot;').join('"')) : dataOrStr;
+  selectedOption = r;
+
+  const panel = document.getElementById('selectedPanel');
+  panel.classList.add('show');
+
+  const clientName = document.getElementById('clientName').value || 'Client';
+  const orig = searchParams.orig, dest = searchParams.dest;
+  const cabin = searchParams.cabin;
+
+  let fields = [];
+  if (r.type==='throwaway') {
+    fields = [
+      {label:'Strategy',val:'Throwaway Ticket'},
+      {label:'Ticket 1 — Client flies',val:`${r.ticket1.dep}→${r.ticket1.arr} · ${r.ticket1.airline} · ${cabin}`},
+      {label:'Ticket 1 Price',val:`$${r.ticket1.price.toLocaleString()}`,highlight:true},
+      {label:'Ticket 2 — Throwaway',val:`${r.ticket2.dep}→${r.ticket2.arr} (${r.ticket2.name}) · Economy · Never flown`},
+      {label:'Ticket 2 Price',val:`$${r.ticket2.price.toLocaleString()}`},
+      {label:'Total Cost',val:`$${r.totalPrice.toLocaleString()}`,highlight:true},
+      {label:'Saving vs Published',val:`$${r.saving.toLocaleString()} (${r.savingPct}% off)`,highlight:true},
+      {label:'Agent Rules',val:'Carry-on only · No FF number · One-way only · Separate bookings · Different airline'},
+    ];
+  } else if (r.type==='nearby') {
+    fields = [
+      {label:'Strategy',val:'Nearby Airport'},
+      {label:'Route',val:`${r.dep} → ${r.arr}`},
+      {label:'Note',val:r.label},
+      {label:'Airline',val:`${r.airline} · ${r.flightNumber}`},
+      {label:'Price',val:`$${r.price.toLocaleString()}`,highlight:true},
+      {label:'Saving',val:`$${r.saving.toLocaleString()} (${r.savingPct}% off)`,highlight:true},
+    ];
+  } else if (r.type==='calendar') {
+    fields = [
+      {label:'Strategy',val:'Date Flexibility'},
+      {label:'Alternate Date',val:r.date},
+      {label:'Shift',val:r.label},
+      {label:'Airline',val:`${r.airline} · ${r.flightNumber}`},
+      {label:'Price',val:`$${r.price.toLocaleString()}`,highlight:true},
+      {label:'Saving',val:`$${r.saving.toLocaleString()} vs requested date`,highlight:true},
+    ];
+  } else if (r.type==='hub') {
+    fields = [
+      {label:'Strategy',val:'Hub Routing'},
+      {label:'Route',val:`${r.dep} via ${r.hubCity} → ${r.arr}`},
+      {label:'Carrier',val:`${r.hubAirline} (${r.hubCode})`},
+      {label:'Price',val:`$${r.price.toLocaleString()}`,highlight:true},
+      {label:'Saving',val:`$${r.saving.toLocaleString()} (${r.savingPct}% off)`,highlight:true},
+      {label:'Note',val:r.benefit},
+    ];
+  } else if (r.type==='openjaw') {
+    fields = [
+      {label:'Strategy',val:'Open Jaw Routing'},
+      {label:'Outbound',val:`${searchParams.orig} → ${searchParams.dest}`},
+      {label:'Return',val:`${r.altReturn} → ${searchParams.orig}`},
+      {label:'Total',val:`$${r.totalPrice.toLocaleString()}`,highlight:true},
+      {label:'Saving vs Round Trip',val:`$${r.saving.toLocaleString()} (${r.savingPct}% off)`,highlight:true},
+      {label:'Note',val:r.note},
+    ];
+  } else if (r.type==='mixedcabin') {
+    fields = [
+      {label:'Strategy',val:'Mixed Cabin'},
+      {label:'Long Haul',val:`${r.leg1.dep}→${r.via} · ${r.leg1.airline} · Business · $${r.leg1.price.toLocaleString()}`},
+      {label:'Connector',val:`${r.via}→${searchParams.dest} · ${r.leg2.airline} · Economy · $${r.leg2.price.toLocaleString()}`},
+      {label:'Total',val:`$${r.totalPrice.toLocaleString()}`,highlight:true},
+      {label:'Saving',val:`$${r.saving.toLocaleString()} (${r.savingPct}% off)`,highlight:true},
+    ];
+  } else {
+    fields = [
+      {label:'Strategy',val:r.type||'Alternative fare'},
+      {label:'Price',val:`$${(r.totalPrice||r.price||0).toLocaleString()}`,highlight:true},
+      {label:'Saving',val:`$${r.saving.toLocaleString()}`,highlight:true},
+    ];
+  }
+
+  document.getElementById('selectedGrid').innerHTML = fields.map(f =>
+    `<div class="sp-field">
+      <div class="sp-label">${f.label}</div>
+      <div class="sp-val ${f.highlight?'highlight':''}">${f.val}</div>
+    </div>`
+  ).join('');
+
+  panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function clearSelected() {
+  selectedOption = null;
+  document.getElementById('selectedPanel').classList.remove('show');
+  document.querySelectorAll('.btn-select').forEach(b => {
+    b.classList.remove('selected');
+    b.textContent = 'Select';
+  });
+}
+
+// ══ COPY QUOTE ══
+function copyQuote() {
+  if (!selectedOption) return;
+  const r = selectedOption;
+  const client = document.getElementById('clientName').value||'Client';
+  const notes  = document.getElementById('clientNotes').value;
+  const {orig,dest,dep,pax,cabin} = searchParams;
+  const cabinLabel = {business:'Business Class',first:'First Class',premium_economy:'Premium Economy',economy:'Economy'}[cabin]||cabin;
+
+  let text = `BWT QUOTE — ${client}\n${'═'.repeat(40)}\n`;
+  text += `Route: ${orig} → ${dest} · ${dep} · ${pax} passenger${pax>1?'s':''} · ${cabinLabel}\n\n`;
+
+  if (r.type==='throwaway') {
+    text += `Strategy: Throwaway Ticket\n\n`;
+    text += `TICKET 1 (Client travels):\n  ${r.ticket1.dep} → ${r.ticket1.arr}\n  ${r.ticket1.airline} · ${r.ticket1.flightNumber} · ${cabinLabel}\n  Price: $${r.ticket1.price.toLocaleString()}\n\n`;
+    text += `TICKET 2 (Throwaway — not to be disclosed):\n  ${r.ticket2.dep} → ${r.ticket2.arr}\n  Economy · 24-48hrs after Ticket 1\n  Price: $${r.ticket2.price.toLocaleString()}\n\n`;
+    text += `TOTAL COST: $${r.totalPrice.toLocaleString()}\n`;
+    text += `PUBLISHED FARE: $${(r.vsPublished||0).toLocaleString()}\n`;
+    text += `SAVING: $${r.saving.toLocaleString()} (${r.savingPct}% below published)\n\n`;
+    text += `⚠ INTERNAL NOTES:\n  • Book as two separate one-way tickets\n  • Carry-on baggage only\n  • No frequent flyer number on Ticket 2\n  • Do not mention Ticket 2 to client\n`;
+  } else {
+    text += `Strategy: ${r.type}\n`;
+    text += `Price: $${(r.totalPrice||r.price||0).toLocaleString()}\n`;
+    text += `Saving: $${r.saving.toLocaleString()} (${r.savingPct}% off published)\n`;
+    if (r.airline) text += `Carrier: ${r.airline}\n`;
+  }
+
+  if (notes) text += `\nClient notes: ${notes}`;
+  text += `\n\n— BWT Agent Cockpit · ${new Date().toLocaleString()}`;
+
+  navigator.clipboard.writeText(text).then(()=>{
+    toast('Quote copied to clipboard ✓','green');
+  }).catch(()=>{
+    toast('Copy failed — check clipboard permissions');
+  });
+}
+
+// ══ UTILS ══
+function capFirst(s){return s.charAt(0).toUpperCase()+s.slice(1)}
+
+let _toastTimer;
+function toast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast show'+(type?' '+type:'');
+  clearTimeout(_toastTimer);
+  _toastTimer=setTimeout(()=>t.classList.remove('show'),2800);
+}
+</script>
+</body>
+</html>
