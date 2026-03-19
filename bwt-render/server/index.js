@@ -310,8 +310,32 @@ app.post('/api/search', async (req, res) => {
     const data = await raw.json();
     if (data.error) throw new Error(`SearchAPI: ${data.error}`);
 
-    // SearchAPI round trip: price already includes both legs — no second call needed
-    // The type field in each result tells us "Round trip" or "One way"
+    // SearchAPI round trip: price includes both legs
+    // But we need a second call per offer using departure_token to get return leg details
+    if (tripType === 'round' && returnDate) {
+      const allGroups = [...(data.best_flights||[]), ...(data.other_flights||[])];
+      // Fetch return leg details for top 8 offers in parallel
+      const returnCalls = allGroups.slice(0, 8)
+        .filter(g => g.departure_token)
+        .map(async g => {
+          try {
+            const rp = new URLSearchParams({
+              ...params,
+              departure_token: g.departure_token,
+            });
+            const rraw = await fetch(`${SEARCHAPI_BASE}?${rp.toString()}`,
+              { signal: AbortSignal.timeout(15000) });
+            if (!rraw.ok) return null;
+            const rdata = await rraw.json();
+            if (rdata.error) return null;
+            // Pick best return flight
+            const returnFlights = [...(rdata.best_flights||[]), ...(rdata.other_flights||[])];
+            if (returnFlights.length) g._returnFlight = returnFlights[0];
+          } catch { /* silent — outbound still shows */ }
+        });
+      await Promise.all(returnCalls);
+    }
+
     const { offers, priceInsights } = normalizeSearchAPIResponse(data, travelClass, tripType);
 
     if (!offers.length) {

@@ -445,6 +445,10 @@ a{color:inherit;text-decoration:none}
 .fc-segs{display:none;border-top:1px solid var(--bdr);background:var(--s1)}
 .fc-segs.on{display:block}
 .seg-wrap{padding:14px 20px}
+.fc-return-summary{display:flex;align-items:center;gap:7px;padding:8px 16px;font-size:11px;color:var(--muted);background:rgba(200,168,75,.04);border-top:1px solid var(--border);flex-wrap:wrap}
+.fc-return-summary svg{color:var(--gold);flex-shrink:0}
+.seg-hd-return{color:var(--gold);border-color:var(--goldb)}
+.seg-wrap-return{margin-top:16px;padding-top:16px;border-top:2px dashed var(--border)}
 .seg-hd{font-size:9px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px;margin-bottom:12px}
 .seg-hd::after{content:'';flex:1;height:1px;background:var(--bdr)}
 .seg-row{display:grid;grid-template-columns:1fr 76px 1fr;gap:12px;align-items:center;margin-bottom:6px}
@@ -2036,9 +2040,14 @@ function buildCard(offer, idx, gated=false, starPriority=false) {
       </div>
       <button class="pr-cta" style="width:auto;padding:8px 16px;margin-top:0" onclick="openModal(window._offerMap[${idx}])">Quote</button>
     </div>
+    ${offer.journeys && offer.journeys[1] ? `<div class="fc-return-summary">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 14l-4-4 4-4"/><path d="M5 10h11a4 4 0 0 1 0 8h-1"/></svg>
+      Return · ${offer.journeys[1].origin||''} → ${offer.journeys[1].destination||''} · ${fmtTime(offer.journeys[1].depTime)} – ${fmtTime(offer.journeys[1].arrTime)} · ${offer.journeys[1].duration||''}
+      ${offer.journeys[1].stops===0?'<span class="rt-stp direct" style="font-size:9px">Non-stop</span>':'<span class="rt-stp conn" style="font-size:9px">'+offer.journeys[1].stops+' stop</span>'}
+    </div>` : ''}
     <button class="fc-tog" id="tog-${idx}" onclick="toggleSegs(${idx})">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-      ${segs.length} segment${segs.length!==1?'s':''} · View details
+      ${(segs.length + (offer.journeys&&offer.journeys[1]?offer.journeys[1].segments?.length||0:0))} segment${segs.length!==1?'s':''} · View details
     </button>
     <div class="fc-segs" id="sgs-${idx}">
       <div class="seg-wrap">
@@ -2060,6 +2069,42 @@ function buildCard(offer, idx, gated=false, starPriority=false) {
     card.appendChild(ov);
   }
   return card;
+}
+
+// ── Return journey segment HTML builder ──────────────────────────────────────
+function buildReturnSegHTML(returnJourney) {
+  if (!returnJourney || !returnJourney.segments || !returnJourney.segments.length) return '';
+  const segs = returnJourney.segments;
+  let html = '<div class="seg-wrap seg-wrap-return">';
+  html += '<div class="seg-hd seg-hd-return">Return · ' + (returnJourney.origin||'') + ' → ' + (returnJourney.destination||'') + '</div>';
+  segs.forEach((seg, si) => {
+    if (si > 0) {
+      const prevSeg = segs[si-1];
+      const layData = prevSeg.layoverAfter;
+      const layDur = layData?.duration || '';
+      const layApt = prevSeg.arrival?.airport || layData?.airport || '';
+      const layName = layData?.name || layApt;
+      html += '<div class="layover">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
+        (layDur ? layDur + ' layover' : 'Layover') + ' · ' + layApt +
+        (layName && layName !== layApt ? ' <span class="layover-detail">' + layName + '</span>' : '') +
+        '</div>';
+    }
+    html += '<div class="seg-row">' +
+      '<div><div class="seg-t">' + fmtTime(seg.departure?.datetime) + '</div>' +
+      '<div class="seg-a">' + (seg.departure?.airport||'') + (seg.departure?.terminal?' T'+seg.departure.terminal:'') + '</div></div>' +
+      '<div class="seg-mid">' +
+        '<div class="seg-fn">' + (seg.flightNumber||'') + '</div>' +
+        '<div class="seg-ac">' + (seg.aircraft||'') + '</div>' +
+        (seg.legroom ? '<div class="seg-leg">💺 ' + seg.legroom + '</div>' : '') +
+        '<div class="seg-du">' + (seg.duration||'') + '</div>' +
+      '</div>' +
+      '<div class="seg-r"><div class="seg-t">' + fmtTime(seg.arrival?.datetime) + '</div>' +
+      '<div class="seg-a">' + (seg.arrival?.airport||'') + (seg.arrival?.terminal?' T'+seg.arrival.terminal:'') + '</div></div>' +
+      '</div>';
+  });
+  html += '</div>';
+  return html;
 }
 
 // ── Amenity pill builder ──────────────────────────────────────────────────────

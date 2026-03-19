@@ -94,7 +94,7 @@ function normalizeGroup(group, idx, requestedCabin, tripType, isBest) {
     const dep = firstSeg.departure_airport;
     const arr = lastSeg.arrival_airport;
 
-    // Build single journey (outbound)
+    // Build outbound journey
     const journey = {
       index:       0,
       direction:   'outbound',
@@ -109,6 +109,31 @@ function normalizeGroup(group, idx, requestedCabin, tripType, isBest) {
       stops:       segments.length - 1,
       segments:    normalizedSegments,
     };
+
+    // Build return journey if available (from second SearchAPI call)
+    let returnJourney = null;
+    if (group._returnFlight) {
+      const rf = group._returnFlight;
+      const rSegs = rf.flights || [];
+      const rLays = rf.layovers || [];
+      const rFirst = rSegs[0] || {};
+      const rLast  = rSegs[rSegs.length-1] || rFirst;
+      const rDurMins = rf.total_duration || rSegs.reduce((s,f)=>s+(f.duration||0),0);
+      returnJourney = {
+        index:       1,
+        direction:   'inbound',
+        duration:    formatMins(rDurMins),
+        durationRaw: rDurMins,
+        origin:      rFirst.departure_airport?.id || '',
+        destination: rLast.arrival_airport?.id || '',
+        originCity:  rFirst.departure_airport?.name || '',
+        destCity:    rLast.arrival_airport?.name || '',
+        depTime:     rFirst.departure_airport?.time || '',
+        arrTime:     rLast.arrival_airport?.time || '',
+        stops:       rSegs.length - 1,
+        segments:    rSegs.map((seg, i) => normalizeSegment(seg, i, rLays, i)),
+      };
+    }
 
     // Baggage from extensions
     const baggage = extractBaggageFromExtensions(group.extensions || [], segments);
@@ -138,9 +163,10 @@ function normalizeGroup(group, idx, requestedCabin, tripType, isBest) {
       validatingCarrier: carrierCode,
       carrierName,
       airlineLogo,
-      journeys:         [journey],
+      journeys:         returnJourney ? [journey, returnJourney] : [journey],
       totalStops:       segments.length - 1,
       outboundDuration: durationStr,
+      inboundDuration:  returnJourney?.duration || null,
       baggageSummary:   baggage,
       fareConditions: {
         refundable,
