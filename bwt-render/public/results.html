@@ -2668,7 +2668,27 @@ async function submitQuote() {
 /* ═══════════════════════════════════════════════
    HELPERS
 ═══════════════════════════════════════════════ */
-function fmtTime(dt) { if(!dt) return '--:--'; try { return new Date(dt).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false}); } catch { return (dt+'').slice(11,16)||'--:--'; } }
+function fmtTime(dt) {
+  if (!dt) return '--:--';
+  const s = String(dt).trim();
+  // SearchAPI format: "8:35 PM" or "10:05 AM"
+  const ampm = s.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+  if (ampm) {
+    let h = parseInt(ampm[1]), m = ampm[2], period = ampm[3].toUpperCase();
+    if (period === 'AM' && h === 12) h = 0;
+    if (period === 'PM' && h !== 12) h += 12;
+    return String(h).padStart(2,'0') + ':' + m;
+  }
+  // ISO or "YYYY-MM-DD HH:MM" format
+  if (s.includes('T') || s.match(/\d{4}-\d{2}-\d{2}/)) {
+    const t = s.includes('T') ? s.split('T')[1] : s.split(' ')[1];
+    return (t||'').slice(0,5) || '--:--';
+  }
+  // HH:MM already
+  if (s.match(/^\d{1,2}:\d{2}$/)) return s.padStart(5,'0');
+  try { return new Date(s).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false}); }
+  catch { return '--:--'; }
+}
 function isNextDay(dep,arr) { if(!dep||!arr) return false; try { return new Date(arr).toDateString()!==new Date(dep).toDateString()&&new Date(arr)>new Date(dep); } catch { return false; } }
 function calcLay(arr,dep) { if(!arr||!dep) return ''; const ms=new Date(dep)-new Date(arr), h=Math.floor(ms/3600000), m=Math.round((ms%3600000)/60000); return m?`${h}h ${m}m`:`${h}h`; }
 function parseDur(s) { if(!s) return 9999; const h=s.match(/(\d+)h/), m=s.match(/(\d+)m/); return (h?+h[1]*60:0)+(m?+m[1]:0); }
