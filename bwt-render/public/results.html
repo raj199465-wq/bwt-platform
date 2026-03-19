@@ -2021,7 +2021,7 @@ function buildCard(offer, idx, gated=false, starPriority=false) {
         <div class="pr-badges">${bdgHTML}</div>
         <div class="pr-amt">
           <div class="pr-big"><sup>$</sup>${Math.round(offer.totalPrice||0).toLocaleString()}</div>
-          <div class="pr-note">per person · ${offer.currency||'USD'}</div>
+          <div class="pr-note">${offer.isRoundTrip?'round trip':'one way'} · per person · ${offer.currency||'USD'}</div>
         </div>
         <div>
           <button class="pr-cta ${starPriority?'pr-cta-star':''}" onclick="openModal(window._offerMap[${idx}])">${starPriority?'Request Private Rate →':'Request Quote →'}</button>

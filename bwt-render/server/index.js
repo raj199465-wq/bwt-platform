@@ -310,6 +310,35 @@ app.post('/api/search', async (req, res) => {
     const data = await raw.json();
     if (data.error) throw new Error(`SearchAPI: ${data.error}`);
 
+    // For round trips: fetch return legs using departure_tokens
+    if (tripType === 'round' && returnDate) {
+      const allOutbound = [...(data.best_flights||[]), ...(data.other_flights||[])];
+      // Fetch return options for top 3 outbound flights to get combined prices
+      const returnFetches = allOutbound.slice(0, 5)
+        .filter(f => f.departure_token)
+        .map(async f => {
+          try {
+            const rp = { ...params, departure_token: f.departure_token };
+            delete rp.return_date;
+            const rqs = new URLSearchParams(rp);
+            const rraw = await fetch(`${SEARCHAPI_BASE}?${rqs.toString()}`,
+              { signal: AbortSignal.timeout(15000) });
+            if (!rraw.ok) return null;
+            const rdata = await rraw.json();
+            return { outbound: f, returnData: rdata };
+          } catch { return null; }
+        });
+      const returnResults = (await Promise.all(returnFetches)).filter(Boolean);
+      // Attach return flight info to outbound offers
+      returnResults.forEach(({ outbound, returnData }) => {
+        const returnFlights = [...(returnData.best_flights||[]), ...(returnData.other_flights||[])];
+        if (returnFlights.length) {
+          outbound._returnFlight = returnFlights[0];
+          outbound._combinedPrice = (outbound.price||0) + (returnFlights[0].price||0);
+        }
+      });
+    }
+
     const { offers, priceInsights } = normalizeSearchAPIResponse(data, travelClass, tripType);
 
     if (!offers.length) {
