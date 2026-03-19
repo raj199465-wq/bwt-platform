@@ -1755,15 +1755,13 @@ async function doSearch() {
       allOffers = res.ok ? (data.offers||[]) : [];
       if (res.ok && data.priceInsights) window._priceInsights = data.priceInsights;
       if (!res.ok && !allOffers.length) {
-        document.getElementById('cards').innerHTML = `<div class="empty">
-          <div class="empty-emo">⚠️</div>
-          <div class="empty-h">Search unavailable</div>
-          <p class="empty-p">${data.message||'Please WhatsApp or call us and we'll find your fare directly.'}</p>
-          <a href="https://wa.me/YOUR_WA_NUMBER?text=Hi+BWT,+I+need+a+quote+for+${orig}+to+${dest}" 
-             target="_blank" class="pr-cta" style="max-width:240px;margin:16px auto 0;display:block;text-align:center;text-decoration:none">
-            WhatsApp Us For a Quote
-          </a>
-        </div>`;
+        document.getElementById('cards').innerHTML =
+          '<div class="empty"><div class="empty-emo">⚠️</div>' +
+          '<div class="empty-h">Search unavailable</div>' +
+          '<p class="empty-p">' + (data.message || 'Search temporarily unavailable. Please WhatsApp us.') + '</p>' +
+          '<a href="https://wa.me/YOUR_WA_NUMBER" target="_blank" class="pr-cta"' +
+          ' style="max-width:240px;margin:16px auto 0;display:block;text-align:center;text-decoration:none">' +
+          'WhatsApp Us For a Quote</a></div>';
         return;
       }
     } else {
@@ -1897,6 +1895,8 @@ function buildOtherDivider() {
    BUILD CARD
 ═══════════════════════════════════════════════ */
 function buildCard(offer, idx, gated=false, starPriority=false) {
+  if (!window._offerMap) window._offerMap = {};
+  window._offerMap[idx] = offer;
   const card=document.createElement('div');
   card.className='fcard';
   if ((offer.badges||[]).some(b=>b==='Best Value'||b==='Lowest Fare')) card.classList.add('hl');
@@ -1964,14 +1964,13 @@ function buildCard(offer, idx, gated=false, starPriority=false) {
       <div class="seg-mid">
         <div class="seg-fn">${seg.flightNumber||''}</div>
         <div class="seg-ac">${seg.aircraft||''}</div>
-        ${seg.legroom?'<div class="seg-leg">💺 '+seg.legroom+'</div>":''}
+        ${seg.legroom?'<div class="seg-leg">💺 '+seg.legroom+'</div>':''}
         <div class="seg-du">${seg.duration||''}</div>
       </div>
       <div class="seg-r"><div class="seg-t">${fmtTime(seg.arrival?.datetime)}</div><div class="seg-a">${seg.arrival?.airport||''}${seg.arrival?.terminal?' T'+seg.arrival.terminal:''}</div></div>
     </div>`;
   });
 
-  const esc=JSON.stringify(offer).replace(/\/g,'\\').replace(/`/g,'\`');
 
   card.innerHTML=`
     <div class="fg">
@@ -2025,7 +2024,7 @@ function buildCard(offer, idx, gated=false, starPriority=false) {
           <div class="pr-note">per person · ${offer.currency||'USD'}</div>
         </div>
         <div>
-          <button class="pr-cta ${starPriority?'pr-cta-star':''}" onclick="openModal(\`${esc}\`)">${starPriority?'Request Private Rate →':'Request Quote →'}</button>
+          <button class="pr-cta ${starPriority?'pr-cta-star':''}" onclick="openModal(window._offerMap[${idx}])">${starPriority?'Request Private Rate →':'Request Quote →'}</button>
           <div class="pr-sub">${starPriority?'⚡ We specialize in beating these fares':"We'll check if we can beat this price"}</div>
         </div>
       </div>
@@ -2036,7 +2035,7 @@ function buildCard(offer, idx, gated=false, starPriority=false) {
         <div class="fc-mob-p">$${Math.round(offer.totalPrice||0).toLocaleString()}</div>
         <div class="fc-mob-n">${offer.carrierName||code}${primaryFn?' · '+primaryFn:''}</div>
       </div>
-      <button class="pr-cta" style="width:auto;padding:8px 16px;margin-top:0" onclick="openModal(\`${esc}\`)">Quote</button>
+      <button class="pr-cta" style="width:auto;padding:8px 16px;margin-top:0" onclick="openModal(window._offerMap[${idx}])">Quote</button>
     </div>
     <!-- Toggle -->
     <button class="fc-tog" id="tog-${idx}" onclick="toggleSegs(${idx})">
@@ -2058,7 +2057,7 @@ function buildCard(offer, idx, gated=false, starPriority=false) {
       <div class="gate-lock">🔒</div>
       <div class="gate-h">See All Results</div>
       <p class="gate-p">Create a free account to view all available fares and request a quote from our specialists.</p>
-      <button class="gate-btn" onclick="openModal(null)">Sign Up Free — It's Instant</button>
+      <button class="gate-btn" onclick="openModal(null)">Sign Up Free — Instant Access</button>
       <div class="gate-note">No credit card · No spam · Cancel anytime</div>
     </div>`;
     card.appendChild(ov);
@@ -2195,12 +2194,10 @@ function buildSCard(f, idx) {
   el.className = 'scard';
 
   // Airline chips
-  const chips = (f.airlines||[]).map(code => {
+    const chips = (f.airlines||[]).map(code => {
     const logo = LOGOS[code];
-    return `<div class="sc-chip">${logo
-      ? '<img src="' + logo + '" alt="' + code + '" onerror="this.outerHTML=\'<span class=\\'sc-chip-fb\\'>' + code + '</span>\'">'
-      : '<span class="sc-chip-fb">' + code + '</span>'
-    } ${code}</div>`;
+    const logoHtml = logo ? '<img src="' + logo + '" alt="' + code + '" width="20" height="20" style="object-fit:contain">' : '';
+    return '<div class="sc-chip">' + logoHtml + ' ' + code + '</div>';
   }).join('');
 
   // Quote payload for this specialist find
