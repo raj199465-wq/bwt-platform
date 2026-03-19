@@ -2690,7 +2690,19 @@ function fmtTime(dt) {
   catch { return '--:--'; }
 }
 function isNextDay(dep,arr) { if(!dep||!arr) return false; try { return new Date(arr).toDateString()!==new Date(dep).toDateString()&&new Date(arr)>new Date(dep); } catch { return false; } }
-function calcLay(arr,dep) { if(!arr||!dep) return ''; const ms=new Date(dep)-new Date(arr), h=Math.floor(ms/3600000), m=Math.round((ms%3600000)/60000); return m?`${h}h ${m}m`:`${h}h`; }
+function calcLay(arr,dep) {
+  if (!arr||!dep) return '';
+  // Try parsing as time strings first (SearchAPI format "6:20 AM")
+  // These can't be subtracted so fall back to empty
+  if (String(arr).match(/AM|PM/i) || String(dep).match(/AM|PM/i)) return '';
+  try {
+    const ms = new Date(dep) - new Date(arr);
+    if (isNaN(ms) || ms <= 0) return '';
+    const h = Math.floor(ms/3600000);
+    const m = Math.round((ms%3600000)/60000);
+    return m ? h+'h '+m+'m' : h+'h';
+  } catch { return ''; }
+}
 function parseDur(s) { if(!s) return 9999; const h=s.match(/(\d+)h/), m=s.match(/(\d+)m/); return (h?+h[1]*60:0)+(m?+m[1]:0); }
 function getHour(dt) { try { return new Date(dt).getHours(); } catch { return 0; } }
 function daysOut(n) { const d=new Date(); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); }
