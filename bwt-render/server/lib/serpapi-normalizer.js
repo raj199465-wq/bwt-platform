@@ -236,10 +236,12 @@ function normalizeSegment(seg, idx, layovers, layoverIdx) {
     overnight:   seg.overnight || false,
     extensions:  seg.extensions || [],
     // Layover after this segment (if any)
+    // SearchAPI layover: { id, name, duration (minutes), overnight }
     layoverAfter: layovers[layoverIdx] ? {
-      airport:  layovers[layoverIdx].id,
-      name:     layovers[layoverIdx].name,
-      duration: formatMins(layovers[layoverIdx].duration || 0),
+      airport:  layovers[layoverIdx].id   || '',
+      name:     layovers[layoverIdx].name || '',
+      duration: formatMins(layovers[layoverIdx].duration || layovers[layoverIdx].layover_duration || 0),
+      durationRaw: layovers[layoverIdx].duration || 0,
     } : null,
   };
 }

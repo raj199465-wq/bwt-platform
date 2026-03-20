@@ -351,6 +351,11 @@ app.post('/api/search', async (req, res) => {
 
     const sorted = assignBadges(sortOffers(offers, sort));
     log('info', 'search', 'searchapi success', { orig, dest, count: sorted.length });
+    // Debug: log first offer layover data
+    const firstOffer = sorted[0];
+    if (firstOffer?.layovers?.length) {
+      log('info', 'search', 'layover sample', { layovers: firstOffer.layovers.slice(0,2) });
+    }
 
     return res.json({
       offers: sorted, fromCache: false, count: sorted.length, priceInsights,

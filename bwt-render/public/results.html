@@ -1237,14 +1237,6 @@ mark.m{background:rgba(201,168,76,.18);border-radius:2px;padding:0 1px;color:inh
 <div class="acdrop" id="acdrop"></div>
 
 <script>
-window.onerror = function(msg, src, line, col, err) {
-  console.error('[BWT CRASH] ' + msg + ' at line ' + line + ' col ' + col);
-  console.error('[BWT CRASH] Error object:', err);
-  return false;
-};
-window.addEventListener('unhandledrejection', function(e) {
-  console.error('[BWT PROMISE ERROR]', e.reason);
-});
 /* BWT v2.1 — 2026-03-19 18:54 */
 /* ═══════════════════════════════════════════════
    CONFIG
@@ -2054,6 +2046,7 @@ function buildCard(offer, idx, gated=false, starPriority=false) {
         <div class="seg-hd">Outbound · ${j.origin||''} → ${j.destination||''}</div>
         ${segHTML}
       </div>
+      ${offer.journeys && offer.journeys[1] ? buildReturnSegHTML(offer.journeys[1]) : ''}
     </div>`;
 
   if (gated) {
