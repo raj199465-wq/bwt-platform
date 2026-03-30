@@ -3487,3 +3487,3159 @@ function injectUnknownRoutePanel(orig, dest) {
 
 </body>
 </html>
+}
+.rh-steps{
+  display:flex;align-items:stretch;gap:0;
+}
+.rh-step{
+  display:flex;align-items:flex-start;gap:14px;flex:1;
+  padding-right:24px;
+}
+.rh-step-num{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--gold,#c8a84b);color:#0a1228;
+  font-size:16px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-family:'Syne',sans-serif;
+}
+.rh-step-title{
+  font-size:15px;font-weight:700;color:#fff;
+  margin-bottom:6px;font-family:'Syne',sans-serif;
+  line-height:1.2;
+}
+.rh-step-sub{font-size:12px;color:rgba(255,255,255,.55);line-height:1.6;}
+.rh-step-divider{
+  display:flex;align-items:center;
+  font-size:20px;color:rgba(200,168,75,.3);
+  padding:0 8px;flex-shrink:0;padding-top:8px;
+}
+@media(max-width:700px){
+  .rh-steps{flex-direction:column;gap:20px;}
+  .rh-step-divider{display:none;}
+  .rh-step{padding-right:0;}
+}
+
+/* Expanded segment detail */
+.seg-endpoint{display:flex;flex-direction:column;gap:2px;min-width:140px}
+.seg-endpoint.seg-r{align-items:flex-end;text-align:right}
+.seg-date{font-size:10px;font-weight:600;color:var(--gold,#c8a84b);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px}
+.seg-apt-name{font-size:12px;color:rgba(255,255,255,.7);line-height:1.3}
+.seg-city{font-size:11px;color:rgba(255,255,255,.4);margin-top:1px}
+
+.pub-banner{flex-direction:column}.pub-banner-cta{width:100%;justify-content:center}}
+
+/* Histogram */
+.hist-card{background:var(--s1);border:1px solid var(--bdr);border-top:2px solid var(--navy);border-radius:var(--r);padding:13px 15px 9px;margin-bottom:10px;display:none}
+.hist-card.on{display:block}
+.hc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.hc-lbl{font-size:9.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--navy);opacity:.65}
+.hc-sub{font-size:10px;color:var(--muted);margin-top:2px;font-weight:400}
+.hc-range{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--navy);font-weight:600}
+.hist{display:flex;align-items:flex-end;gap:2px;height:38px}
+.hb{flex:1;border-radius:3px 3px 0 0;min-height:3px;background:#cbd5e8;cursor:pointer;transition:background .15s}
+.hb.act{background:var(--navy2)}
+.hb.act:hover{background:var(--blue)}
+.hb:not(.act):hover{opacity:.7}
+.hc-bot{display:flex;justify-content:space-between;margin-top:4px;font-size:9.5px;color:var(--subtle);font-family:'JetBrains Mono',monospace}
+
+/* Sort */
+.sort-row{display:flex;align-items:center;gap:6px;margin-bottom:11px;flex-wrap:wrap}
+.sort-lbl{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--subtle);margin-right:2px}
+.schip{
+  padding:6px 13px;border-radius:100px;font-size:11.5px;font-weight:700;
+  border:1.5px solid var(--bdr2);color:var(--muted);background:var(--s1);transition:all .15s;
+}
+.schip.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.schip:hover:not(.on){border-color:var(--bdr3);color:var(--ink2)}
+.rcnt{margin-left:auto;font-size:11.5px;color:var(--muted);font-weight:500}
+
+/* ══════════════════════════════════════════════════════════
+   FLIGHT CARD
+══════════════════════════════════════════════════════════ */
+.cards{display:flex;flex-direction:column;gap:6px}
+.fcard{
+  background:var(--card);border:1px solid var(--bdr);border-radius:var(--r2);
+  overflow:hidden;transition:border-color .2s,box-shadow .2s,transform .15s;
+  animation:cIn .22s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes cIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+.fcard:hover{border-color:var(--blue-b);box-shadow:var(--sh2),0 0 0 1px var(--blue-b);transform:translateY(-1px);background:var(--card-h)}
+.fcard.hl{border-color:var(--blue-b);box-shadow:0 0 0 1.5px var(--blue-b),var(--glow)}
+.fcard.lh-card{border-color:rgba(5,80,160,.3)}
+.fcard.lh-card:hover{border-color:rgba(5,80,160,.55);box-shadow:0 0 0 1px rgba(5,80,160,.35),var(--sh2)}
+
+/* ── Alliance dividers ── */
+.alliance-divider{display:flex;align-items:center;justify-content:space-between;
+  padding:11px 16px;border-radius:10px;margin-bottom:8px;gap:12px}
+.lh-divider{background:linear-gradient(135deg,rgba(5,40,105,.1),rgba(5,40,105,.05));
+  border:1px solid rgba(5,80,160,.2);border-left:3px solid #0550a0}
+.other-divider{background:rgba(255,255,255,.03);border:1px solid var(--bdr);
+  margin-top:18px;border-left:3px solid var(--bdr2)}
+.adiv-left{display:flex;flex-direction:column;gap:3px}
+.adiv-logo{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;
+  color:#1a6bc4;letter-spacing:.04em}
+.adiv-logo-other{color:var(--ink2);font-weight:600}
+.adiv-sub{font-size:10.5px;color:var(--muted);letter-spacing:.03em}
+.adiv-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;white-space:nowrap}
+.adiv-badge{background:rgba(26,58,107,.15);border:1px solid rgba(26,58,107,.3);
+  color:#4a7bc4;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;
+  letter-spacing:.06em}
+.adiv-note{font-size:10.5px;color:var(--muted)}
+.adiv-note-other{font-size:10.5px;color:var(--muted)}
+
+/* ── Private rate CTA button ── */
+.pr-cta-star{background:linear-gradient(135deg,#0550a0,#1a6bc4) !important;
+  border-color:#1a6bc4 !important}
+.pr-cta-star:hover{background:linear-gradient(135deg,#044490,#1560b0) !important;
+  transform:translateY(-1px)}
+
+/* ── Blur gate ── */
+.fcard.gated{position:relative;overflow:visible}
+.fcard.gated .fg,
+.fcard.gated .fc-mob,
+.fcard.gated .fc-tog,
+.fcard.gated .fc-segs{filter:blur(5px);pointer-events:none;user-select:none}
+.scard.gated{position:relative;overflow:visible}
+.scard.gated .sc-grid,
+.scard.gated .sc-mob{filter:blur(4px);pointer-events:none;user-select:none}
+.gate-overlay{
+  position:absolute;inset:0;z-index:10;
+  background:rgba(238,242,248,.88);backdrop-filter:blur(4px);
+  border-radius:var(--r2);
+  display:flex;align-items:center;justify-content:center;
+}
+.gate-box{
+  background:#ffffff;border:1px solid var(--gold-b);border-radius:13px;
+  padding:18px 24px;text-align:center;box-shadow:var(--sh2);
+  max-width:300px;
+}
+.gate-lock{font-size:22px;margin-bottom:7px}
+.gate-h{font-size:13px;font-weight:700;color:#0f172a;margin-bottom:4px;font-family:'Instrument Serif',serif}
+.gate-p{font-size:11px;color:#64748b;margin-bottom:12px;line-height:1.55}
+.gate-btn{
+  background:var(--navy);color:#ffffff;
+  padding:9px 22px;border-radius:8px;
+  font-size:12px;font-weight:800;cursor:pointer;border:none;
+  transition:all .15s;display:block;width:100%;
+}
+.gate-btn:hover{background:var(--navy2)}
+.gate-note{font-size:9.5px;color:#94a3b8;margin-top:7px}
+
+/* Card main grid */
+.fg{display:grid;grid-template-columns:90px 1fr auto;min-height:96px}
+
+/* ─ Airline column ─ */
+.fc-air{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  padding:16px 10px;border-right:1px solid var(--bdr);background:var(--s1);
+}
+.al-lg{width:46px;height:46px;border-radius:9px;background:var(--s2);border:1px solid var(--bdr2);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.al-lg img{width:100%;height:100%;object-fit:contain;padding:3px}
+.al-lg-fb{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:var(--ink2)}
+.air-name{font-size:9.5px;color:var(--muted);text-align:center;line-height:1.3;max-width:70px;font-weight:500}
+
+/* ─ Route column ─ */
+.fc-rt{padding:16px 20px;display:flex;flex-direction:column;justify-content:center;gap:10px}
+.rt-times{display:flex;align-items:center;gap:0}
+.rt-pt{min-width:76px}
+.rt-time{
+  font-family:'Instrument Serif',Georgia,serif;
+  font-size:27px;color:var(--ink);line-height:1;letter-spacing:-.01em;
+}
+.rt-time.late{color:var(--red)}
+.rt-apt{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:var(--muted);margin-top:3px;letter-spacing:.06em}
+.rt-city{font-size:9.5px;color:var(--subtle);margin-top:1px}
+.rt-mid{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:0 16px;min-width:110px}
+.rt-dur{font-size:11px;font-weight:700;color:var(--muted)}
+.rt-path{width:100%;display:flex;align-items:center}
+.rt-line{flex:1;height:1px;background:var(--bdr3)}
+.rt-dot{width:6px;height:6px;border-radius:50%;border:1.5px solid var(--bdr3);background:var(--card);flex-shrink:0}
+.rt-plane{color:var(--gold);font-size:13px;margin:0 4px;flex-shrink:0}
+.rt-stp{font-size:10px;font-weight:800;text-align:center}
+.rt-stp.direct{color:var(--green)}
+.rt-stp.conn{color:var(--amber)}
+.rt-tags{display:flex;gap:4px;flex-wrap:wrap}
+.tag{
+  display:inline-flex;align-items:center;gap:3px;
+  padding:2px 7px;border-radius:4px;border:1px solid;
+  font-size:9.5px;font-weight:800;letter-spacing:.02em;
+}
+.tag.cbn{border-color:var(--gold-b);color:var(--gold);background:var(--gold-dim)}
+.tag.bag{border-color:var(--bdr2);color:var(--muted);background:var(--s3)}
+.tag.ref{border-color:var(--green-b);color:var(--green);background:var(--green-bg)}
+.tag.noref{border-color:var(--bdr2);color:var(--subtle);background:var(--s3)}
+.tag.fare{border-color:rgba(96,165,250,.2);color:var(--blue);background:var(--blue-bg)}
+.tag svg{width:9px;height:9px}
+
+/* ─ Price column ─ */
+.fc-pr{
+  padding:16px 18px;display:flex;flex-direction:column;
+  align-items:flex-end;justify-content:space-between;
+  border-left:1px solid var(--bdr);min-width:172px;
+}
+.pr-badges{display:flex;flex-direction:column;align-items:flex-end;gap:4px;margin-bottom:4px}
+.pbadge{font-size:9px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;padding:2px 8px;border-radius:100px;border:1px solid}
+.pbadge.best{background:var(--gold-dim);color:var(--gold);border-color:var(--gold-b)}
+.pbadge.cheap{background:var(--green-bg);color:var(--green);border-color:var(--green-b)}
+.pbadge.fast{background:var(--blue-bg);color:var(--blue);border-color:rgba(96,165,250,.25)}
+.pbadge.nonstop{background:rgba(167,139,250,.09);color:#a78bfa;border-color:rgba(167,139,250,.25)}
+.pr-amt{}
+.pr-big{font-family:'Instrument Serif',Georgia,serif;font-size:29px;color:var(--ink);line-height:1;letter-spacing:-.02em}
+.pr-big sup{font-size:14px;letter-spacing:0;vertical-align:super}
+.pr-note{font-size:9.5px;color:var(--muted);margin-top:3px;font-weight:500}
+.pr-cta{
+  width:100%;margin-top:10px;background:var(--navy);color:#ffffff;
+  padding:10px 14px;border-radius:9px;font-size:12px;font-weight:800;
+  text-align:center;cursor:pointer;transition:all .15s;border:none;
+}
+.pr-cta:hover{background:var(--blue);transform:translateY(-1px);box-shadow:0 4px 16px rgba(26,86,219,.28)}
+.pr-cta:active{transform:none}
+.pr-sub{font-size:10px;color:var(--green);text-align:right;margin-top:5px;font-weight:600}
+
+/* ─ Expand toggle ─ */
+.fc-tog{
+  width:100%;padding:8px 20px;background:var(--s2);border-top:1px solid var(--bdr);
+  color:var(--muted);font-size:11px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  transition:all .15s;cursor:pointer;
+}
+.fc-tog:hover{background:var(--s3);color:var(--ink2)}
+.fc-tog svg{width:13px;height:13px;transition:transform .2s}
+.fc-tog.on svg{transform:rotate(180deg)}
+
+/* ─ Segments panel ─ */
+.fc-segs{display:none;border-top:1px solid var(--bdr);background:var(--s1)}
+.fc-segs.on{display:block}
+.seg-wrap{padding:14px 20px}
+.fc-return-summary{display:flex;align-items:center;gap:7px;padding:8px 16px;font-size:11px;color:var(--muted);background:rgba(200,168,75,.04);border-top:1px solid var(--border);flex-wrap:wrap}
+.fc-return-summary svg{color:var(--gold);flex-shrink:0}
+.seg-hd-return{color:var(--gold);border-color:var(--goldb)}
+.seg-wrap-return{margin-top:16px;padding-top:16px;border-top:2px dashed var(--border)}
+.seg-hd{font-size:9px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.seg-hd::after{content:'';flex:1;height:1px;background:var(--bdr)}
+.seg-row{display:grid;grid-template-columns:1fr 76px 1fr;gap:12px;align-items:center;margin-bottom:6px}
+.seg-t{font-family:'Instrument Serif',Georgia,serif;font-size:20px;color:var(--ink)}
+.seg-a{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--muted);margin-top:2px;letter-spacing:.06em}
+.seg-mid{text-align:center}
+.seg-fn{font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;color:var(--ink2)}
+.seg-ac{font-size:10px;color:var(--muted)}
+.seg-du{font-size:9.5px;color:var(--subtle);margin-top:1px}
+.seg-r{text-align:right}
+.layover{
+  margin:5px 0 10px;padding:6px 11px;
+  background:var(--amber-bg);border:1px solid rgba(245,158,11,.2);
+  border-radius:7px;font-size:11px;font-weight:600;color:var(--amber);
+  display:flex;align-items:center;gap:5px;
+}
+.layover svg{width:11px;height:11px;flex-shrink:0}
+
+/* Mobile price strip */
+.fc-mob{display:none;align-items:center;justify-content:space-between;padding:11px 15px;border-top:1px solid var(--bdr);background:var(--s2)}
+.fc-mob-p{font-family:'Instrument Serif',serif;font-size:22px;color:var(--ink)}
+.fc-mob-n{font-size:9.5px;color:var(--muted);margin-top:1px}
+
+/* ══════════════════════════════════════════════════════════
+   INTERSTITIAL
+══════════════════════════════════════════════════════════ */
+.icta{
+  background:linear-gradient(135deg,var(--s2),var(--s3));
+  border:1px solid var(--blue-b);border-radius:var(--r2);
+  padding:22px 26px;display:flex;align-items:center;gap:18px;
+  position:relative;overflow:hidden;
+}
+.icta::before{
+  content:'';position:absolute;top:-50px;right:-50px;
+  width:160px;height:160px;border-radius:50%;
+  background:radial-gradient(circle,rgba(26,86,219,.06),transparent 70%);
+  pointer-events:none;
+}
+.icta-ico{font-size:30px;flex-shrink:0;filter:drop-shadow(0 0 10px rgba(26,86,219,.2))}
+.icta-txt h3{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px;font-family:'Instrument Serif',serif}
+.icta-txt p{font-size:11.5px;color:var(--muted);line-height:1.65;max-width:500px}
+.icta-act{margin-left:auto;flex-shrink:0;display:flex;flex-direction:column;gap:7px;align-items:flex-end}
+.icta-btn{padding:9px 20px;border-radius:9px;font-size:12px;font-weight:800;cursor:pointer;border:none;transition:all .15s}
+.icta-btn.p{background:var(--navy);color:#fff}
+.icta-btn.p:hover{background:var(--blue)}
+.icta-btn.g{color:var(--muted);font-size:11px;text-decoration:underline;padding:3px 0}
+.icta-btn.g:hover{color:var(--ink2)}
+
+/* ══════════════════════════════════════════════════════════
+   SKELETON
+══════════════════════════════════════════════════════════ */
+.skel-card{
+  background:var(--s1);border:1px solid var(--bdr);border-radius:var(--r2);
+  padding:18px;display:grid;grid-template-columns:72px 1fr 148px;
+  gap:18px;align-items:center;margin-bottom:6px;
+}
+.sk{border-radius:5px;background:linear-gradient(90deg,var(--s2) 0%,var(--s3) 50%,var(--s2) 100%);background-size:200% 100%;animation:sh 1.6s infinite}
+@keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.sk-col{display:flex;flex-direction:column;gap:7px}
+
+/* ══════════════════════════════════════════════════════════
+   EMPTY
+══════════════════════════════════════════════════════════ */
+.empty{background:var(--s1);border:1px solid var(--bdr);border-radius:var(--r2);padding:60px 32px;text-align:center}
+.empty-emo{font-size:44px;margin-bottom:14px}
+.empty-h{font-family:'Instrument Serif',serif;font-size:20px;color:var(--ink);margin-bottom:7px}
+.empty-p{font-size:13px;color:var(--muted);max-width:360px;margin:0 auto 22px;line-height:1.7}
+
+/* ══════════════════════════════════════════════════════════
+   QUOTE MODAL
+══════════════════════════════════════════════════════════ */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);backdrop-filter:blur(8px);z-index:1000;align-items:center;justify-content:center;padding:16px}
+.modal-bg.on{display:flex}
+.modal{
+  background:#ffffff;border:1px solid rgba(0,0,0,.12);border-radius:var(--r2);
+  width:100%;max-width:510px;max-height:92vh;overflow-y:auto;
+  box-shadow:0 32px 80px rgba(0,0,0,.5);
+  animation:mIn .2s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes mIn{from{opacity:0;transform:scale(.96) translateY(10px)}to{opacity:1;transform:none}}
+.modal-hd{
+  background:linear-gradient(135deg,var(--navy),var(--navy2));
+  padding:19px 22px;border-bottom:1px solid var(--bdr);
+  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+  position:sticky;top:0;z-index:1;border-radius:var(--r2) var(--r2) 0 0;
+}
+.modal-hd h2{font-family:'Instrument Serif',serif;font-size:17px;color:#ffffff}
+.modal-hd p{font-size:11px;color:rgba(255,255,255,.6);margin-top:3px}
+.modal-x{width:27px;height:27px;background:rgba(255,255,255,.15);border-radius:50%;color:rgba(255,255,255,.8);font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;border:1px solid rgba(0,0,0,.1);transition:all .15s}
+.modal-x:hover{background:rgba(255,255,255,.25);color:#ffffff}
+.modal-body{padding:20px}
+.fpr{background:var(--gold-dim);border:1px solid var(--gold-b);border-radius:9px;padding:12px 14px;margin-bottom:18px}
+.fpr-r{font-family:'Instrument Serif',serif;font-size:14px;color:var(--ink);margin-bottom:2px}
+.fpr-m{font-size:11px;color:var(--muted)}
+.fpr-p{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--gold);margin-top:4px}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:13px}
+.fr{margin-bottom:13px}
+.fl{display:block;font-size:9.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.fi{
+  width:100%;padding:10px 12px;border-radius:8px;
+  background:#f8fafc;border:1.5px solid rgba(0,0,0,.12);
+  color:var(--ink);font-size:13px;outline:none;transition:border-color .15s;
+}
+.fi:focus{border-color:var(--gold-b)}
+.fi::placeholder{color:var(--subtle)}
+.fi-sel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%233f5570'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;cursor:pointer}
+.fi-sel option{background:#ffffff}
+.fi-ta{min-height:70px;resize:vertical}
+.ferr{font-size:10.5px;color:var(--red);margin-top:3px;display:none}
+.ferr.on{display:block}
+.f-sub{
+  width:100%;padding:12px;background:var(--gold);color:#080d16;
+  border-radius:9px;font-size:13px;font-weight:800;
+  border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;
+  transition:all .15s;
+}
+.f-sub:hover{background:var(--gold-l)}
+.f-sub:disabled{opacity:.65;cursor:wait}
+.f-note{font-size:10.5px;color:var(--subtle);text-align:center;margin-top:9px}
+.q-ok{text-align:center;padding:48px 22px;display:none}
+.q-ok.on{display:block}
+.q-ok-emo{font-size:42px;margin-bottom:13px}
+.q-ok-h{font-family:'Instrument Serif',serif;font-size:21px;color:var(--ink);margin-bottom:5px}
+.q-ok-ref{
+  display:inline-block;background:var(--gold-dim);border:1px solid var(--gold-b);
+  border-radius:8px;padding:8px 22px;margin:9px 0 13px;
+  font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:600;color:var(--gold);letter-spacing:.12em;
+}
+.q-ok-p{font-size:12.5px;color:#64748b;max-width:340px;margin:0 auto;line-height:1.7}
+
+/* ══════════════════════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════════════════════ */
+.toast{
+  position:fixed;bottom:22px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:#1e293b;color:#f1f5f9;border:1px solid rgba(255,255,255,.1);
+  padding:10px 20px;border-radius:9px;font-size:13px;font-weight:600;
+  z-index:9999;transition:transform .3s cubic-bezier(.22,1,.36,1);
+  max-width:90vw;text-align:center;box-shadow:var(--sh2);
+}
+.toast.on{transform:translateX(-50%) translateY(0)}
+.toast.err{background:rgba(239,68,68,.14);border-color:rgba(239,68,68,.3);color:#fca5a5}
+
+/* ══════════════════════════════════════════════════════════
+   AIRPORT DROPDOWN
+══════════════════════════════════════════════════════════ */
+.ac-sug{
+  position:absolute;top:calc(100% + 4px);left:0;
+  width:320px;
+  background:#0d1b3e;
+  border:1px solid rgba(200,168,75,.25);
+  border-radius:10px;
+  box-shadow:0 12px 40px rgba(0,0,0,.7);
+  overflow:hidden;z-index:99999;
+  display:none;
+}
+.ac-sug.open{display:block;animation:acIn .1s ease both}
+@keyframes acIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.ac-row{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.05);transition:background .1s}
+.ac-row:last-child{border-bottom:none}
+.ac-row:hover,.ac-row.hl{background:rgba(200,168,75,.1)}
+.ac-flag{font-size:15px;width:22px;text-align:center;flex-shrink:0}
+.ac-inf{flex:1;min-width:0}
+.ac-city{font-size:12.5px;font-weight:600;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ac-name{font-size:10.5px;color:#64748b;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ac-code{font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600;color:var(--gold);flex-shrink:0}
+mark.m{background:rgba(201,168,76,.18);border-radius:2px;padding:0 1px;color:inherit;font-weight:700}
+.ac-none{padding:16px 13px;text-align:center;color:#64748b;font-size:12px}
+
+/* ══════════════════════════════════════════════════════════
+   SPECIALIST FINDS
+══════════════════════════════════════════════════════════ */
+.sf-section{margin-top:28px}
+.sf-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.sf-head-line{flex:1;height:1px;background:linear-gradient(to right,var(--gold-b),transparent)}
+.sf-head-line2{flex:1;height:1px;background:linear-gradient(to left,var(--gold-b),transparent)}
+.sf-badge{
+  display:flex;align-items:center;gap:7px;
+  background:linear-gradient(135deg,rgba(15,32,68,.08),rgba(15,32,68,.03));
+  border:1px solid var(--gold-b);border-radius:100px;padding:5px 14px 5px 10px;
+  font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--navy);white-space:nowrap;
+}
+.sf-badge svg{width:14px;height:14px}
+.sf-sub{font-size:12px;color:var(--muted);margin-bottom:16px;text-align:center;line-height:1.6;max-width:580px;margin-left:auto;margin-right:auto}
+.scard{
+  background:#ffffff;border:1px solid rgba(0,0,0,.08);border-radius:var(--r2);
+  overflow:hidden;position:relative;margin-bottom:8px;
+  transition:border-color .2s,box-shadow .2s,transform .15s;
+  animation:cIn .25s cubic-bezier(.22,1,.36,1) both;
+}
+.scard:hover{border-color:var(--gold-b);box-shadow:var(--sh2),var(--glow);transform:translateY(-1px)}
+.scard-bar{position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--navy),var(--blue))}
+.sc-grid{display:grid;grid-template-columns:42px 1fr auto;padding:16px 18px 16px 22px;gap:0;align-items:center}
+.sc-ico-col{padding-right:14px}
+.sc-ico{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.sc-ico.mixed{background:rgba(96,165,250,.12)}
+.sc-ico.openjaw{background:rgba(167,139,250,.12)}
+.sc-ico.consol{background:rgba(34,197,94,.12)}
+.sc-ico.fueldump{background:rgba(245,158,11,.1)}
+.sc-main{min-width:0}
+.sc-type{font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;display:flex;align-items:center;gap:5px;margin-bottom:3px}
+.sc-type::before{content:'';width:4px;height:4px;border-radius:50%;background:currentColor}
+.sc-type.mixed{color:var(--blue)}
+.sc-type.openjaw{color:#a78bfa}
+.sc-type.consol{color:var(--green)}
+.sc-type.fueldump{color:var(--amber)}
+.sc-route{font-family:'Instrument Serif',Georgia,serif;font-size:17px;color:var(--ink);line-height:1.2;margin-bottom:5px}
+.sc-route em{color:var(--gold);font-style:italic}
+.sc-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.sc-mi{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:4px}
+.sc-mi svg{width:10px;height:10px}
+.sc-dot{color:var(--subtle);font-size:8px}
+.sc-airlines{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:7px}
+.sc-chip{display:flex;align-items:center;gap:5px;background:var(--s3);border:1px solid var(--bdr2);border-radius:6px;padding:3px 8px;font-size:10px;font-weight:600;color:var(--ink2)}
+.sc-chip img{width:16px;height:16px;object-fit:contain}
+.sc-chip-fb{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)}
+.sc-explain{font-size:11px;color:var(--subtle);line-height:1.55;padding:7px 10px;background:var(--s2);border-radius:7px;border-left:2px solid var(--gold-b)}
+.sc-explain strong{color:var(--muted);font-weight:700}
+.sc-pr{display:flex;flex-direction:column;align-items:flex-end;gap:7px;padding-left:20px;flex-shrink:0}
+.sc-saving{font-size:9px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:100px;background:var(--green-bg);color:var(--green);border:1px solid var(--green-b);white-space:nowrap}
+.sc-was{font-size:10px;color:var(--subtle);text-decoration:line-through;font-family:'JetBrains Mono',monospace;text-align:right}
+.sc-price{font-family:'Instrument Serif',Georgia,serif;font-size:26px;color:var(--ink);line-height:1;letter-spacing:-.01em;text-align:right}
+.sc-price sup{font-size:13px;vertical-align:super;letter-spacing:0}
+.sc-pnote{font-size:9px;color:var(--muted);margin-top:2px;text-align:right}
+.sc-cta{background:transparent;border:1.5px solid var(--gold-b);color:var(--gold);padding:8px 15px;border-radius:8px;font-size:11.5px;font-weight:800;cursor:pointer;transition:all .15s;white-space:nowrap;letter-spacing:.02em}
+.sc-cta:hover{background:var(--gold);color:#080d16;border-color:var(--gold)}
+.sc-mob{display:none;align-items:center;justify-content:space-between;padding:10px 14px;border-top:1px solid var(--bdr);background:var(--s2)}
+.sf-disc{background:var(--s2);border:1px solid var(--bdr);border-left:3px solid var(--blue-b);border-radius:var(--r);padding:12px 15px;margin-top:10px;display:flex;align-items:flex-start;gap:9px;font-size:10.5px;color:var(--muted);line-height:1.6}
+.sf-disc svg{width:13px;height:13px;color:var(--subtle);flex-shrink:0;margin-top:1px}
+
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════════════════ */
+@media(max-width:940px){
+  .sidebar{display:none}
+  .main{padding-left:0}
+  .nav-pills{display:none}
+}
+@media(max-width:680px){
+  .nsf:nth-child(5),.nsf-arrow:nth-of-type(2){display:none}
+  .fg{grid-template-columns:72px 1fr}
+  .fc-pr{display:none}
+  .fc-mob{display:flex}
+  .icta{flex-direction:column;text-align:center}
+  .icta-act{margin-left:0;align-items:center}
+  .sc-grid{grid-template-columns:42px 1fr}
+  .sc-pr{display:none}
+  .sc-mob{display:flex}
+}
+@media(max-width:460px){
+  .f2{grid-template-columns:1fr}
+  .rh-route{font-size:17px}
+}
+
+/* ════════════════════════════════
+   ROUTE RANGE BAR
+════════════════════════════════ */
+.route-range-bar{
+  background:var(--navy);
+  border:1px solid var(--gold-border);
+  border-radius:var(--radius);
+  padding:22px 28px;
+  margin-bottom:16px;
+  display:grid;
+  grid-template-columns:1fr auto 1fr auto;
+  gap:0;
+  align-items:center;
+  position:relative;
+  overflow:hidden;
+}
+.route-range-bar::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--gold),var(--gold-l));
+}
+@media(max-width:680px){
+  .route-range-bar{grid-template-columns:1fr;gap:16px}
+  .rrb-div,.rrb-arrow{display:none}
+}
+.rrb-col{display:flex;flex-direction:column;gap:3px}
+.rrb-label{font-size:9px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:rgba(200,210,230,.38);margin-bottom:6px}
+.rrb-range{display:flex;align-items:baseline;gap:5px}
+.rrb-amt{font-family:'Instrument Serif',Georgia,serif;font-size:28px;font-weight:400;line-height:1}
+.rrb-amt--pub{color:rgba(200,200,220,.35);text-decoration:line-through;text-decoration-color:rgba(200,80,80,.35)}
+.rrb-amt--bwt{color:var(--gold)}
+.rrb-suffix{font-size:13px}
+.rrb-suffix--pub{color:rgba(200,200,220,.25)}
+.rrb-suffix--bwt{color:rgba(200,168,75,.5)}
+.rrb-note{font-size:10.5px;color:rgba(200,210,230,.35);margin-top:4px;line-height:1.5}
+.rrb-saving{
+  display:inline-flex;align-items:center;gap:5px;margin-top:8px;
+  background:rgba(45,158,111,.12);border:1px solid rgba(45,158,111,.2);
+  border-radius:100px;padding:3px 10px;
+}
+.rrb-saving-txt{font-size:10.5px;font-weight:700;color:#2d9e6f}
+.rrb-div{width:1px;height:56px;background:rgba(200,168,75,.12);margin:0 28px}
+.rrb-arrow{font-size:22px;color:rgba(200,168,75,.2);padding:0 16px;text-align:center}
+.rrb-disclaimer{
+  grid-column:1/-1;
+  margin-top:14px;padding-top:12px;
+  border-top:1px solid rgba(200,168,75,.08);
+  font-size:10px;color:rgba(200,210,230,.22);line-height:1.6;
+}
+/* Inline under each card — compact version */
+.card-range-hint{
+  background:linear-gradient(90deg,rgba(12,18,32,.6),rgba(12,18,32,.3));
+  border-top:1px solid rgba(200,168,75,.1);
+  padding:10px 20px;
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  font-size:11.5px;
+}
+.crh-label{color:rgba(200,210,230,.35);flex-shrink:0}
+.crh-pub{color:rgba(200,200,220,.3);text-decoration:line-through;font-weight:600}
+.crh-arrow{color:rgba(200,168,75,.3);flex-shrink:0}
+.crh-bwt{color:var(--gold);font-weight:700}
+.crh-saving{
+  margin-left:auto;
+  background:rgba(45,158,111,.1);border:1px solid rgba(45,158,111,.18);
+  border-radius:100px;padding:2px 9px;
+  font-size:10px;font-weight:700;color:#2d9e6f;white-space:nowrap;
+}
+
+/* ════════════════════════════════
+   WHATSAPP
+════════════════════════════════ */
+/* Floating bubble */
+.wa-bubble{
+  position:fixed;bottom:28px;right:28px;z-index:8000;
+  display:flex;align-items:center;gap:0;
+  filter:drop-shadow(0 6px 20px rgba(37,211,102,.35));
+  cursor:pointer;text-decoration:none;
+}
+.wa-bubble-btn{
+  width:58px;height:58px;border-radius:50%;
+  background:#25d366;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .2s,background .2s;
+  position:relative;
+}
+.wa-bubble-btn::before{
+  content:'';position:absolute;inset:0;border-radius:50%;
+  background:#25d366;animation:waPulse 2.5s ease-out infinite;
+}
+@keyframes waPulse{
+  0%{transform:scale(1);opacity:.6}
+  70%{transform:scale(1.5);opacity:0}
+  100%{transform:scale(1.5);opacity:0}
+}
+.wa-bubble-btn svg{position:relative;z-index:1;width:28px;height:28px;fill:#fff}
+.wa-bubble:hover .wa-bubble-btn{background:#20c35a;transform:scale(1.08)}
+.wa-bubble-label{
+  background:#fff;border-radius:8px;
+  padding:8px 14px;margin-right:10px;
+  font-size:12px;font-weight:700;color:#1a1a2e;
+  white-space:nowrap;
+  box-shadow:0 4px 16px rgba(0,0,0,.12);
+  opacity:0;transform:translateX(10px);
+  transition:all .25s cubic-bezier(.22,1,.36,1);
+  pointer-events:none;
+}
+.wa-bubble-label span{display:block;font-size:10px;font-weight:400;color:#6a6a7a;margin-top:1px}
+.wa-bubble:hover .wa-bubble-label{opacity:1;transform:translateX(0)}
+
+/* WhatsApp strip — after route range bar */
+.wa-strip{
+  background:linear-gradient(135deg,#075e54,#128c7e);
+  border-radius:var(--radius);
+  padding:20px 24px;
+  display:flex;align-items:center;gap:20px;
+  margin-bottom:16px;
+  flex-wrap:wrap;
+}
+.wa-strip-left{display:flex;align-items:center;gap:14px;flex:1;min-width:0}
+.wa-strip-icon{
+  width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.15);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.wa-strip-icon svg{width:22px;height:22px;fill:#fff}
+.wa-strip-title{font-size:14px;font-weight:700;color:#fff;margin-bottom:2px}
+.wa-strip-sub{font-size:11.5px;color:rgba(255,255,255,.65);line-height:1.5}
+.wa-strip-btn{
+  display:inline-flex;align-items:center;gap:9px;
+  background:#25d366;color:#fff;
+  padding:12px 22px;border-radius:8px;
+  font-size:12.5px;font-weight:700;font-family:'DM Sans',sans-serif;
+  white-space:nowrap;text-decoration:none;
+  transition:background .2s,transform .15s;flex-shrink:0;
+}
+.wa-strip-btn svg{width:16px;height:16px;fill:#fff;flex-shrink:0}
+.wa-strip-btn:hover{background:#20c35a;transform:translateY(-1px)}
+.wa-strip-timing{
+  font-size:10px;color:rgba(255,255,255,.45);
+  letter-spacing:.06em;text-align:right;flex-shrink:0;
+}
+
+/* Unknown route — WhatsApp first panel */
+.wa-unknown-route{
+  background:var(--navy);border:1px solid rgba(200,168,75,.15);
+  border-radius:var(--radius);padding:40px 36px;text-align:center;
+  margin-bottom:16px;
+}
+.wa-ur-icon{font-size:36px;margin-bottom:16px}
+.wa-ur-title{font-family:'Instrument Serif',Georgia,serif;font-size:22px;color:#fff;margin-bottom:8px}
+.wa-ur-sub{font-size:13.5px;color:rgba(200,210,230,.5);line-height:1.75;max-width:480px;margin:0 auto 28px}
+.wa-ur-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.wa-ur-btn-wa{
+  display:inline-flex;align-items:center;gap:9px;
+  background:#25d366;color:#fff;
+  padding:14px 28px;border-radius:8px;
+  font-size:13px;font-weight:700;font-family:'DM Sans',sans-serif;
+  text-decoration:none;transition:background .2s;
+}
+.wa-ur-btn-wa svg{width:18px;height:18px;fill:#fff}
+.wa-ur-btn-wa:hover{background:#20c35a}
+.wa-ur-btn-call{
+  display:inline-flex;align-items:center;gap:9px;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);color:#fff;
+  padding:14px 28px;border-radius:8px;
+  font-size:13px;font-weight:700;font-family:'DM Sans',sans-serif;
+  text-decoration:none;transition:all .2s;
+}
+.wa-ur-btn-call:hover{background:rgba(255,255,255,.12)}
+
+/* ════════════════════════════════
+   CARD UPGRADES — real airline data
+════════════════════════════════ */
+/* Airline logo — bigger, use Google's hosted version */
+.al-lg{
+  width:52px;height:52px;border-radius:10px;
+  background:var(--l1);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;flex-shrink:0;
+}
+.al-lg img{width:44px;height:44px;object-fit:contain;padding:3px}
+.al-lg-fb{
+  font-size:13px;font-weight:800;color:var(--muted);
+  font-family:'DM Mono',monospace;letter-spacing:.04em;
+}
+.air-name{font-size:12px;font-weight:600;color:var(--ink2);margin-top:5px;text-align:center;max-width:68px;line-height:1.3}
+.air-fnum{font-size:10px;font-weight:700;color:var(--muted);margin-top:2px;text-align:center;font-family:'DM Mono',monospace;letter-spacing:.06em}
+
+/* Amenity pills row */
+.rt-amenities{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.amen{
+  font-size:9.5px;font-weight:700;letter-spacing:.04em;
+  padding:2px 8px;border-radius:100px;
+  border:1px solid var(--border);color:var(--muted);background:var(--l1);
+  display:inline-flex;align-items:center;gap:4px;
+}
+.amen-icon{font-size:10px}
+.amen.flat{border-color:rgba(200,168,75,.3);color:var(--gold);background:var(--gold-dim)}
+.amen.wifi{border-color:#3b82f640;color:#3b82f6;background:#3b82f608}
+.amen.power{border-color:#f59e0b40;color:#d97706;background:#f59e0b08}
+.amen.ent{border-color:#8b5cf640;color:#8b5cf6;background:#8b5cf608}
+.amen.warn{border-color:#dc262640;color:#dc2626;background:#dc262608}
+.amen.night{border-color:rgba(100,120,200,.3);color:#6478c8;background:rgba(100,120,200,.06)}
+.amen.aircraft{border-color:var(--border);color:var(--ink2)}
+
+/* Legroom highlight for business */
+.legroom-tag{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(200,168,75,.08);border:1px solid rgba(200,168,75,.2);
+  border-radius:100px;padding:2px 10px;
+  font-size:9.5px;font-weight:700;color:var(--gold);letter-spacing:.04em;
+}
+
+/* Segment upgrades */
+.seg-fn{font-size:11px;font-weight:700;color:var(--ink2);font-family:'DM Mono',monospace;letter-spacing:.06em}
+.seg-ac{font-size:10px;color:var(--subtle);margin-top:1px}
+.seg-leg{font-size:10px;color:var(--gold);margin-top:2px;font-weight:600}
+.layover-detail{font-size:10px;color:var(--subtle);margin-top:2px}
+/* Date field — native input fills entire field, picker opens on any click */
+.nsf-date{position:relative}
+.nsf-date-inp{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  opacity:0;cursor:pointer;z-index:10;
+}
+.nsf-date-inp::-webkit-calendar-picker-indicator{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  opacity:0;cursor:pointer;
+}
+.nsf-date-display{
+  font-size:14px;color:rgba(255,255,255,.9);
+  white-space:nowrap;pointer-events:none;
+}
+.nsf-date-display.placeholder{color:rgba(255,255,255,.38)}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV ════════════════════════════════════════════════ -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-gem">
+      <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    </div>
+    <div class="nav-brand">
+      <strong>Business World Travel</strong>
+      <span>Business Class</span>
+    </div>
+  </a>
+
+  <div class="nav-rule"></div>
+
+  <div class="nav-tabs" id="navTabs">
+    <button class="nav-tab on" onclick="setTrip('round',this)">Round Trip</button>
+    <button class="nav-tab" onclick="setTrip('oneway',this)">One Way</button>
+  </div>
+
+  <div class="nav-srch">
+    <!-- Origin -->
+    <div class="nsf">
+      <svg class="nsf-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z"/></svg>
+      <input class="nsf-inp" id="orig-input" placeholder="City or airport" autocomplete="off" spellcheck="false"
+        oninput="acSuggest('orig',this.value)"
+        onfocus="acSuggest('orig',this.value)"
+        onblur="setTimeout(()=>acCloseSug('orig'),160)"
+        onkeydown="acNavSug(event,'orig')">
+      <input type="hidden" id="orig-val">
+      <div class="ac-sug" id="orig-sug"></div>
+    </div>
+    <span class="nsf-arrow">→</span>
+    <!-- Destination -->
+    <div class="nsf">
+      <svg class="nsf-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <input class="nsf-inp" id="dest-input" placeholder="City or airport" autocomplete="off" spellcheck="false"
+        oninput="acSuggest('dest',this.value)"
+        onfocus="acSuggest('dest',this.value)"
+        onblur="setTimeout(()=>acCloseSug('dest'),160)"
+        onkeydown="acNavSug(event,'dest')">
+      <input type="hidden" id="dest-val">
+      <div class="ac-sug" id="dest-sug"></div>
+    </div>
+    <!-- Depart -->
+    <div class="nsf nsf-date" style="cursor:pointer">
+      <svg class="nsf-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
+      <span class="nsf-date-display placeholder" id="dep-display">Depart</span>
+      <input type="date" class="nsf-date-inp" id="dep-date">
+    </div>
+    <!-- Return -->
+    <div class="nsf nsf-date" id="ret-field" style="cursor:pointer">
+      <svg class="nsf-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
+      <span class="nsf-date-display placeholder" id="ret-display">Return</span>
+      <input type="date" class="nsf-date-inp" id="ret-date">
+    </div>
+    <button class="nav-go" id="searchBtn" onclick="doSearch()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      Search
+    </button>
+  </div>
+
+  <div class="nav-pills">
+    <button class="nav-pill">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+      <span id="paxLbl">1 Adult</span>
+    </button>
+    <button class="nav-pill">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+      <span id="cabinLbl">Business</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ═══ RESULTS HEADER ══════════════════════════════════════ -->
+<div class="rhead">
+  <div class="rh-left">
+    <div class="rh-route">
+      <em id="rhOrig">New York</em>
+      <span class="rh-route-arr">→</span>
+      <em id="rhDest">London</em>
+    </div>
+    <div class="rh-meta">
+      <span class="rh-meta-item" id="rhCount">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+        — results
+      </span>
+      <span class="rh-dot">·</span>
+      <span class="rh-meta-item" id="rhDates">—</span>
+      <span class="rh-dot">·</span>
+      <span class="badge idle" id="rhBadge">Loading</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGE ════════════════════════════════════════════════ -->
+<div class="page">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <!-- Stops -->
+    <div class="fp">
+      <div class="fp-hd on" onclick="toggleFP(this)">
+        <div class="fp-title">
+          <svg class="fp-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Stops
+        </div>
+        <svg class="fp-chev on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="fp-bd on">
+        <div class="stops-grid">
+          <button class="stp on" onclick="fStops('any',this)">Any</button>
+          <button class="stp" onclick="fStops('0',this)">Non-stop</button>
+          <button class="stp" onclick="fStops('1',this)">1 Stop</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Price -->
+    <div class="fp">
+      <div class="fp-hd on" onclick="toggleFP(this)">
+        <div class="fp-title">
+          <svg class="fp-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          Max Price
+        </div>
+        <svg class="fp-chev on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="fp-bd on">
+        <div class="pr-wrap">
+          <div class="pr-row"><span class="pr-lbl">Up to</span><span class="pr-val" id="prVal">$15,000</span></div>
+          <input type="range" class="range" id="prSlider" min="0" max="15000" value="15000" step="100" oninput="fPrice(this.value)">
+        </div>
+      </div>
+    </div>
+
+    <!-- Departure time -->
+    <div class="fp">
+      <div class="fp-hd on" onclick="toggleFP(this)">
+        <div class="fp-title">
+          <svg class="fp-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Departure Time
+        </div>
+        <svg class="fp-chev on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="fp-bd on">
+        <div class="time-list">
+          <div class="topt on" onclick="fTime('any',this)"><span>Any time</span><span class="topt-emo">🕐</span></div>
+          <div class="topt" onclick="fTime('morning',this)"><span>Morning · 5am–noon</span><span class="topt-emo">🌅</span></div>
+          <div class="topt" onclick="fTime('afternoon',this)"><span>Afternoon · noon–6pm</span><span class="topt-emo">☀️</span></div>
+          <div class="topt" onclick="fTime('evening',this)"><span>Evening · 6pm–midnight</span><span class="topt-emo">🌙</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Airlines -->
+    <div class="fp">
+      <div class="fp-hd on" onclick="toggleFP(this)">
+        <div class="fp-title">
+          <svg class="fp-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+          Airlines
+        </div>
+        <svg class="fp-chev on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="fp-bd on" id="airlinesFP">
+        <div id="airlinesList" style="font-size:11px;color:var(--subtle);padding:5px 3px">Search first to populate airlines</div>
+      </div>
+    </div>
+
+    <!-- More -->
+    <div class="fp">
+      <div class="fp-hd on" onclick="toggleFP(this)">
+        <div class="fp-title">
+          <svg class="fp-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="9" width="18" height="13" rx="2"/><path d="M8 9V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v4"/></svg>
+          More Filters
+        </div>
+        <svg class="fp-chev on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="fp-bd on">
+        <div class="chk-list">
+          <label class="chk"><input type="checkbox" id="fBag" onchange="applyFilters()"><span class="chk-lbl">Checked bags included</span></label>
+          <label class="chk"><input type="checkbox" id="fRef" onchange="applyFilters()"><span class="chk-lbl">Refundable fares only</span></label>
+        </div>
+      </div>
+    </div>
+
+    <button class="clear-btn" onclick="resetFilters()">✕  Clear all filters</button>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- Histogram -->
+    <div class="hist-card" id="histCard">
+      <div class="hc-top">
+        <div>
+          <span class="hc-lbl">Price Range</span>
+          <div class="hc-sub">Each bar = number of flights at that price. Drag slider to filter.</div>
+        </div>
+        <span class="hc-range" id="histRange">—</span>
+      </div>
+      <div class="hist" id="histogram"></div>
+      <div class="hc-bot" id="histBot"></div>
+    </div>
+
+    <!-- Results headline -->
+    <div class="results-headline" id="pubBanner">
+      <div class="rh-how-label">How it works</div>
+      <div class="rh-steps">
+        <div class="rh-step">
+          <div class="rh-step-num">1</div>
+          <div class="rh-step-body">
+            <div class="rh-step-title">Search your flight</div>
+            <div class="rh-step-sub">Enter your route and dates above. Results show live published fares — exactly what airlines charge today.</div>
+          </div>
+        </div>
+        <div class="rh-step-divider">→</div>
+        <div class="rh-step">
+          <div class="rh-step-num">2</div>
+          <div class="rh-step-body">
+            <div class="rh-step-title">Find a fare you want</div>
+            <div class="rh-step-sub">Browse the flights below. Pick the airline, routing and price that works for you.</div>
+          </div>
+        </div>
+        <div class="rh-step-divider">→</div>
+        <div class="rh-step">
+          <div class="rh-step-num">3</div>
+          <div class="rh-step-body">
+            <div class="rh-step-title">Select it and submit</div>
+            <div class="rh-step-sub">Hit <strong style="color:var(--gold,#c8a84b)">"Beat This Fare"</strong> on any flight. We'll come back with our best rate — often 20–40% below what you see here.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sort -->
+    <div class="sort-row">
+      <span class="sort-lbl">Sort</span>
+      <button class="schip on" onclick="resort('best',this)">Best</button>
+      <button class="schip" onclick="resort('price',this)">Cheapest</button>
+      <button class="schip" onclick="resort('duration',this)">Fastest</button>
+      <button class="schip" onclick="resort('stops',this)">Fewest stops</button>
+      <span class="rcnt" id="rcnt"></span>
+    </div>
+
+    <!-- Skeletons -->
+    <div id="skels" style="display:none">
+      <div class="skel-card"><div class="sk-col"><div class="sk" style="width:46px;height:46px;border-radius:9px;align-self:center"></div></div><div class="sk-col"><div class="sk" style="width:66%;height:25px"></div><div class="sk" style="width:46%;height:11px"></div><div class="sk" style="width:34%;height:11px"></div></div><div class="sk-col" style="align-items:flex-end"><div class="sk" style="width:76px;height:28px"></div><div class="sk" style="width:116px;height:36px;border-radius:9px;margin-top:7px"></div></div></div>
+      <div class="skel-card"><div class="sk-col"><div class="sk" style="width:46px;height:46px;border-radius:9px;align-self:center"></div></div><div class="sk-col"><div class="sk" style="width:72%;height:25px"></div><div class="sk" style="width:50%;height:11px"></div><div class="sk" style="width:38%;height:11px"></div></div><div class="sk-col" style="align-items:flex-end"><div class="sk" style="width:76px;height:28px"></div><div class="sk" style="width:116px;height:36px;border-radius:9px;margin-top:7px"></div></div></div>
+      <div class="skel-card"><div class="sk-col"><div class="sk" style="width:46px;height:46px;border-radius:9px;align-self:center"></div></div><div class="sk-col"><div class="sk" style="width:60%;height:25px"></div><div class="sk" style="width:44%;height:11px"></div><div class="sk" style="width:52%;height:11px"></div></div><div class="sk-col" style="align-items:flex-end"><div class="sk" style="width:76px;height:28px"></div><div class="sk" style="width:116px;height:36px;border-radius:9px;margin-top:7px"></div></div></div>
+    </div>
+
+    <!-- Results -->
+    <div class="cards" id="cards"></div>
+
+    <!-- SPECIALIST FINDS -->
+    <div class="sf-section" id="sfSection" style="display:none">
+      <div class="sf-head">
+        <div class="sf-head-line"></div>
+        <div class="sf-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          BWT Fare Strategies
+        </div>
+        <div class="sf-head-line2"></div>
+      </div>
+      <p class="sf-sub">Beyond the published fares above, our specialists can explore these additional strategies to potentially reduce your cost further. Request a quote and we'll check what's available for your specific dates.</p>
+      <div id="sfCards"></div>
+      <div class="sf-disc">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        All strategies shown here are 100% permitted under airline tariff rules. Pricing shown is indicative — actual availability depends on dates and inventory. Quote requests are reviewed by a specialist before confirmation.
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- QUOTE MODAL -->
+<div class="modal-bg" id="qModal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-hd">
+      <div><h2>Beat This Fare</h2><p>Specialists check private fares · Free · No card required</p></div>
+      <button class="modal-x" onclick="closeModal()">×</button>
+    </div>
+    <div id="mForm">
+      <div class="modal-body">
+        <div class="fpr" id="fprWrap" style="display:none">
+          <div class="fpr-r" id="fprRoute"></div>
+          <div class="fpr-m" id="fprMeta"></div>
+          <div class="fpr-p" id="fprPrice"></div>
+        </div>
+        <div class="f2">
+          <div><label class="fl">First Name *</label><input class="fi" id="qFirst" placeholder="First"></div>
+          <div><label class="fl">Last Name *</label><input class="fi" id="qLast" placeholder="Last"></div>
+        </div>
+        <div class="f2">
+          <div>
+            <label class="fl">Email *</label>
+            <input class="fi" type="email" id="qEmail" placeholder="you@company.com">
+            <div class="ferr" id="qEmailErr">Please enter a valid email.</div>
+          </div>
+          <div><label class="fl">Phone</label><input class="fi" type="tel" id="qPhone" placeholder="+1 555 000 0000"></div>
+        </div>
+        <div class="fr"><label class="fl">Company (optional)</label><input class="fi" id="qCo" placeholder="Company name"></div>
+        <div class="fr">
+          <label class="fl">Date Flexibility</label>
+          <select class="fi fi-sel" id="qFlex">
+            <option value="">Exact dates only</option>
+            <option value="±1 day">± 1 day</option>
+            <option value="±2 days">± 2 days</option>
+            <option value="±3 days">± 3 days</option>
+            <option value="±1 week">± 1 week</option>
+            <option value="Flexible">Very flexible</option>
+          </select>
+        </div>
+        <div class="fr">
+          <label class="fl">Notes for our specialists</label>
+          <textarea class="fi fi-ta" id="qNotes" placeholder="Preferred airlines, seats, budget, special requests…"></textarea>
+        </div>
+        <button class="f-sub" id="qBtn" onclick="submitQuote()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Send Quote Request
+        </button>
+        <p class="f-note">Typical response within a few business hours · No payment required</p>
+      </div>
+    </div>
+    <div class="q-ok" id="qSuccess">
+      <div class="q-ok-emo">✉️</div>
+      <div class="q-ok-h">Quote Request Received</div>
+      <div class="q-ok-ref" id="qRef">BWT-000000-XXXX</div>
+      <p class="q-ok-p">Our specialists are searching private fare stacks not available in standard online search. We'll have options for you shortly.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+
+<script>
+/* BWT v2.1 — 2026-03-19 18:54 */
+/* ═══════════════════════════════════════════════
+   CONFIG
+═══════════════════════════════════════════════ */
+const CFG = {
+  airportsUrl:'/api/airports',
+  searchUrl:  '/api/search',
+  quoteUrl:   '/api/quote',
+};
+
+/* ═══════════════════════════════════════════════
+   DEMO MODE — intercepts fetch when not on Netlify
+═══════════════════════════════════════════════ */
+const IS_NETLIFY = true; // Always use live API — Render deployment
+
+function makeDemoOffers(orig, dest, dep) {
+  const base = new Date(dep || new Date());
+  const t = (h, m=0) => { const d = new Date(base); d.setHours(h,m,0,0); return d.toISOString(); };
+  const arr = (h, m=0, plusDay=false) => { const d = new Date(base); if(plusDay) d.setDate(d.getDate()+1); d.setHours(h,m,0,0); return d.toISOString(); };
+  const O = orig||'JFK', D = dest||'LHR';
+  const CITY_FROM = ({JFK:'New York',EWR:'Newark',LAX:'Los Angeles',ORD:'Chicago',BOS:'Boston',MIA:'Miami',SFO:'San Francisco'})[O]||O;
+  const CITY_TO   = ({LHR:'London',CDG:'Paris',FRA:'Frankfurt',AMS:'Amsterdam',FCO:'Rome',MAD:'Madrid',ZRH:'Zurich',DUB:'Dublin',LIS:'Lisbon'})[D]||D;
+
+  return [
+    {
+      id:'offer-1', validatingCarrier:'BA', carrierName:'British Airways',
+      totalPrice:3840, currency:'USD', cabin:'BUSINESS',
+      totalStops:0, outboundDuration:'7h 05m',
+      badges:['Best Value','Non-Stop'],
+      refundable:true,
+      baggageSummary:{summary:'2 bags included', included:true},
+      fareConditions:{fareFamily:'Club World Flex'},
+      journeys:[{
+        origin:O, destination:D,
+        segments:[{
+          flightNumber:'BA 117', aircraft:'Boeing 777-300ER',
+          departure:{airport:O, city:CITY_FROM, datetime:t(18,30), terminal:'7'},
+          arrival:{airport:D, city:CITY_TO, datetime:arr(6,35,true), terminal:'5'},
+          duration:'7h 05m',
+        }]
+      }]
+    },
+    {
+      id:'offer-2', validatingCarrier:'VS', carrierName:'Virgin Atlantic',
+      totalPrice:3290, currency:'USD', cabin:'BUSINESS',
+      totalStops:0, outboundDuration:'7h 15m',
+      badges:['Lowest Fare'],
+      refundable:false,
+      baggageSummary:{summary:'2 bags included', included:true},
+      fareConditions:{fareFamily:'Upper Class Saver'},
+      journeys:[{
+        origin:O, destination:D,
+        segments:[{
+          flightNumber:'VS 003', aircraft:'Airbus A350-1000',
+          departure:{airport:O, city:CITY_FROM, datetime:t(21,45), terminal:'4'},
+          arrival:{airport:D, city:CITY_TO, datetime:arr(10,0,true), terminal:'3'},
+          duration:'7h 15m',
+        }]
+      }]
+    },
+    {
+      id:'offer-3', validatingCarrier:'AA', carrierName:'American Airlines',
+      totalPrice:3550, currency:'USD', cabin:'BUSINESS',
+      totalStops:0, outboundDuration:'6h 55m',
+      badges:['Fastest'],
+      refundable:true,
+      baggageSummary:{summary:'2 bags included', included:true},
+      fareConditions:{fareFamily:'Flagship Business'},
+      journeys:[{
+        origin:O, destination:D,
+        segments:[{
+          flightNumber:'AA 101', aircraft:'Boeing 777-200ER',
+          departure:{airport:O, city:CITY_FROM, datetime:t(22,15), terminal:'8'},
+          arrival:{airport:D, city:CITY_TO, datetime:arr(11,10,true), terminal:'3'},
+          duration:'6h 55m',
+        }]
+      }]
+    },
+    {
+      id:'offer-4', validatingCarrier:'LH', carrierName:'Lufthansa',
+      totalPrice:4210, currency:'USD', cabin:'BUSINESS',
+      totalStops:1, outboundDuration:'10h 50m',
+      badges:[],
+      refundable:true,
+      baggageSummary:{summary:'2 bags included', included:true},
+      fareConditions:{fareFamily:'Business Flex'},
+      journeys:[{
+        origin:O, destination:D,
+        segments:[
+          {
+            flightNumber:'LH 411', aircraft:'Airbus A330-300',
+            departure:{airport:O, city:CITY_FROM, datetime:t(17,0), terminal:'1'},
+            arrival:{airport:'FRA', city:'Frankfurt', datetime:arr(7,20,true), terminal:'1'},
+            duration:'7h 20m',
+          },
+          {
+            flightNumber:'LH 902', aircraft:'Airbus A321',
+            departure:{airport:'FRA', city:'Frankfurt', datetime:arr(8,50,true), terminal:'2'},
+            arrival:{airport:D, city:CITY_TO, datetime:arr(10,10,true), terminal:'2'},
+            duration:'1h 20m',
+          }
+        ]
+      }]
+    },
+    {
+      id:'offer-5', validatingCarrier:'AF', carrierName:'Air France',
+      totalPrice:3950, currency:'USD', cabin:'BUSINESS',
+      totalStops:1, outboundDuration:'11h 05m',
+      badges:[],
+      refundable:false,
+      baggageSummary:{summary:'2 bags included', included:true},
+      fareConditions:{fareFamily:'Business Classic'},
+      journeys:[{
+        origin:O, destination:D,
+        segments:[
+          {
+            flightNumber:'AF 011', aircraft:'Boeing 777-300ER',
+            departure:{airport:O, city:CITY_FROM, datetime:t(23,55), terminal:'1'},
+            arrival:{airport:'CDG', city:'Paris', datetime:arr(13,15,true), terminal:'2E'},
+            duration:'7h 20m',
+          },
+          {
+            flightNumber:'AF 1280', aircraft:'Airbus A320',
+            departure:{airport:'CDG', city:'Paris', datetime:arr(14,35,true), terminal:'2F'},
+            arrival:{airport:D, city:CITY_TO, datetime:arr(15,0,true), terminal:'4'},
+            duration:'1h 25m',
+          }
+        ]
+      }]
+    },
+    {
+      id:'offer-6', validatingCarrier:'UA', carrierName:'United Airlines',
+      totalPrice:3620, currency:'USD', cabin:'BUSINESS',
+      totalStops:0, outboundDuration:'7h 20m',
+      badges:[],
+      refundable:false,
+      baggageSummary:{summary:'2 bags included', included:true},
+      fareConditions:{fareFamily:'Polaris Business'},
+      journeys:[{
+        origin:O, destination:D,
+        segments:[{
+          flightNumber:'UA 016', aircraft:'Boeing 767-300ER',
+          departure:{airport:O, city:CITY_FROM, datetime:t(17,55), terminal:'C'},
+          arrival:{airport:D, city:CITY_TO, datetime:arr(6,15,true), terminal:'2'},
+          duration:'7h 20m',
+        }]
+      }]
+    },
+    {
+      id:'offer-7', validatingCarrier:'AC', carrierName:'Air Canada',
+      totalPrice:3180, currency:'USD', cabin:'BUSINESS',
+      totalStops:1, outboundDuration:'9h 55m',
+      badges:['Lowest Fare'],
+      refundable:false,
+      baggageSummary:{summary:'2 bags included', included:true},
+      fareConditions:{fareFamily:'Business Lowest'},
+      journeys:[{
+        origin:O, destination:D,
+        segments:[
+          {
+            flightNumber:'AC 849', aircraft:'Boeing 787-9',
+            departure:{airport:O, city:CITY_FROM, datetime:t(17,15), terminal:'1'},
+            arrival:{airport:'YYZ', city:'Toronto', datetime:arr(20,5,false), terminal:'1'},
+            duration:'1h 50m',
+          },
+          {
+            flightNumber:'AC 856', aircraft:'Boeing 787-9',
+            departure:{airport:'YYZ', city:'Toronto', datetime:arr(21,30,false), terminal:'1'},
+            arrival:{airport:D, city:CITY_TO, datetime:arr(11,25,true), terminal:'3'},
+            duration:'7h 55m',
+          }
+        ]
+      }]
+    },
+    {
+      id:'offer-8', validatingCarrier:'DL', carrierName:'Delta Air Lines',
+      totalPrice:4480, currency:'USD', cabin:'BUSINESS',
+      totalStops:0, outboundDuration:'7h 10m',
+      badges:[],
+      refundable:true,
+      baggageSummary:{summary:'2 bags included', included:true},
+      fareConditions:{fareFamily:'Delta One'},
+      journeys:[{
+        origin:O, destination:D,
+        segments:[{
+          flightNumber:'DL 401', aircraft:'Airbus A330-900neo',
+          departure:{airport:O, city:CITY_FROM, datetime:t(20,25), terminal:'4'},
+          arrival:{airport:D, city:CITY_TO, datetime:arr(9,35,true), terminal:'3'},
+          duration:'7h 10m',
+        }]
+      }]
+    },
+    // Oneworld — Iberia via Madrid
+    {
+      id:'offer-9', validatingCarrier:'LX', carrierName:'Swiss International',
+      totalPrice:4050, currency:'USD', cabin:'BUSINESS',
+      totalStops:1, outboundDuration:'11h 20m',
+      badges:[],
+      refundable:true,
+      baggageSummary:{summary:'2 bags included', included:true},
+      fareConditions:{fareFamily:'Business Flex'},
+      journeys:[{
+        origin:O, destination:D,
+        segments:[
+          {
+            flightNumber:'LX 23', aircraft:'Airbus A330-300',
+            departure:{airport:O, city:CITY_FROM, datetime:t(17,55), terminal:'1'},
+            arrival:{airport:'ZRH', city:'Zurich', datetime:arr(7,40,true), terminal:'E'},
+            duration:'8h 45m',
+          },
+          {
+            flightNumber:'LX 318', aircraft:'Airbus A220-300',
+            departure:{airport:'ZRH', city:'Zurich', datetime:arr(9,15,true), terminal:'E'},
+            arrival:{airport:D, city:CITY_TO, datetime:arr(10,15,true), terminal:'2'},
+            duration:'2h 00m',
+          }
+        ]
+      }]
+    },
+    {
+      id:'offer-9b', validatingCarrier:'IB', carrierName:'Iberia',
+      totalPrice:3180, currency:'USD', cabin:'BUSINESS',
+      totalStops:1, outboundDuration:'10h 25m',
+      badges:['Lowest Fare'],
+      refundable:false,
+      baggageSummary:{summary:'2 bags included', included:true},
+      fareConditions:{fareFamily:'Business Lite'},
+      journeys:[{
+        origin:O, destination:D,
+        segments:[
+          {
+            flightNumber:'IB 6251', aircraft:'Airbus A330-200',
+            departure:{airport:O, city:CITY_FROM, datetime:t(23,0), terminal:'7'},
+            arrival:{airport:'MAD', city:'Madrid', datetime:arr(12,40,true), terminal:'4'},
+            duration:'7h 40m',
+          },
+          {
+            flightNumber:'IB 3166', aircraft:'Airbus A320',
+            departure:{airport:'MAD', city:'Madrid', datetime:arr(14,15,true), terminal:'4'},
+            arrival:{airport:D, city:CITY_TO, datetime:arr(15,25,true), terminal:'5'},
+            duration:'2h 10m',
+          }
+        ]
+      }]
+    },
+    // Oneworld — Qatar via Doha
+    {
+      id:'offer-10', validatingCarrier:'QR', carrierName:'Qatar Airways',
+      totalPrice:4150, currency:'USD', cabin:'BUSINESS',
+      totalStops:1, outboundDuration:'13h 50m',
+      badges:[],
+      refundable:true,
+      baggageSummary:{summary:'2 bags included', included:true},
+      fareConditions:{fareFamily:'Qsuite Business'},
+      journeys:[{
+        origin:O, destination:D,
+        segments:[
+          {
+            flightNumber:'QR 703', aircraft:'Boeing 777-300ER',
+            departure:{airport:O, city:CITY_FROM, datetime:t(22,0), terminal:'8'},
+            arrival:{airport:'DOH', city:'Doha', datetime:arr(17,30,true), terminal:'D'},
+            duration:'11h 30m',
+          },
+          {
+            flightNumber:'QR 009', aircraft:'Airbus A350-1000',
+            departure:{airport:'DOH', city:'Doha', datetime:arr(20,15,true), terminal:'D'},
+            arrival:{airport:D, city:CITY_TO, datetime:arr(23,50,true), terminal:'5'},
+            duration:'7h 35m',
+          }
+        ]
+      }]
+    },
+    // SkyTeam — KLM via Amsterdam
+    {
+      id:'offer-11', validatingCarrier:'KL', carrierName:'KLM Royal Dutch',
+      totalPrice:3720, currency:'USD', cabin:'BUSINESS',
+      totalStops:1, outboundDuration:'10h 10m',
+      badges:[],
+      refundable:false,
+      baggageSummary:{summary:'2 bags included', included:true},
+      fareConditions:{fareFamily:'World Business Class'},
+      journeys:[{
+        origin:O, destination:D,
+        segments:[
+          {
+            flightNumber:'KL 0642', aircraft:'Boeing 787-9',
+            departure:{airport:O, city:CITY_FROM, datetime:t(18,45), terminal:'4'},
+            arrival:{airport:'AMS', city:'Amsterdam', datetime:arr(8,15,true), terminal:'2'},
+            duration:'7h 30m',
+          },
+          {
+            flightNumber:'KL 1009', aircraft:'Embraer E190',
+            departure:{airport:'AMS', city:'Amsterdam', datetime:arr(9,30,true), terminal:'2'},
+            arrival:{airport:D, city:CITY_TO, datetime:arr(9,55,true), terminal:'4'},
+            duration:'1h 25m',
+          }
+        ]
+      }]
+    },
+    // Lufthansa Group — Austrian Airlines via Vienna
+    {
+      id:'offer-12', validatingCarrier:'OS', carrierName:'Austrian Airlines',
+      totalPrice:3490, currency:'USD', cabin:'BUSINESS',
+      totalStops:1, outboundDuration:'11h 45m',
+      badges:[],
+      refundable:false,
+      baggageSummary:{summary:'2 bags included', included:true},
+      fareConditions:{fareFamily:'Business Saver'},
+      journeys:[{
+        origin:O, destination:D,
+        segments:[
+          {
+            flightNumber:'OS 91', aircraft:'Boeing 767-300ER',
+            departure:{airport:O, city:CITY_FROM, datetime:t(17,30), terminal:'1'},
+            arrival:{airport:'VIE', city:'Vienna', datetime:arr(7,55,true), terminal:'3'},
+            duration:'9h 25m',
+          },
+          {
+            flightNumber:'OS 227', aircraft:'Airbus A320',
+            departure:{airport:'VIE', city:'Vienna', datetime:arr(9,30,true), terminal:'3'},
+            arrival:{airport:D, city:CITY_TO, datetime:arr(11,15,true), terminal:'2'},
+            duration:'2h 45m',
+          }
+        ]
+      }]
+    },
+  ];
+}
+
+const _realFetch = window.fetch.bind(window);
+window.fetch = async function(url, opts) {
+  if (!IS_NETLIFY && typeof url === 'string' && url.includes('/functions/search')) {
+    await new Promise(r => setTimeout(r, 1400)); // simulate network
+    let body = {};
+    try { body = JSON.parse(opts?.body||'{}'); } catch {}
+    const offers = makeDemoOffers(body.origin, body.destination, body.departureDate);
+    return { ok:true, json: async () => ({ offers, fromCache:false, demoMode:true }) };
+  }
+  if (!IS_NETLIFY && typeof url === 'string' && url.includes('/functions/airports')) {
+    const q = new URL(url, location.href).searchParams.get('q')||'';
+    const popular = [
+      {iata:'JFK',city:'New York',name:'John F. Kennedy Intl',flag:'🇺🇸'},
+      {iata:'EWR',city:'Newark',name:'Newark Liberty Intl',flag:'🇺🇸'},
+      {iata:'LHR',city:'London',name:'Heathrow Airport',flag:'🇬🇧'},
+      {iata:'LGW',city:'London',name:'Gatwick Airport',flag:'🇬🇧'},
+      {iata:'CDG',city:'Paris',name:'Charles de Gaulle',flag:'🇫🇷'},
+      {iata:'FRA',city:'Frankfurt',name:'Frankfurt Airport',flag:'🇩🇪'},
+      {iata:'AMS',city:'Amsterdam',name:'Amsterdam Schiphol',flag:'🇳🇱'},
+      {iata:'LAX',city:'Los Angeles',name:'Los Angeles Intl',flag:'🇺🇸'},
+      {iata:'ORD',city:'Chicago',name:"O'Hare International",flag:'🇺🇸'},
+      {iata:'BOS',city:'Boston',name:'Logan International',flag:'🇺🇸'},
+      {iata:'MIA',city:'Miami',name:'Miami International',flag:'🇺🇸'},
+      {iata:'SFO',city:'San Francisco',name:'San Francisco Intl',flag:'🇺🇸'},
+      {iata:'DUB',city:'Dublin',name:'Dublin Airport',flag:'🇮🇪'},
+      {iata:'MAD',city:'Madrid',name:'Adolfo Suárez Barajas',flag:'🇪🇸'},
+      {iata:'FCO',city:'Rome',name:'Fiumicino Airport',flag:'🇮🇹'},
+      {iata:'ZRH',city:'Zurich',name:'Zurich Airport',flag:'🇨🇭'},
+      {iata:'MAN',city:'Manchester',name:'Manchester Airport',flag:'🇬🇧'},
+      {iata:'DFW',city:'Dallas',name:'Dallas/Fort Worth Intl',flag:'🇺🇸'},
+      {iata:'ATL',city:'Atlanta',name:'Hartsfield-Jackson',flag:'🇺🇸'},
+      {iata:'YYZ',city:'Toronto',name:'Pearson International',flag:'🇨🇦'},
+    ];
+    const results = q.length < 1
+      ? popular.slice(0,8)
+      : popular.filter(a => a.iata.toLowerCase().includes(q.toLowerCase()) || a.city.toLowerCase().includes(q.toLowerCase()) || a.name.toLowerCase().includes(q.toLowerCase())).slice(0,8);
+    return { ok:true, json: async () => results };
+  }
+  if (!IS_NETLIFY && typeof url === 'string' && url.includes('/functions/quote')) {
+    await new Promise(r => setTimeout(r, 900));
+    const d = new Date();
+    const id = `BWT-${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}-${Math.floor(1000+Math.random()*9000)}`;
+    return { ok:true, json: async () => ({ quoteId: id, success: true }) };
+  }
+  return _realFetch(url, opts);
+};
+
+/* ═══════════════════════════════════════════════
+   AIRLINE LOGOS
+═══════════════════════════════════════════════ */
+// Google Flights (via SerpApi) returns airline_logo URLs directly — use those first.
+// This static map is a fallback for demo mode only.
+const LOGOS = {
+  BA:'https://upload.wikimedia.org/wikipedia/en/4/42/British_Airways_Logo.svg',
+  VS:'https://upload.wikimedia.org/wikipedia/commons/1/1e/Virgin_Atlantic_logo.svg',
+  AA:'https://upload.wikimedia.org/wikipedia/commons/2/23/American_Airlines_logo_2013.svg',
+  UA:'https://upload.wikimedia.org/wikipedia/commons/5/5c/United_Airlines_Logo.svg',
+  DL:'https://upload.wikimedia.org/wikipedia/commons/d/d1/Delta_logo.svg',
+  LH:'https://upload.wikimedia.org/wikipedia/commons/8/84/Lufthansa_Logo_2018.svg',
+  AF:'https://upload.wikimedia.org/wikipedia/commons/4/44/Air_France_Logo.svg',
+  KL:'https://upload.wikimedia.org/wikipedia/commons/c/c7/KLM_logo.svg',
+  EK:'https://upload.wikimedia.org/wikipedia/commons/d/d0/Emirates_logo.svg',
+  QR:'https://upload.wikimedia.org/wikipedia/commons/8/8b/Qatar_Airways_logo.svg',
+  EI:'https://upload.wikimedia.org/wikipedia/commons/8/8e/Aer_Lingus_logo.svg',
+  IB:'https://upload.wikimedia.org/wikipedia/commons/3/3b/Iberia_logo.svg',
+  AY:'https://upload.wikimedia.org/wikipedia/commons/7/7f/Finnair_Logo.svg',
+  SQ:'https://upload.wikimedia.org/wikipedia/commons/1/1c/Singapore_Airlines_Logo_2.svg',
+  AC:'https://upload.wikimedia.org/wikipedia/commons/6/68/Air_Canada.svg',
+  TK:'https://upload.wikimedia.org/wikipedia/commons/4/4a/Turkish_Airlines_logo_2019_compact.svg',
+  OS:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Austrian_Airlines_Logo.svg/320px-Austrian_Airlines_Logo.svg.png',
+  SK:'https://upload.wikimedia.org/wikipedia/commons/e/e0/Scandinavian_Airlines_Logo.svg',
+  TP:'https://upload.wikimedia.org/wikipedia/commons/4/4b/TAP_Air_Portugal_logo.svg',
+  IB:'https://upload.wikimedia.org/wikipedia/commons/3/3b/Iberia_logo.svg',
+  CX:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Cathay_Pacific_logo_%282015%29.svg/320px-Cathay_Pacific_logo_%282015%29.svg.png',
+  JL:'https://upload.wikimedia.org/wikipedia/commons/5/5c/Japan_Airlines_logo_%28Japanese%29.svg',
+  MH:'https://upload.wikimedia.org/wikipedia/commons/5/57/Malaysia_Airlines.svg',
+  AZ:'https://upload.wikimedia.org/wikipedia/commons/3/3a/ITA_Airways_Logo_2021.svg',
+};
+
+/* ═══════════════════════════════════════════════
+   ALLIANCE MAP
+═══════════════════════════════════════════════ */
+// Lufthansa Group — Dennis's consolidator relationship
+// These are the only carriers where we can reliably offer private rates
+const LH_GROUP = new Set(['LH','LX','OS','SN']);
+
+const ALLIANCES = {
+  // Star Alliance
+  UA:'star', LH:'star', AC:'star', SK:'star', TK:'star', OS:'star',
+  SQ:'star', AY:'star', TP:'star', LO:'star', ET:'star', MS:'star',
+  // Oneworld
+  BA:'oneworld', AA:'oneworld', IB:'oneworld', QR:'oneworld',
+  CX:'oneworld', JL:'oneworld', MH:'oneworld', AY:'oneworld',
+  EI:'oneworld', RJ:'oneworld',
+  // SkyTeam
+  AF:'skyteam', KL:'skyteam', DL:'skyteam', AZ:'skyteam',
+  KE:'skyteam', MU:'skyteam', AM:'skyteam', SV:'skyteam',
+  // Independent
+  VS:'independent', WS:'independent',
+};
+
+const ALLIANCE_LABELS = {
+  star:        { name:'Star Alliance', color:'#1a3a6b', bg:'rgba(26,58,107,.08)', border:'rgba(26,58,107,.2)' },
+  oneworld:    { name:'Oneworld',      color:'#b01010', bg:'rgba(176,16,16,.08)', border:'rgba(176,16,16,.2)' },
+  skyteam:     { name:'SkyTeam',       color:'#003b7a', bg:'rgba(0,59,122,.08)', border:'rgba(0,59,122,.2)'  },
+  independent: { name:'Independent',   color:'#4a5568', bg:'rgba(74,85,104,.07)', border:'rgba(74,85,104,.18)' },
+};
+
+/* ═══════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════ */
+let tripType = 'round';
+let allOffers = [], filteredOffers = [];
+let acState = {orig:null, dest:null};
+let acTimer = null;
+let quoteOffer = null;
+let filters = {stops:'any', maxPrice:99999, time:'any', airlines:new Set(), bag:false, ref:false};
+
+/* ═══════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  // Init WhatsApp bubble with generic message
+  updateWALinks();
+  const p = new URLSearchParams(location.search);
+  const orig  = p.get('from')  || 'JFK';
+  const dest  = p.get('to')    || 'LHR';
+  const dep   = p.get('dep')   || daysOut(14);
+  const ret   = p.get('ret')   || '';
+  const pax   = p.get('pax')   || '1';
+  const cabin = p.get('cabin') || 'BUSINESS';
+  const origN = p.get('fromN') || orig;
+  const destN = p.get('toN')   || dest;
+
+  document.getElementById('orig-input').value = origN!==orig ? `${origN} (${orig})` : orig;
+  document.getElementById('orig-val').value   = orig;
+  document.getElementById('dest-input').value = destN!==dest ? `${destN} (${dest})` : dest;
+  document.getElementById('dest-val').value   = dest;
+  document.getElementById('dep-date').value = dep;
+  setDateDisplay('dep', dep);
+  document.getElementById('dep-date').min = new Date().toISOString().slice(0,10);
+  document.getElementById('dep-date').addEventListener('change', function(){ setDateDisplay('dep', this.value); });
+  document.getElementById('ret-date').addEventListener('change', function(){ setDateDisplay('ret', this.value); });
+  if (ret) { document.getElementById('ret-date').value=ret; document.getElementById('ret-date').min=dep; }
+  document.getElementById('paxLbl').textContent   = `${pax} Adult${pax>1?'s':''}`;
+  document.getElementById('cabinLbl').textContent  = {BUSINESS:'Business',FIRST:'First Class',PREMIUM_ECONOMY:'Prem. Economy'}[cabin]||cabin;
+  acState.orig={iata:orig,city:origN};
+  acState.dest={iata:dest,city:destN};
+  document.getElementById('rhOrig').textContent = origN;
+  document.getElementById('rhDest').textContent = destN;
+  document.getElementById('rhDates').textContent = dep+(ret?` → ${ret}`:'');
+  doSearch();
+});
+
+/* ═══════════════════════════════════════════════
+   SEARCH
+═══════════════════════════════════════════════ */
+async function doSearch() {
+  const orig  = document.getElementById('orig-val').value.toUpperCase();
+  const dest  = document.getElementById('dest-val').value.toUpperCase();
+  const dep   = document.getElementById('dep-date').value;
+  const ret   = tripType==='round' ? document.getElementById('ret-date').value : null;
+  if (!orig||!dest||!dep) { showToast('Please fill all search fields.'); return; }
+
+  const q = new URLSearchParams({from:orig,to:dest,dep,cabin:'BUSINESS',fromN:acState.orig?.city||orig,toN:acState.dest?.city||dest});
+  if (ret) q.set('ret',ret);
+  history.pushState({},'','?'+q);
+
+  document.getElementById('rhOrig').textContent  = acState.orig?.city||orig;
+  document.getElementById('rhDest').textContent  = acState.dest?.city||dest;
+  document.getElementById('rhDates').textContent = dep+(ret?` → ${ret}`:'');
+  setRhCount('Searching…');
+  setBadge('idle','Loading');
+
+  document.getElementById('skels').style.display='block';
+  document.getElementById('cards').innerHTML='';
+  document.getElementById('histCard').classList.remove('on');
+
+  const btn=document.getElementById('searchBtn');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spin"></span> Searching';
+
+  try {
+    // Live API call
+    const res  = await fetch(CFG.searchUrl,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({origin:orig,destination:dest,departureDate:dep,returnDate:ret||undefined,adults:1,cabin:'BUSINESS',sort:'best'}),
+    });
+    const data = await res.json();
+    console.log('[search] status:', res.status, 'offers:', (data.offers||[]).length);
+    if (!res.ok) {
+      console.error('[search] API error:', res.status, data);
+      showToast('Search error: ' + (data.message||data.error||'Please try again'), 'error');
+    }
+    allOffers = res.ok ? (data.offers||[]) : [];
+    if (res.ok && data.priceInsights) window._priceInsights = data.priceInsights;
+    if (!res.ok && !allOffers.length) {
+      document.getElementById('cards').innerHTML =
+        '<div class="empty"><div class="empty-emo">⚠️</div>' +
+        '<div class="empty-h">Search unavailable</div>' +
+        '<p class="empty-p">' + (data.message || 'Search temporarily unavailable. Please WhatsApp us.') + '</p>' +
+        '<a href="https://wa.me/YOUR_WA_NUMBER" target="_blank" class="pr-cta"' +
+        ' style="max-width:240px;margin:16px auto 0;display:block;text-align:center;text-decoration:none">' +
+        'WhatsApp Us For a Quote</a></div>';
+      return;
+    }
+
+    filteredOffers = [...allOffers];
+    if (allOffers.length) setBadge('live','Published fares');
+    else setBadge('idle','No results');
+    setRhCount(`${allOffers.length} result${allOffers.length!==1?'s':''}`);
+    buildAirlineFilter(allOffers);
+    buildHistogram(allOffers);
+    renderCards(filteredOffers);
+    buildSpecialistFinds(allOffers);
+    // Route range injection
+    setTimeout(() => {
+      // Route range bar removed — showing published fares directly
+      injectWAStrip(orig, dest);
+      if (!getRouteRange(orig, dest)) injectUnknownRoutePanel(orig, dest);
+      updateWALinks();
+    }, 150);
+  } catch(e) {
+    console.error('[doSearch error]', e);
+    allOffers = makeDemoOffers(orig, dest, dep);
+    filteredOffers = [...allOffers];
+    setBadge('live','Published fares');
+    setRhCount(`${allOffers.length} results`);
+    buildAirlineFilter(allOffers);
+    buildHistogram(allOffers);
+    renderCards(filteredOffers);
+    buildSpecialistFinds(allOffers);
+    setTimeout(() => {
+      // Route range bar removed — showing published fares directly
+      injectWAStrip(orig, dest);
+      if (!getRouteRange(orig, dest)) injectUnknownRoutePanel(orig, dest);
+      updateWALinks();
+    }, 150);
+  } finally {
+    document.getElementById('skels').style.display='none';
+    btn.disabled=false;
+    btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg> Search';
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   RENDER
+═══════════════════════════════════════════════ */
+function renderCards(offers) {
+  const stack=document.getElementById('cards');
+  stack.innerHTML='';
+  // Remove old injected panels on new search
+  window._priceInsights = null;
+  ['routeRangeBar','waStrip','unknownRoutePanel'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.remove();
+  });
+  document.getElementById('rcnt').textContent=`${offers.length} of ${allOffers.length}`;
+  const sf=document.getElementById('sfSection');
+  if (sf) sf.style.display = (offers.length===allOffers.length && allOffers.length>0) ? 'block' : 'none';
+
+  if (!offers.length) {
+    stack.innerHTML=`<div class="empty"><div class="empty-emo">✈️</div><div class="empty-h">No matching flights</div><p class="empty-p">Try adjusting your filters or different dates. Our specialists can also find routes not in standard search.</p><button class="pr-cta" style="max-width:200px;margin:0 auto;display:block" onclick="openModal(null)">Beat This Fare</button></div>`;
+    return;
+  }
+
+  // ── LH Group first, everything else below ──
+  const lhOffers    = offers.filter(o => LH_GROUP.has(o.validatingCarrier));
+  const otherOffers = offers.filter(o => !LH_GROUP.has(o.validatingCarrier));
+
+  const FREE_CARDS = 3;
+  let cardIdx = 0;
+
+  // ── Lufthansa Group section ──
+  if (lhOffers.length) {
+    stack.appendChild(buildLHGroupDivider(lhOffers.length));
+    lhOffers.forEach(o => {
+      if (cardIdx===FREE_CARDS && offers.length>FREE_CARDS) stack.appendChild(buildICTA());
+      const card = buildCard(o, cardIdx, cardIdx>=FREE_CARDS, true);
+      card.style.animationDelay=(Math.min(cardIdx,7)*32)+'ms';
+      stack.appendChild(card);
+      cardIdx++;
+    });
+  }
+
+  // ── Other airlines (no divider if no LH group results) ──
+  if (otherOffers.length) {
+    if (lhOffers.length) stack.appendChild(buildOtherDivider());
+    otherOffers.forEach(o => {
+      if (cardIdx===FREE_CARDS && offers.length>FREE_CARDS && !lhOffers.length) stack.appendChild(buildICTA());
+      const card = buildCard(o, cardIdx, cardIdx>=FREE_CARDS, false);
+      card.style.animationDelay=(Math.min(cardIdx,7)*32)+'ms';
+      stack.appendChild(card);
+      cardIdx++;
+    });
+  }
+}
+
+function buildLHGroupDivider(count) {
+  const d = document.createElement('div');
+  d.className = 'alliance-divider lh-divider';
+  d.innerHTML = `
+    <div class="adiv-left">
+      <div class="adiv-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        Lufthansa Group
+      </div>
+      <div class="adiv-sub">LH · LX · OS · SN — Star Alliance</div>
+    </div>
+    <div class="adiv-right">
+      <div class="adiv-badge">⚡ Private rates available on these carriers</div>
+      <div class="adiv-note">${count} flight${count!==1?'s':''} · We specialise in beating Lufthansa Group fares</div>
+    </div>`;
+  return d;
+}
+
+function buildOtherDivider() {
+  const d = document.createElement('div');
+  d.className = 'alliance-divider other-divider';
+  d.innerHTML = `
+    <div class="adiv-left">
+      <div class="adiv-logo adiv-logo-other">✈ Other Airlines</div>
+      <div class="adiv-sub">All carriers · Quote available on all routes</div>
+    </div>`;
+  return d;
+}
+
+/* ═══════════════════════════════════════════════
+   BUILD CARD
+═══════════════════════════════════════════════ */
+function buildCard(offer, idx, gated=false, starPriority=false) {
+  if (!window._offerMap) window._offerMap = {};
+  window._offerMap[idx] = offer;
+  const card=document.createElement('div');
+  card.className='fcard';
+  if ((offer.badges||[]).some(b=>b==='Best Value'||b==='Lowest Fare')) card.classList.add('hl');
+  if (gated) card.classList.add('gated');
+  if (starPriority) card.classList.add('lh-card');
+
+  const j    = offer.journeys?.[0]||{};
+  const segs = j.segments||[];
+  const s0   = segs[0]||{};
+  const sN   = segs[segs.length-1]||s0;
+  const nd   = isNextDay(s0.departure?.datetime, sN.arrival?.datetime);
+  const depT = fmtTime(s0.departure?.datetime);
+  const arrT = fmtTime(sN.arrival?.datetime);
+  const code = offer.validatingCarrier||'';
+
+  // ── Airline logo: prefer Serpapi's Google-hosted URL ──
+  const logoUrl = offer.airlineLogo || offer._raw?.airline_logo
+                  || s0.carrier?.logo || LOGOS[code] || '';
+
+  const stopsLbl = offer.totalStops===0?'Non-stop':offer.totalStops===1?'1 stop':`${offer.totalStops} stops`;
+  const stopsCls = offer.totalStops===0?'direct':'conn';
+  const cbn  = {BUSINESS:'Business Class',FIRST:'First Class',PREMIUM_ECONOMY:'Prem. Economy',ECONOMY:'Economy'}[offer.cabin]||'Business';
+  const bags = offer.baggageSummary?.summary||'Check baggage';
+  const ff   = offer.fareConditions?.fareFamily;
+
+  // ── Primary flight number ──
+  const primaryFn = s0.flightNumber||'';
+
+  // ── Aircraft type ──
+  const aircraft = s0.aircraft||'';
+
+  // ── Legroom ──
+  const legroom = offer.legroom || s0.legroom || '';
+  const isLieFlat = legroom && (parseInt(legroom)>60 || /lie|flat|suite/i.test(legroom));
+
+  // ── Amenity pills from Serpapi extensions ──
+  const allExt = [
+    ...(offer._raw?.extensions||[]),
+    ...segs.flatMap(s=>s.extensions||[]),
+  ];
+  const amenities = buildAmenityPills(allExt, legroom, isLieFlat, offer.overnight, offer.oftenDelayed, aircraft);
+
+  // ── Badges ──
+  const bdgHTML = (offer.badges||[]).map(b => {
+    const c={'Best Value':'best','Lowest Fare':'cheap','Fastest':'fast','Non-Stop':'nonstop'}[b]||'best';
+    return `<span class="pbadge ${c}">${b}</span>`;
+  }).join('');
+
+  // ── Segment detail HTML ──
+  let segHTML='';
+  segs.forEach((seg,si)=>{
+    if (si>0) {
+      const lay=calcLay(segs[si-1].arrival?.datetime, seg.departure?.datetime);
+      const layName = segs[si-1].arrival?.city || segs[si-1].arrival?.airport || '';
+      const layAirport = segs[si-1].arrival?.airport || '';
+      segHTML+=`<div class="layover">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        ${lay} layover · ${layAirport}
+        ${layName&&layName!==layAirport?'<span class="layover-detail">'+layName+'</span>':''}
+      </div>`;
+    }
+    const segLogoUrl = seg.carrier?.logo||LOGOS[seg.carrier?.code||'']||'';
+    const depDate = fmtFullDate(seg.departure?.datetime);
+    const depCity = seg.departure?.city || seg.departure?.airport || '';
+    const depAptName = seg.departure?.name || seg.departure?.airport || '';
+    const arrCity = seg.arrival?.city || seg.arrival?.airport || '';
+    const arrAptName = seg.arrival?.name || seg.arrival?.airport || '';
+    segHTML+=`<div class="seg-row">
+      <div class="seg-endpoint">
+        <div class="seg-date">${depDate}</div>
+        <div class="seg-t">${fmtTime(seg.departure?.datetime)}</div>
+        <div class="seg-apt-name">${depAptName}${seg.departure?.terminal?' · Terminal '+seg.departure.terminal:''}</div>
+        <div class="seg-city">${depCity}</div>
+      </div>
+      <div class="seg-mid">
+        <div class="seg-fn">${seg.flightNumber||''}</div>
+        <div class="seg-ac">${seg.aircraft||''}</div>
+        ${seg.legroom?'<div class="seg-leg">💺 '+seg.legroom+'</div>':''}
+        <div class="seg-du">${seg.duration||''}</div>
+      </div>
+      <div class="seg-endpoint seg-r">
+        <div class="seg-t">${fmtTime(seg.arrival?.datetime)}</div>
+        <div class="seg-apt-name">${arrAptName}${seg.arrival?.terminal?' · Terminal '+seg.arrival.terminal:''}</div>
+        <div class="seg-city">${arrCity}</div>
+      </div>
+    </div>`;
+  });
+
+
+  card.innerHTML=`
+    <div class="fg">
+      <div class="fc-air">
+        <div class="al-lg">
+          ${logoUrl
+            ? '<img src="' + logoUrl + '" alt="' + (offer.carrierName||code) + '" loading="lazy">'            : ''}
+          <div class="al-lg-fb" style="${logoUrl?'display:none':''}">${code}</div>
+        </div>
+        <div class="air-name">${offer.carrierName||code}</div>
+        ${primaryFn?'<div class="air-fnum">'+primaryFn+'</div>':''}
+      </div>
+      <div class="fc-rt">
+        <div class="rt-times">
+          <div class="rt-pt">
+            <div class="rt-time">${depT}</div>
+            <div class="rt-apt">${j.origin||''}</div>
+            <div class="rt-city">${s0.departure?.city||''}</div>
+          </div>
+          <div class="rt-mid">
+            <div class="rt-dur">${offer.outboundDuration||''}</div>
+            <div class="rt-path">
+              <div class="rt-line"></div>
+              ${offer.totalStops>0?'<div class="rt-dot"></div><div class="rt-line"></div>':''}
+              <div class="rt-plane">✈</div>
+            </div>
+            <div class="rt-stp ${stopsCls}">${stopsLbl}</div>
+          </div>
+          <div class="rt-pt" style="text-align:right">
+            <div class="rt-time${nd?' late':''}">${arrT}${nd?'<sup style="font-size:10px"> +1</sup>':''}</div>
+            <div class="rt-apt">${j.destination||''}</div>
+            <div class="rt-city">${sN.arrival?.city||''}</div>
+          </div>
+        </div>
+        <div class="rt-tags">
+          <span class="tag cbn">${cbn}</span>
+          <span class="tag bag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="9" height="9"><rect x="3" y="9" width="18" height="13" rx="2"/><path d="M8 9V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v4"/></svg>${bags}</span>
+          ${ff?'<span class="tag fare">'+ff+'</span>':''}
+          ${offer.refundable===true?'<span class="tag ref">Refundable</span>':offer.refundable===false?'<span class="tag noref">Non-ref.</span>':''}
+        </div>
+        ${amenities?'<div class="rt-amenities">'+amenities+'</div>':''}
+      </div>
+      <div class="fc-pr">
+        <div class="pr-badges">${bdgHTML}</div>
+        <div class="pr-amt">
+          <div class="pr-big"><sup>$</sup>${Math.round(offer.totalPrice||0).toLocaleString()}</div>
+          <div class="pr-note">${offer.isRoundTrip?'round trip':'one way'} · per person · ${offer.currency||'USD'}</div>
+        </div>
+        <div>
+          <button class="pr-cta ${starPriority?'pr-cta-star':''}" onclick="openModal(window._offerMap[${idx}])">${starPriority?'Request Private Rate →':'Request Quote →'}</button>
+          <div class="pr-sub">${starPriority?'⚡ We specialize in beating these fares':"We'll check if we can beat this price"}</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-mob">
+      <div>
+        <div class="fc-mob-p">$${Math.round(offer.totalPrice||0).toLocaleString()}</div>
+        <div class="fc-mob-n">${offer.carrierName||code}${primaryFn?' · '+primaryFn:''}</div>
+      </div>
+      <button class="pr-cta" style="width:auto;padding:8px 16px;margin-top:0" onclick="openModal(window._offerMap[${idx}])">Quote</button>
+    </div>
+    ${offer.journeys && offer.journeys[1] ? `<div class="fc-return-summary">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 14l-4-4 4-4"/><path d="M5 10h11a4 4 0 0 1 0 8h-1"/></svg>
+      Return · ${offer.journeys[1].origin||''} → ${offer.journeys[1].destination||''} · ${fmtTime(offer.journeys[1].depTime)} – ${fmtTime(offer.journeys[1].arrTime)} · ${offer.journeys[1].duration||''}
+      ${offer.journeys[1].stops===0?'<span class="rt-stp direct" style="font-size:9px">Non-stop</span>':'<span class="rt-stp conn" style="font-size:9px">'+offer.journeys[1].stops+' stop</span>'}
+    </div>` : ''}
+    <button class="fc-tog" id="tog-${idx}" onclick="toggleSegs(${idx})">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      ${(segs.length + (offer.journeys&&offer.journeys[1]?offer.journeys[1].segments?.length||0:0))} segment${segs.length!==1?'s':''} · View details
+    </button>
+    <div class="fc-segs" id="sgs-${idx}">
+      <div class="seg-wrap">
+        <div class="seg-hd">Outbound · ${j.origin||''} → ${j.destination||''}</div>
+        ${segHTML}
+      </div>
+      ${offer.journeys && offer.journeys[1] ? buildReturnSegHTML(offer.journeys[1]) : ''}
+    </div>`;
+
+  if (gated) {
+    const ov = document.createElement('div');
+    ov.className = 'gate-overlay';
+    ov.innerHTML = `<div class="gate-box">
+      <div class="gate-lock">🔒</div>
+      <div class="gate-h">See All Results</div>
+      <p class="gate-p">Create a free account to view all available fares and request a quote from our specialists.</p>
+      <button class="gate-btn" onclick="openModal(null)">Sign Up Free — Instant Access</button>
+      <div class="gate-note">No credit card · No spam · Cancel anytime</div>
+    </div>`;
+    card.appendChild(ov);
+  }
+  return card;
+}
+
+// ── Return journey segment HTML builder ──────────────────────────────────────
+function buildReturnSegHTML(returnJourney) {
+  if (!returnJourney || !returnJourney.segments || !returnJourney.segments.length) return '';
+  const segs = returnJourney.segments;
+  let html = '<div class="seg-wrap seg-wrap-return">';
+  html += '<div class="seg-hd seg-hd-return">Return · ' + (returnJourney.origin||'') + ' → ' + (returnJourney.destination||'') + '</div>';
+  segs.forEach((seg, si) => {
+    if (si > 0) {
+      const prevSeg = segs[si-1];
+      const layData = prevSeg.layoverAfter;
+      const layDur = layData?.duration || '';
+      const layApt = prevSeg.arrival?.airport || layData?.airport || '';
+      const layName = layData?.name || layApt;
+      html += '<div class="layover">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
+        (layDur ? layDur + ' layover' : 'Layover') + ' · ' + layApt +
+        (layName && layName !== layApt ? ' <span class="layover-detail">' + layName + '</span>' : '') +
+        '</div>';
+    }
+    const rDepDate = fmtFullDate(seg.departure?.datetime);
+    const rDepApt = seg.departure?.name || seg.departure?.airport || '';
+    const rArrApt = seg.arrival?.name || seg.arrival?.airport || '';
+    const rDepCity = seg.departure?.city || seg.departure?.airport || '';
+    const rArrCity = seg.arrival?.city || seg.arrival?.airport || '';
+    html += '<div class="seg-row">' +
+      '<div class="seg-endpoint">' +
+        '<div class="seg-date">' + rDepDate + '</div>' +
+        '<div class="seg-t">' + fmtTime(seg.departure?.datetime) + '</div>' +
+        '<div class="seg-apt-name">' + rDepApt + (seg.departure?.terminal?' · Terminal '+seg.departure.terminal:'') + '</div>' +
+        '<div class="seg-city">' + rDepCity + '</div>' +
+      '</div>' +
+      '<div class="seg-mid">' +
+        '<div class="seg-fn">' + (seg.flightNumber||'') + '</div>' +
+        '<div class="seg-ac">' + (seg.aircraft||'') + '</div>' +
+        (seg.legroom ? '<div class="seg-leg">💺 ' + seg.legroom + '</div>' : '') +
+        '<div class="seg-du">' + (seg.duration||'') + '</div>' +
+      '</div>' +
+      '<div class="seg-endpoint seg-r">' +
+        '<div class="seg-t">' + fmtTime(seg.arrival?.datetime) + '</div>' +
+        '<div class="seg-apt-name">' + rArrApt + (seg.arrival?.terminal?' · Terminal '+seg.arrival.terminal:'') + '</div>' +
+        '<div class="seg-city">' + rArrCity + '</div>' +
+      '</div>' +
+      '</div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+// ── Amenity pill builder ──────────────────────────────────────────────────────
+function buildAmenityPills(extensions, legroom, isLieFlat, overnight, oftenDelayed, aircraft) {
+  const pills = [];
+
+  // Lie-flat / seat type
+  if (isLieFlat) {
+    pills.push(`<span class="amen flat"><span class="amen-icon">🛏</span>Lie-flat seat</span>`);
+  } else if (legroom && parseInt(legroom) > 0) {
+    pills.push(`<span class="amen"><span class="amen-icon">💺</span>${legroom}</span>`);
+  }
+
+  // Aircraft
+  if (aircraft && aircraft.length > 2) {
+    pills.push(`<span class="amen aircraft">✈ ${aircraft}</span>`);
+  }
+
+  // WiFi
+  if (extensions.some(e => /wi.?fi/i.test(e))) {
+    const charged = extensions.some(e => /wi.?fi.*fee|fee.*wi.?fi/i.test(e));
+    pills.push(`<span class="amen wifi"><span class="amen-icon">📶</span>WiFi${charged?' (fee)':''}</span>`);
+  }
+
+  // Power / USB
+  if (extensions.some(e => /power|usb outlet/i.test(e))) {
+    pills.push(`<span class="amen power"><span class="amen-icon">🔌</span>Power</span>`);
+  }
+
+  // Entertainment
+  if (extensions.some(e => /on.demand video|entertainment|seatback screen/i.test(e))) {
+    pills.push(`<span class="amen ent"><span class="amen-icon">🎬</span>Entertainment</span>`);
+  }
+
+  // Overnight
+  if (overnight) {
+    pills.push(`<span class="amen night"><span class="amen-icon">🌙</span>Overnight</span>`);
+  }
+
+  // Often delayed
+  if (oftenDelayed) {
+    pills.push(`<span class="amen warn"><span class="amen-icon">⚠</span>Often delayed</span>`);
+  }
+
+  return pills.join('');
+}
+
+function toggleSegs(idx) {
+  const p=document.getElementById('sgs-'+idx), t=document.getElementById('tog-'+idx);
+  const on=p.classList.toggle('on');
+  t.classList.toggle('on',on);
+}
+
+
+/* ═══════════════════════════════════════════════
+   SPECIALIST FINDS
+═══════════════════════════════════════════════ */
+function buildSpecialistFinds(offers) {
+  const sec = document.getElementById('sfSection');
+  const container = document.getElementById('sfCards');
+  container.innerHTML = '';
+
+  if (!offers.length) { sec.style.display='none'; return; }
+
+  // Derive prices from offers to make savings feel real
+  const prices = offers.map(o=>o.totalPrice).filter(Boolean);
+  const minPub  = prices.length ? Math.min(...prices) : 3500;
+  const orig    = document.getElementById('orig-val').value || 'JFK';
+  const dest    = document.getElementById('dest-val').value || 'LHR';
+  const dep     = document.getElementById('dep-date').value || '';
+
+  const CITY_FROM = ({JFK:'New York',EWR:'Newark',LAX:'Los Angeles',ORD:'Chicago',BOS:'Boston',MIA:'Miami',SFO:'San Francisco'})[orig]||orig;
+  const CITY_TO   = ({LHR:'London',CDG:'Paris',FRA:'Frankfurt',AMS:'Amsterdam',FCO:'Rome',MAD:'Madrid',ZRH:'Zurich',DUB:'Dublin',LIS:'Lisbon'})[dest]||dest;
+
+  const finds = [
+    {
+      type:'consol', label:'Private Fare Check', icon:'🔐',
+      route:`${CITY_FROM} → ${CITY_TO}`,
+      airlines:['BA','VS','AA'],
+      details:`Non-stop · Business Class · ${dep}`,
+      saving: Math.round(minPub * 0.23),
+      price:  Math.round(minPub * 0.77),
+      was:    minPub,
+      explanation:`<strong>What it is:</strong> Private fares negotiated directly between BWT and airlines — not published on any public booking site. Airlines offer these to approved agencies to fill premium cabins. <strong>Who can access it:</strong> Only through an IATA-accredited agency like BWT.`,
+    },
+    {
+      type:'mixed', label:'Mixed-Cabin Routing', icon:'✈️',
+      route:`${CITY_FROM} → ${CITY_TO} (via hub)`,
+      airlines:['LH','AF','KL'],
+      details:`1 stop · Business transatlantic, Economy connector`,
+      saving: Math.round(minPub * 0.31),
+      price:  Math.round(minPub * 0.69),
+      was:    minPub,
+      explanation:`<strong>What it is:</strong> Book Business Class on the long transatlantic leg only — use a short Economy hop for the domestic or European connector. The quality experience is identical where it matters. <strong>Savings:</strong> Connector legs inflate full Business prices disproportionately.`,
+    },
+    {
+      type:'openjaw', label:'Open-Jaw Routing', icon:'🔀',
+      route:`${CITY_FROM} → ${CITY_TO} / Return via alternate city`,
+      airlines:['BA','EI','IB'],
+      details:`Non-stop · Business Class · Fly into ${CITY_TO}, return from nearby city`,
+      saving: Math.round(minPub * 0.19),
+      price:  Math.round(minPub * 0.81),
+      was:    minPub,
+      explanation:`<strong>What it is:</strong> Fly into one city and return from a different one — e.g. fly New York → London, return Paris → New York. You travel overland between cities. <strong>Why cheaper:</strong> Airlines price these city pairs differently; the combination is often less than a straight round-trip.`,
+    },
+    {
+      type:'fueldump', label:'Alternate Hub Routing', icon:'⚡',
+      route:`${CITY_FROM} → ${CITY_TO} (via alternate hub)`,
+      airlines:['QR','EK','AY'],
+      details:`1 stop · Business Class · Hub-priced differently by the GDS`,
+      saving: Math.round(minPub * 0.34),
+      price:  Math.round(minPub * 0.66),
+      was:    minPub,
+      explanation:`<strong>What it is:</strong> Routing through a hub where airlines price Business Class more aggressively — such as Doha, Dubai, or Helsinki — can produce significant savings versus a direct or European hub connection. Same total travel time, different fare basis. <strong>Fully permitted</strong> under standard IATA tariff rules.`,
+    },
+  ];
+
+  finds.forEach((f, i) => {
+    const card = buildSCard(f, i);
+    card.style.animationDelay = (i * 60) + 'ms';
+    container.appendChild(card);
+  });
+
+  sec.style.display = 'block';
+}
+
+function buildSCard(f, idx) {
+  const el = document.createElement('div');
+  el.className = 'scard';
+
+  // Airline chips
+    const chips = (f.airlines||[]).map(code => {
+    const logo = LOGOS[code];
+    const logoHtml = logo ? '<img src="' + logo + '" alt="' + code + '" width="20" height="20" style="object-fit:contain">' : '';
+    return '<div class="sc-chip">' + logoHtml + ' ' + code + '</div>';
+  }).join('');
+
+  // Store specialist find data by index for onclick access
+  if (!window._sfMap) window._sfMap = {};
+  window._sfMap[idx] = {
+    specialistFind: true,
+    fareType: f.label,
+    route: f.route,
+    airlines: f.airlines,
+    indicativePrice: f.price,
+    savings: f.saving,
+  };
+
+  el.innerHTML = `
+    <div class="scard-bar"></div>
+    <div class="sc-grid">
+      <div class="sc-ico-col">
+        <div class="sc-ico ${f.type}">${f.icon}</div>
+      </div>
+      <div class="sc-main">
+        <div class="sc-type ${f.type}">${f.label}</div>
+        <div class="sc-route">${f.route.replace('→','<span style="color:var(--muted)">→</span>')}</div>
+        <div class="sc-meta">
+          <span class="sc-mi">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+            ${f.details}
+          </span>
+        </div>
+        <div class="sc-airlines">${chips}</div>
+        <div class="sc-explain">${f.explanation}</div>
+      </div>
+      <div class="sc-pr">
+        <div class="sc-saving">Save ~$${f.saving.toLocaleString()}</div>
+        <div>
+          <div class="sc-was">$${f.was.toLocaleString()}</div>
+          <div class="sc-price"><sup>$</sup>${f.price.toLocaleString()}</div>
+          <div class="sc-pnote">est. per person</div>
+        </div>
+        <button class="sc-cta" onclick="openModal(window._sfMap[${idx}])">Get This Fare</button>
+      </div>
+    </div>
+    <div class="sc-mob">
+      <div>
+        <div style="font-size:10px;font-weight:800;color:var(--green);margin-bottom:2px">Save ~$${f.saving.toLocaleString()}</div>
+        <div style="font-family:'Instrument Serif',serif;font-size:21px;color:var(--ink)">$${f.price.toLocaleString()}</div>
+        <div style="font-size:9px;color:var(--muted)">est. per person</div>
+      </div>
+      <button class="sc-cta" onclick="openModal(window._sfMap[${idx}])">Get This Fare</button>
+    </div>`;
+
+  return el;
+}
+
+function buildICTA() {
+  const el=document.createElement('div');
+  el.className='icta';
+  el.innerHTML=`<div class="icta-ico">✨</div>
+    <div class="icta-txt">
+      <h3>Check Private Fares — Often Below Published Prices</h3>
+      <p>Our specialists access consolidated and private fare stacks unavailable in standard online search. Business class transatlantic routes see the biggest savings.</p>
+    </div>
+    <div class="icta-act">
+      <button class="icta-btn p" onclick="openModal(null)">Beat This Fare</button>
+      <button class="icta-btn g" onclick="this.closest('.icta').remove()">Continue browsing</button>
+    </div>`;
+  // All specialist finds are gated — sign-up required
+  el.classList.add('gated');
+  const sov = document.createElement('div');
+  sov.className = 'gate-overlay';
+  sov.innerHTML = `<div class="gate-box">
+    <div class="gate-lock">⭐</div>
+    <div class="gate-h">Specialist Access Required</div>
+    <p class="gate-p">These strategies are only available through a BWT specialist consultation. Sign up free to get started.</p>
+    <button class="gate-btn" onclick="openModal(null)">Get Access Free</button>
+    <div class="gate-note">Reviewed by a specialist before any booking</div>
+  </div>`;
+  el.appendChild(sov);
+
+  return el;
+}
+
+/* ═══════════════════════════════════════════════
+   HISTOGRAM
+═══════════════════════════════════════════════ */
+function buildHistogram(offers) {
+  if (offers.length<3) return;
+  const prices=offers.map(o=>o.totalPrice).filter(Boolean);
+  const min=Math.min(...prices), max=Math.max(...prices);
+  if (min===max) return;
+
+  const N=16, step=(max-min)/N;
+  const buckets=Array(N).fill(0);
+  prices.forEach(p=>{ const b=Math.min(N-1,Math.floor((p-min)/step)); buckets[b]++; });
+  const peak=Math.max(...buckets);
+
+  const sl=document.getElementById('prSlider');
+  sl.max=Math.ceil(max); sl.value=Math.ceil(max);
+  document.getElementById('prVal').textContent='$'+Math.ceil(max).toLocaleString();
+  document.getElementById('histogram').innerHTML=buckets.map((c,i)=>{
+    const h=peak?Math.max(6,Math.round((c/peak)*100)):6;
+    const lo=Math.round(min+i*step), hi=Math.round(min+(i+1)*step);
+    const tip=`${c} flight${c!==1?'s':''} · $${lo.toLocaleString()}–$${hi.toLocaleString()}`;
+    return `<div class="hb act" style="height:${h}%" title="${tip}" data-tip="${tip}"></div>`;
+  }).join('');
+  document.getElementById('histBot').innerHTML=
+    `<span style="display:flex;align-items:center;gap:4px">
+      <span style="width:8px;height:8px;border-radius:2px;background:var(--navy);display:inline-block;opacity:.7"></span>
+      $${Math.round(min).toLocaleString()}
+    </span>
+    <span style="font-size:9px;color:var(--subtle)">hover a bar for details</span>
+    <span style="display:flex;align-items:center;gap:4px">
+      $${Math.round(max).toLocaleString()}
+      <span style="width:8px;height:8px;border-radius:2px;background:var(--navy);display:inline-block;opacity:.7"></span>
+    </span>`;
+  document.getElementById('histRange').textContent=`$${Math.round(min).toLocaleString()} – $${Math.round(max).toLocaleString()}`;
+  document.getElementById('histCard').classList.add('on');
+}
+
+/* ═══════════════════════════════════════════════
+   FILTERS
+═══════════════════════════════════════════════ */
+function buildAirlineFilter(offers) {
+  const map = new Map();
+  offers.forEach(o => {
+    const c = o.validatingCarrier||'';
+    if (!map.has(c)) map.set(c, {name:o.carrierName||c, count:0, alliance:ALLIANCES[c]||'independent'});
+    map.get(c).count++;
+  });
+
+  const wrap = document.getElementById('airlinesList');
+  wrap.innerHTML = '';
+
+  // Alliance quick-filter buttons
+  const allianceCounts = {star:0, oneworld:0, skyteam:0, independent:0};
+  map.forEach(({alliance, count}) => { if (allianceCounts[alliance]!==undefined) allianceCounts[alliance]+=count; });
+
+  const btnWrap = document.createElement('div');
+  btnWrap.className = 'alliance-btns';
+  Object.entries(ALLIANCE_LABELS).forEach(([key, {name, color, bg, border}]) => {
+    const cnt = allianceCounts[key]||0;
+    if (!cnt) return;
+    const btn = document.createElement('button');
+    btn.className = 'alliance-btn';
+    btn.dataset.alliance = key;
+    btn.style.cssText = 'border-color:'+border;
+    btn.innerHTML = '<span class="ab-left"><span class="ab-dot" style="background:'+color+'"></span>'+name+'</span><span class="ab-cnt">'+cnt+' flight'+(cnt!==1?'s':'')+'</span>';
+    btn.onclick = () => fAlliance(key, btn, color, bg, border);
+    btnWrap.appendChild(btn);
+  });
+  wrap.appendChild(btnWrap);
+
+  const sep = document.createElement('div');
+  sep.className = 'alliance-sep';
+  sep.textContent = 'Individual Airlines';
+  wrap.appendChild(sep);
+
+  const list = document.createElement('div');
+  list.className = 'al-list';
+  [...map.entries()].sort((a,b) => b[1].count-a[1].count).forEach(([code, {name, count, alliance}]) => {
+    const logo = LOGOS[code];
+    const al   = ALLIANCE_LABELS[alliance];
+    const row  = document.createElement('label');
+    row.className = 'aopt';
+    const alTag = al ? '<span style="font-size:8.5px;font-weight:700;padding:1px 5px;border-radius:4px;background:'+al.bg+';color:'+al.color+';border:1px solid '+al.border+';white-space:nowrap">'+al.name+'</span>' : '';
+    const logoHtml = logo
+      ? '<img src="'+logo+'" alt="'+code+'" onerror="this.outerHTML=\'<div class=\"alogo-fb\">'+code+'</div>\'">'
+      : '<div class="alogo-fb">'+code+'</div>';
+    row.innerHTML = '<div class="aopt-l"><input type="checkbox" data-c="'+code+'" onchange="fAirline(\''+code+'\',this.checked)"><div class="alogo">'+logoHtml+'</div><span class="aopt-name">'+name+'</span>'+alTag+'</div><span class="aopt-cnt">'+count+'</span>';
+    list.appendChild(row);
+  });
+  wrap.appendChild(list);
+}
+
+function fAlliance(key, btn, color, bg, border) {
+  const allBtns = document.querySelectorAll('.alliance-btn');
+  if (filters.alliance === key) {
+    filters.alliance = null;
+    allBtns.forEach(b => { b.classList.remove('on'); b.style.background=''; b.style.color=''; b.style.borderColor=''; });
+    filters.airlines.clear();
+    document.querySelectorAll('.aopt input[type=checkbox]').forEach(cb => { cb.checked=false; });
+  } else {
+    filters.alliance = key;
+    allBtns.forEach(b => { b.classList.remove('on'); b.style.background=''; b.style.color=''; });
+    btn.classList.add('on');
+    btn.style.background = color;
+    btn.style.borderColor = color;
+    btn.style.color = '#fff';
+    filters.airlines.clear();
+    document.querySelectorAll('.aopt input[type=checkbox]').forEach(cb => {
+      const inAlliance = (ALLIANCES[cb.dataset.c]||'independent') === key;
+      cb.checked = inAlliance;
+      if (inAlliance) filters.airlines.add(cb.dataset.c);
+    });
+  }
+  applyFilters();
+}
+
+
+function fStops(v,btn) { document.querySelectorAll('.stp').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); filters.stops=v; applyFilters(); }
+function fTime(v,el)   { document.querySelectorAll('.topt').forEach(t=>t.classList.remove('on')); el.classList.add('on'); filters.time=v; applyFilters(); }
+function fAirline(code,checked) { if(checked) filters.airlines.add(code); else filters.airlines.delete(code); applyFilters(); }
+function fPrice(v) {
+  filters.maxPrice=parseInt(v);
+  const pct=(v/parseInt(document.getElementById('prSlider').max))*100;
+  document.getElementById('prSlider').style.setProperty('--pct',pct+'%');
+  document.getElementById('prVal').textContent='$'+parseInt(v).toLocaleString();
+  const bars=document.querySelectorAll('.hb'), max=parseInt(document.getElementById('prSlider').max);
+  bars.forEach((bar,i)=>{ bar.classList.toggle('act', (i+1)/bars.length*max <= filters.maxPrice*1.06); });
+  applyFilters();
+}
+
+function applyFilters() {
+  filters.bag=document.getElementById('fBag').checked;
+  filters.ref=document.getElementById('fRef').checked;
+  filteredOffers=allOffers.filter(o=>{
+    if (filters.stops!=='any' && o.totalStops!==parseInt(filters.stops)) return false;
+    if (o.totalPrice>filters.maxPrice) return false;
+    if (filters.airlines.size>0 && !filters.airlines.has(o.validatingCarrier)) return false;
+    if (filters.bag && !o.baggageSummary?.included) return false;
+    if (filters.ref && o.refundable!==true) return false;
+    if (filters.time!=='any') {
+      const h=getHour(o.journeys?.[0]?.segments?.[0]?.departure?.datetime);
+      if (filters.time==='morning'   && !(h>=5&&h<12))  return false;
+      if (filters.time==='afternoon' && !(h>=12&&h<18)) return false;
+      if (filters.time==='evening'   && !(h>=18||h<5))  return false;
+    }
+    return true;
+  });
+  renderCards(filteredOffers);
+}
+
+function resetFilters() {
+  filters={stops:'any',maxPrice:99999,time:'any',airlines:new Set(),bag:false,ref:false};
+  document.querySelectorAll('.stp').forEach((b,i)=>b.classList.toggle('on',i===0));
+  document.querySelectorAll('.topt').forEach((t,i)=>t.classList.toggle('on',i===0));
+  document.querySelectorAll('[data-c]').forEach(cb=>cb.checked=false);
+  document.getElementById('fBag').checked=false;
+  document.getElementById('fRef').checked=false;
+  const sl=document.getElementById('prSlider'); fPrice(sl.max);
+  filteredOffers=[...allOffers]; renderCards(filteredOffers);
+}
+
+function resort(mode,btn) {
+  document.querySelectorAll('.schip').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+
+  const sortFn = (a,b) => {
+    if (mode==='price')    return a.totalPrice-b.totalPrice;
+    if (mode==='duration') return parseDur(a.outboundDuration)-parseDur(b.outboundDuration);
+    if (mode==='stops')    return a.totalStops-b.totalStops||a.totalPrice-b.totalPrice;
+    return (a.totalPrice+a.totalStops*300)-(b.totalPrice+b.totalStops*300);
+  };
+
+  // Sort within each group, keep LH Group first
+  const starOffers  = filteredOffers.filter(o=>LH_GROUP.has(o.validatingCarrier)).sort(sortFn);
+  const otherOffers = filteredOffers.filter(o=>!LH_GROUP.has(o.validatingCarrier)).sort(sortFn);
+  filteredOffers = [...starOffers, ...otherOffers];
+  renderCards(filteredOffers);
+}
+console.log('[BWT] resort function loaded ✅');
+
+function toggleFP(hd) {
+  hd.classList.toggle('on');
+  hd.nextElementSibling.classList.toggle('on');
+  hd.querySelector('.fp-chev').classList.toggle('on');
+}
+
+/* ═══════════════════════════════════════════════
+   TRIP TYPE
+═══════════════════════════════════════════════ */
+function setTrip(type,btn) {
+  tripType=type;
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('on')); btn.classList.add('on');
+  document.getElementById('ret-field').style.display=type==='oneway'?'none':'';
+}
+
+/* ═══════════════════════════════════════════════
+   AUTOCOMPLETE
+═══════════════════════════════════════════════ */
+// ══ DATE DISPLAY HELPER ══
+function setDateDisplay(field, val) {
+  const el = document.getElementById(field+'-display');
+  if (!el) return;
+  if (val) {
+    el.textContent = new Date(val+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+    el.classList.remove('placeholder');
+  } else {
+    el.textContent = field==='dep' ? 'Depart' : 'Return';
+    el.classList.add('placeholder');
+  }
+}
+
+// ══ AIRPORT DATA ══
+const AIRPORTS_DB=[
+  // ── North America ──
+  {iata:'JFK',city:'New York',name:'John F. Kennedy International',flag:'🇺🇸'},
+  {iata:'EWR',city:'Newark',name:'Newark Liberty International',flag:'🇺🇸'},
+  {iata:'LGA',city:'New York',name:'LaGuardia Airport',flag:'🇺🇸'},
+  {iata:'BOS',city:'Boston',name:'Logan International Airport',flag:'🇺🇸'},
+  {iata:'MIA',city:'Miami',name:'Miami International Airport',flag:'🇺🇸'},
+  {iata:'FLL',city:'Fort Lauderdale',name:'Fort Lauderdale-Hollywood International',flag:'🇺🇸'},
+  {iata:'ATL',city:'Atlanta',name:'Hartsfield-Jackson Atlanta International',flag:'🇺🇸'},
+  {iata:'ORD',city:'Chicago',name:"O'Hare International Airport",flag:'🇺🇸'},
+  {iata:'MDW',city:'Chicago',name:'Chicago Midway Airport',flag:'🇺🇸'},
+  {iata:'LAX',city:'Los Angeles',name:'Los Angeles International',flag:'🇺🇸'},
+  {iata:'SFO',city:'San Francisco',name:'San Francisco International',flag:'🇺🇸'},
+  {iata:'SJC',city:'San Jose',name:'Norman Y. Mineta San Jose International',flag:'🇺🇸'},
+  {iata:'OAK',city:'Oakland',name:'Oakland International Airport',flag:'🇺🇸'},
+  {iata:'IAD',city:'Washington DC',name:'Washington Dulles International',flag:'🇺🇸'},
+  {iata:'DCA',city:'Washington DC',name:'Ronald Reagan Washington National',flag:'🇺🇸'},
+  {iata:'BWI',city:'Baltimore',name:'Baltimore/Washington International',flag:'🇺🇸'},
+  {iata:'DFW',city:'Dallas',name:'Dallas/Fort Worth International',flag:'🇺🇸'},
+  {iata:'DAL',city:'Dallas',name:'Dallas Love Field',flag:'🇺🇸'},
+  {iata:'IAH',city:'Houston',name:'George Bush Intercontinental',flag:'🇺🇸'},
+  {iata:'HOU',city:'Houston',name:'William P. Hobby Airport',flag:'🇺🇸'},
+  {iata:'SEA',city:'Seattle',name:'Seattle-Tacoma International',flag:'🇺🇸'},
+  {iata:'DEN',city:'Denver',name:'Denver International Airport',flag:'🇺🇸'},
+  {iata:'LAS',city:'Las Vegas',name:'Harry Reid International Airport',flag:'🇺🇸'},
+  {iata:'PHX',city:'Phoenix',name:'Phoenix Sky Harbor International',flag:'🇺🇸'},
+  {iata:'MSP',city:'Minneapolis',name:'Minneapolis-Saint Paul International',flag:'🇺🇸'},
+  {iata:'DTW',city:'Detroit',name:'Detroit Metropolitan Wayne County',flag:'🇺🇸'},
+  {iata:'CLT',city:'Charlotte',name:'Charlotte Douglas International',flag:'🇺🇸'},
+  {iata:'PHL',city:'Philadelphia',name:'Philadelphia International Airport',flag:'🇺🇸'},
+  {iata:'SLC',city:'Salt Lake City',name:'Salt Lake City International',flag:'🇺🇸'},
+  {iata:'PDX',city:'Portland',name:'Portland International Airport',flag:'🇺🇸'},
+  {iata:'MCO',city:'Orlando',name:'Orlando International Airport',flag:'🇺🇸'},
+  {iata:'TPA',city:'Tampa',name:'Tampa International Airport',flag:'🇺🇸'},
+  {iata:'BNA',city:'Nashville',name:'Nashville International Airport',flag:'🇺🇸'},
+  {iata:'AUS',city:'Austin',name:'Austin-Bergstrom International',flag:'🇺🇸'},
+  {iata:'SAN',city:'San Diego',name:'San Diego International Airport',flag:'🇺🇸'},
+  {iata:'HNL',city:'Honolulu',name:'Daniel K. Inouye International',flag:'🇺🇸'},
+  {iata:'ANC',city:'Anchorage',name:'Ted Stevens Anchorage International',flag:'🇺🇸'},
+  {iata:'YYZ',city:'Toronto',name:'Toronto Pearson International',flag:'🇨🇦'},
+  {iata:'YUL',city:'Montreal',name:'Montréal-Trudeau International',flag:'🇨🇦'},
+  {iata:'YVR',city:'Vancouver',name:'Vancouver International Airport',flag:'🇨🇦'},
+  {iata:'YYC',city:'Calgary',name:'Calgary International Airport',flag:'🇨🇦'},
+  {iata:'YEG',city:'Edmonton',name:'Edmonton International Airport',flag:'🇨🇦'},
+  {iata:'YOW',city:'Ottawa',name:'Ottawa Macdonald-Cartier International',flag:'🇨🇦'},
+  {iata:'MEX',city:'Mexico City',name:'Benito Juárez International',flag:'🇲🇽'},
+  {iata:'CUN',city:'Cancún',name:'Cancún International Airport',flag:'🇲🇽'},
+  {iata:'GDL',city:'Guadalajara',name:'Miguel Hidalgo y Costilla International',flag:'🇲🇽'},
+  // ── Europe ──
+  {iata:'LHR',city:'London',name:'Heathrow Airport',flag:'🇬🇧'},
+  {iata:'LGW',city:'London',name:'Gatwick Airport',flag:'🇬🇧'},
+  {iata:'STN',city:'London',name:'Stansted Airport',flag:'🇬🇧'},
+  {iata:'LTN',city:'London',name:'Luton Airport',flag:'🇬🇧'},
+  {iata:'LCY',city:'London',name:'City Airport',flag:'🇬🇧'},
+  {iata:'MAN',city:'Manchester',name:'Manchester Airport',flag:'🇬🇧'},
+  {iata:'BHX',city:'Birmingham',name:'Birmingham Airport',flag:'🇬🇧'},
+  {iata:'EDI',city:'Edinburgh',name:'Edinburgh Airport',flag:'🇬🇧'},
+  {iata:'GLA',city:'Glasgow',name:'Glasgow Airport',flag:'🇬🇧'},
+  {iata:'CDG',city:'Paris',name:'Charles de Gaulle Airport',flag:'🇫🇷'},
+  {iata:'ORY',city:'Paris',name:'Paris Orly Airport',flag:'🇫🇷'},
+  {iata:'NCE',city:'Nice',name:'Cote d Azur Airport',flag:'🇫🇷'},
+  {iata:'LYS',city:'Lyon',name:'Lyon-Saint Exupéry Airport',flag:'🇫🇷'},
+  {iata:'MRS',city:'Marseille',name:'Marseille Provence Airport',flag:'🇫🇷'},
+  {iata:'FRA',city:'Frankfurt',name:'Frankfurt Airport',flag:'🇩🇪'},
+  {iata:'MUC',city:'Munich',name:'Munich Airport',flag:'🇩🇪'},
+  {iata:'BER',city:'Berlin',name:'Berlin Brandenburg Airport',flag:'🇩🇪'},
+  {iata:'DUS',city:'Düsseldorf',name:'Düsseldorf Airport',flag:'🇩🇪'},
+  {iata:'HAM',city:'Hamburg',name:'Hamburg Airport',flag:'🇩🇪'},
+  {iata:'STR',city:'Stuttgart',name:'Stuttgart Airport',flag:'🇩🇪'},
+  {iata:'CGN',city:'Cologne',name:'Cologne Bonn Airport',flag:'🇩🇪'},
+  {iata:'AMS',city:'Amsterdam',name:'Amsterdam Schiphol Airport',flag:'🇳🇱'},
+  {iata:'MAD',city:'Madrid',name:'Adolfo Suárez Madrid-Barajas',flag:'🇪🇸'},
+  {iata:'BCN',city:'Barcelona',name:'Barcelona El Prat Airport',flag:'🇪🇸'},
+  {iata:'AGP',city:'Málaga',name:'Málaga-Costa del Sol Airport',flag:'🇪🇸'},
+  {iata:'PMI',city:'Palma de Mallorca',name:'Palma de Mallorca Airport',flag:'🇪🇸'},
+  {iata:'VLC',city:'Valencia',name:'Valencia Airport',flag:'🇪🇸'},
+  {iata:'FCO',city:'Rome',name:'Leonardo da Vinci International',flag:'🇮🇹'},
+  {iata:'MXP',city:'Milan',name:'Milan Malpensa Airport',flag:'🇮🇹'},
+  {iata:'LIN',city:'Milan',name:'Milan Linate Airport',flag:'🇮🇹'},
+  {iata:'VCE',city:'Venice',name:'Venice Marco Polo Airport',flag:'🇮🇹'},
+  {iata:'NAP',city:'Naples',name:'Naples International Airport',flag:'🇮🇹'},
+  {iata:'BGY',city:'Bergamo',name:'Bergamo Orio al Serio Airport',flag:'🇮🇹'},
+  {iata:'ZRH',city:'Zurich',name:'Zurich Airport',flag:'🇨🇭'},
+  {iata:'GVA',city:'Geneva',name:'Geneva Airport',flag:'🇨🇭'},
+  {iata:'VIE',city:'Vienna',name:'Vienna International Airport',flag:'🇦🇹'},
+  {iata:'BRU',city:'Brussels',name:'Brussels Airport',flag:'🇧🇪'},
+  {iata:'CPH',city:'Copenhagen',name:'Copenhagen Airport',flag:'🇩🇰'},
+  {iata:'ARN',city:'Stockholm',name:'Stockholm Arlanda Airport',flag:'🇸🇪'},
+  {iata:'GOT',city:'Gothenburg',name:'Gothenburg Landvetter Airport',flag:'🇸🇪'},
+  {iata:'OSL',city:'Oslo',name:'Oslo Gardermoen Airport',flag:'🇳🇴'},
+  {iata:'HEL',city:'Helsinki',name:'Helsinki Vantaa Airport',flag:'🇫🇮'},
+  {iata:'DUB',city:'Dublin',name:'Dublin Airport',flag:'🇮🇪'},
+  {iata:'LIS',city:'Lisbon',name:'Lisbon Humberto Delgado Airport',flag:'🇵🇹'},
+  {iata:'OPO',city:'Porto',name:'Francisco Sá Carneiro Airport',flag:'🇵🇹'},
+  {iata:'ATH',city:'Athens',name:'Athens Eleftherios Venizelos',flag:'🇬🇷'},
+  {iata:'SKG',city:'Thessaloniki',name:'Thessaloniki Macedonia Airport',flag:'🇬🇷'},
+  {iata:'IST',city:'Istanbul',name:'Istanbul Airport',flag:'🇹🇷'},
+  {iata:'SAW',city:'Istanbul',name:'Istanbul Sabiha Gökçen Airport',flag:'🇹🇷'},
+  {iata:'ADB',city:'Izmir',name:'Izmir Adnan Menderes Airport',flag:'🇹🇷'},
+  {iata:'PRG',city:'Prague',name:'Václav Havel Airport Prague',flag:'🇨🇿'},
+  {iata:'WAW',city:'Warsaw',name:'Warsaw Chopin Airport',flag:'🇵🇱'},
+  {iata:'BUD',city:'Budapest',name:'Budapest Ferenc Liszt Airport',flag:'🇭🇺'},
+  {iata:'OTP',city:'Bucharest',name:'Henri Coandă International',flag:'🇷🇴'},
+  {iata:'SOF',city:'Sofia',name:'Sofia Airport',flag:'🇧🇬'},
+  {iata:'KBP',city:'Kyiv',name:'Boryspil International Airport',flag:'🇺🇦'},
+  {iata:'SVO',city:'Moscow',name:'Sheremetyevo International',flag:'🇷🇺'},
+  {iata:'DME',city:'Moscow',name:'Domodedovo International',flag:'🇷🇺'},
+  {iata:'LED',city:'St Petersburg',name:'Pulkovo Airport',flag:'🇷🇺'},
+  {iata:'KEF',city:'Reykjavik',name:'Keflavík International Airport',flag:'🇮🇸'},
+  {iata:'LUX',city:'Luxembourg',name:'Luxembourg Airport',flag:'🇱🇺'},
+  {iata:'GRO',city:'Girona',name:'Girona-Costa Brava Airport',flag:'🇪🇸'},
+  {iata:'SVQ',city:'Seville',name:'Seville Airport',flag:'🇪🇸'},
+  // ── Middle East & Africa ──
+  {iata:'DXB',city:'Dubai',name:'Dubai International Airport',flag:'🇦🇪'},
+  {iata:'DWC',city:'Dubai',name:'Al Maktoum International Airport',flag:'🇦🇪'},
+  {iata:'AUH',city:'Abu Dhabi',name:'Abu Dhabi International Airport',flag:'🇦🇪'},
+  {iata:'SHJ',city:'Sharjah',name:'Sharjah International Airport',flag:'🇦🇪'},
+  {iata:'DOH',city:'Doha',name:'Hamad International Airport',flag:'🇶🇦'},
+  {iata:'RUH',city:'Riyadh',name:'King Khalid International Airport',flag:'🇸🇦'},
+  {iata:'JED',city:'Jeddah',name:'King Abdulaziz International',flag:'🇸🇦'},
+  {iata:'MCT',city:'Muscat',name:'Muscat International Airport',flag:'🇴🇲'},
+  {iata:'KWI',city:'Kuwait City',name:'Kuwait International Airport',flag:'🇰🇼'},
+  {iata:'BAH',city:'Bahrain',name:'Bahrain International Airport',flag:'🇧🇭'},
+  {iata:'AMM',city:'Amman',name:'Queen Alia International Airport',flag:'🇯🇴'},
+  {iata:'BEY',city:'Beirut',name:'Rafic Hariri International Airport',flag:'🇱🇧'},
+  {iata:'TLV',city:'Tel Aviv',name:'Ben Gurion International Airport',flag:'🇮🇱'},
+  {iata:'CAI',city:'Cairo',name:'Cairo International Airport',flag:'🇪🇬'},
+  {iata:'HRG',city:'Hurghada',name:'Hurghada International Airport',flag:'🇪🇬'},
+  {iata:'SSH',city:'Sharm el-Sheikh',name:'Sharm el-Sheikh International',flag:'🇪🇬'},
+  {iata:'CMN',city:'Casablanca',name:'Mohammed V International Airport',flag:'🇲🇦'},
+  {iata:'RAK',city:'Marrakech',name:'Marrakech Menara Airport',flag:'🇲🇦'},
+  {iata:'TUN',city:'Tunis',name:'Tunis-Carthage International',flag:'🇹🇳'},
+  {iata:'ALG',city:'Algiers',name:'Houari Boumediene Airport',flag:'🇩🇿'},
+  {iata:'JNB',city:'Johannesburg',name:'O.R. Tambo International',flag:'🇿🇦'},
+  {iata:'CPT',city:'Cape Town',name:'Cape Town International',flag:'🇿🇦'},
+  {iata:'DUR',city:'Durban',name:'King Shaka International Airport',flag:'🇿🇦'},
+  {iata:'NBO',city:'Nairobi',name:'Jomo Kenyatta International',flag:'🇰🇪'},
+  {iata:'MBA',city:'Mombasa',name:'Moi International Airport',flag:'🇰🇪'},
+  {iata:'ADD',city:'Addis Ababa',name:'Addis Ababa Bole International',flag:'🇪🇹'},
+  {iata:'DAR',city:'Dar es Salaam',name:'Julius Nyerere International',flag:'🇹🇿'},
+  {iata:'EBB',city:'Kampala',name:'Entebbe International Airport',flag:'🇺🇬'},
+  {iata:'ACC',city:'Accra',name:'Kotoka International Airport',flag:'🇬🇭'},
+  {iata:'LOS',city:'Lagos',name:'Murtala Muhammed International',flag:'🇳🇬'},
+  {iata:'ABV',city:'Abuja',name:'Nnamdi Azikiwe International',flag:'🇳🇬'},
+  {iata:'DKR',city:'Dakar',name:'Blaise Diagne International Airport',flag:'🇸🇳'},
+  {iata:'ABJ',city:'Abidjan',name:'Félix-Houphouët-Boigny International',flag:'🇨🇮'},
+  {iata:'TUN',city:'Tunis',name:'Tunis-Carthage International',flag:'🇹🇳'},
+  // ── Asia Pacific ──
+  {iata:'NRT',city:'Tokyo',name:'Narita International Airport',flag:'🇯🇵'},
+  {iata:'HND',city:'Tokyo',name:'Haneda Airport',flag:'🇯🇵'},
+  {iata:'KIX',city:'Osaka',name:'Kansai International Airport',flag:'🇯🇵'},
+  {iata:'ITM',city:'Osaka',name:'Itami Airport',flag:'🇯🇵'},
+  {iata:'NGO',city:'Nagoya',name:'Chubu Centrair International',flag:'🇯🇵'},
+  {iata:'CTS',city:'Sapporo',name:'New Chitose Airport',flag:'🇯🇵'},
+  {iata:'ICN',city:'Seoul',name:'Incheon International Airport',flag:'🇰🇷'},
+  {iata:'GMP',city:'Seoul',name:'Gimpo International Airport',flag:'🇰🇷'},
+  {iata:'PEK',city:'Beijing',name:'Beijing Capital International',flag:'🇨🇳'},
+  {iata:'PKX',city:'Beijing',name:'Beijing Daxing International',flag:'🇨🇳'},
+  {iata:'PVG',city:'Shanghai',name:'Shanghai Pudong International',flag:'🇨🇳'},
+  {iata:'SHA',city:'Shanghai',name:'Shanghai Hongqiao International',flag:'🇨🇳'},
+  {iata:'CAN',city:'Guangzhou',name:'Guangzhou Baiyun International',flag:'🇨🇳'},
+  {iata:'SZX',city:'Shenzhen',name:'Shenzhen Baoan International',flag:'🇨🇳'},
+  {iata:'CTU',city:'Chengdu',name:'Chengdu Tianfu International',flag:'🇨🇳'},
+  {iata:'HKG',city:'Hong Kong',name:'Hong Kong International',flag:'🇭🇰'},
+  {iata:'TPE',city:'Taipei',name:'Taiwan Taoyuan International',flag:'🇹🇼'},
+  {iata:'TSA',city:'Taipei',name:'Taipei Songshan Airport',flag:'🇹🇼'},
+  {iata:'MNL',city:'Manila',name:'Ninoy Aquino International',flag:'🇵🇭'},
+  {iata:'CEB',city:'Cebu',name:'Mactan-Cebu International',flag:'🇵🇭'},
+  {iata:'SIN',city:'Singapore',name:'Singapore Changi Airport',flag:'🇸🇬'},
+  {iata:'KUL',city:'Kuala Lumpur',name:'Kuala Lumpur International',flag:'🇲🇾'},
+  {iata:'SZB',city:'Kuala Lumpur',name:'Sultan Abdul Aziz Shah Airport',flag:'🇲🇾'},
+  {iata:'BKK',city:'Bangkok',name:'Suvarnabhumi Airport',flag:'🇹🇭'},
+  {iata:'DMK',city:'Bangkok',name:'Don Mueang International',flag:'🇹🇭'},
+  {iata:'HKT',city:'Phuket',name:'Phuket International Airport',flag:'🇹🇭'},
+  {iata:'CNX',city:'Chiang Mai',name:'Chiang Mai International',flag:'🇹🇭'},
+  {iata:'CGK',city:'Jakarta',name:'Soekarno-Hatta International',flag:'🇮🇩'},
+  {iata:'DPS',city:'Bali',name:'Ngurah Rai International',flag:'🇮🇩'},
+  {iata:'SUB',city:'Surabaya',name:'Juanda International Airport',flag:'🇮🇩'},
+  {iata:'SGN',city:'Ho Chi Minh City',name:'Tan Son Nhat International',flag:'🇻🇳'},
+  {iata:'HAN',city:'Hanoi',name:'Noi Bai International Airport',flag:'🇻🇳'},
+  {iata:'DAD',city:'Da Nang',name:'Da Nang International Airport',flag:'🇻🇳'},
+  {iata:'RGN',city:'Yangon',name:'Yangon International Airport',flag:'🇲🇲'},
+  {iata:'PNH',city:'Phnom Penh',name:'Phnom Penh International',flag:'🇰🇭'},
+  {iata:'REP',city:'Siem Reap',name:'Siem Reap-Angkor International',flag:'🇰🇭'},
+  {iata:'VTE',city:'Vientiane',name:'Wattay International Airport',flag:'🇱🇦'},
+  {iata:'DEL',city:'Delhi',name:'Indira Gandhi International',flag:'🇮🇳'},
+  {iata:'BOM',city:'Mumbai',name:'Chhatrapati Shivaji Maharaj International',flag:'🇮🇳'},
+  {iata:'BLR',city:'Bangalore',name:'Kempegowda International Airport',flag:'🇮🇳'},
+  {iata:'MAA',city:'Chennai',name:'Chennai International Airport',flag:'🇮🇳'},
+  {iata:'HYD',city:'Hyderabad',name:'Rajiv Gandhi International Airport',flag:'🇮🇳'},
+  {iata:'CCU',city:'Kolkata',name:'Netaji Subhas Chandra Bose International',flag:'🇮🇳'},
+  {iata:'COK',city:'Kochi',name:'Cochin International Airport',flag:'🇮🇳'},
+  {iata:'AMD',city:'Ahmedabad',name:'Sardar Vallabhbhai Patel International',flag:'🇮🇳'},
+  {iata:'CMB',city:'Colombo',name:'Bandaranaike International Airport',flag:'🇱🇰'},
+  {iata:'KTM',city:'Kathmandu',name:'Tribhuvan International Airport',flag:'🇳🇵'},
+  {iata:'DAC',city:'Dhaka',name:'Hazrat Shahjalal International',flag:'🇧🇩'},
+  {iata:'KHI',city:'Karachi',name:'Jinnah International Airport',flag:'🇵🇰'},
+  {iata:'LHE',city:'Lahore',name:'Allama Iqbal International Airport',flag:'🇵🇰'},
+  {iata:'ISB',city:'Islamabad',name:'New Islamabad International',flag:'🇵🇰'},
+  {iata:'KBL',city:'Kabul',name:'Hamid Karzai International',flag:'🇦🇫'},
+  {iata:'TAS',city:'Tashkent',name:'Islam Karimov Tashkent International',flag:'🇺🇿'},
+  {iata:'ALA',city:'Almaty',name:'Almaty International Airport',flag:'🇰🇿'},
+  {iata:'SYD',city:'Sydney',name:'Kingsford Smith Airport',flag:'🇦🇺'},
+  {iata:'MEL',city:'Melbourne',name:'Melbourne Airport',flag:'🇦🇺'},
+  {iata:'BNE',city:'Brisbane',name:'Brisbane Airport',flag:'🇦🇺'},
+  {iata:'PER',city:'Perth',name:'Perth Airport',flag:'🇦🇺'},
+  {iata:'ADL',city:'Adelaide',name:'Adelaide Airport',flag:'🇦🇺'},
+  {iata:'AKL',city:'Auckland',name:'Auckland Airport',flag:'🇳🇿'},
+  {iata:'CHC',city:'Christchurch',name:'Christchurch Airport',flag:'🇳🇿'},
+  {iata:'WLG',city:'Wellington',name:'Wellington International Airport',flag:'🇳🇿'},
+  // ── Caribbean & Latin America ──
+  {iata:'GRU',city:'São Paulo',name:'São Paulo Guarulhos International',flag:'🇧🇷'},
+  {iata:'CGH',city:'São Paulo',name:'São Paulo Congonhas Airport',flag:'🇧🇷'},
+  {iata:'GIG',city:'Rio de Janeiro',name:'Rio de Janeiro Galeão International',flag:'🇧🇷'},
+  {iata:'SDU',city:'Rio de Janeiro',name:'Santos Dumont Airport',flag:'🇧🇷'},
+  {iata:'BSB',city:'Brasília',name:'Brasília International Airport',flag:'🇧🇷'},
+  {iata:'FOR',city:'Fortaleza',name:'Pinto Martins International',flag:'🇧🇷'},
+  {iata:'REC',city:'Recife',name:'Recife/Guararapes International',flag:'🇧🇷'},
+  {iata:'EZE',city:'Buenos Aires',name:'Ministro Pistarini International',flag:'🇦🇷'},
+  {iata:'AEP',city:'Buenos Aires',name:'Jorge Newbery Airfield',flag:'🇦🇷'},
+  {iata:'SCL',city:'Santiago',name:'Arturo Merino Benítez International',flag:'🇨🇱'},
+  {iata:'LIM',city:'Lima',name:'Jorge Chávez International Airport',flag:'🇵🇪'},
+  {iata:'BOG',city:'Bogotá',name:'El Dorado International Airport',flag:'🇨🇴'},
+  {iata:'MDE',city:'Medellín',name:'José María Córdova International',flag:'🇨🇴'},
+  {iata:'CTG',city:'Cartagena',name:'Rafael Núñez International Airport',flag:'🇨🇴'},
+  {iata:'UIO',city:'Quito',name:'Mariscal Sucre International',flag:'🇪🇨'},
+  {iata:'GYE',city:'Guayaquil',name:'José Joaquín de Olmedo International',flag:'🇪🇨'},
+  {iata:'CCS',city:'Caracas',name:'Simón Bolívar International',flag:'🇻🇪'},
+  {iata:'GUA',city:'Guatemala City',name:'La Aurora International Airport',flag:'🇬🇹'},
+  {iata:'SAL',city:'San Salvador',name:'Monseñor Óscar Arnulfo Romero',flag:'🇸🇻'},
+  {iata:'PTY',city:'Panama City',name:'Tocumen International Airport',flag:'🇵🇦'},
+  {iata:'SJO',city:'San José',name:'Juan Santamaría International',flag:'🇨🇷'},
+  {iata:'SDQ',city:'Santo Domingo',name:'Las Américas International',flag:'🇩🇴'},
+  {iata:'PUJ',city:'Punta Cana',name:'Punta Cana International Airport',flag:'🇩🇴'},
+  {iata:'HAV',city:'Havana',name:'José Martí International Airport',flag:'🇨🇺'},
+  {iata:'MBJ',city:'Montego Bay',name:'Sangster International Airport',flag:'🇯🇲'},
+  {iata:'KIN',city:'Kingston',name:'Norman Manley International',flag:'🇯🇲'},
+  {iata:'NAS',city:'Nassau',name:'Lynden Pindling International',flag:'🇧🇸'},
+  {iata:'AUA',city:'Aruba',name:'Queen Beatrix International Airport',flag:'🇦🇼'},
+  {iata:'CUR',city:'Curaçao',name:'Hato International Airport',flag:'🇨🇼'},
+  {iata:'SXM',city:'St Maarten',name:'Princess Juliana International',flag:'🇸🇽'},
+  {iata:'BGI',city:'Bridgetown',name:'Grantley Adams International',flag:'🇧🇧'},
+  {iata:'POS',city:'Port of Spain',name:'Piarco International Airport',flag:'🇹🇹'},
+];
+const POPULAR_AC=['JFK','EWR','LHR','CDG','FRA','AMS','MAD','DXB','DOH','SIN','LAX','NRT'];
+
+function hlTxt(text, q) {
+  if (!q||!text) return text||'';
+  const i=text.toLowerCase().indexOf(q.toLowerCase());
+  if (i<0) return text;
+  return text.slice(0,i)+'<mark class="m">'+text.slice(i,i+q.length)+'</mark>'+text.slice(i+q.length);
+}
+
+// ══ AIRPORT TYPEAHEAD (Google Flights style) ══
+const _acHlIdx = {orig:-1, dest:-1};
+
+function acSuggest(field, q) {
+  const ql = (q||'').trim().toLowerCase();
+  const sug = document.getElementById(field+'-sug');
+  const list = ql
+    ? AIRPORTS_DB.filter(a =>
+        a.iata.toLowerCase().startsWith(ql) ||
+        a.city.toLowerCase().startsWith(ql) ||
+        a.city.toLowerCase().includes(ql) ||
+        a.name.toLowerCase().includes(ql)
+      ).slice(0, 7)
+    : POPULAR_AC.map(c => AIRPORTS_DB.find(a => a.iata===c)).filter(Boolean);
+
+  _acHlIdx[field] = -1;
+  sug.innerHTML = '';
+
+  list.forEach(a => {
+    const row = document.createElement('div');
+    row.className = 'ac-row';
+    row.innerHTML =
+      '<div class="ac-flag">' + (a.flag||'🌍') + '</div>' +
+      '<div class="ac-inf">' +
+        '<div class="ac-city">' + hlTxt(a.city, q) + '</div>' +
+        '<div class="ac-name">' + a.name + '</div>' +
+      '</div>' +
+      '<div class="ac-code">' + a.iata + '</div>';
+    row.addEventListener('mousedown', e => {
+      e.preventDefault();
+      acPick(field, a);
+    });
+    sug.appendChild(row);
+  });
+
+  sug.classList.toggle('open', list.length > 0);
+}
+
+function acCloseSug(field) {
+  const sug = document.getElementById(field+'-sug');
+  if (sug) sug.classList.remove('open');
+}
+
+function acNavSug(e, field) {
+  const sug = document.getElementById(field+'-sug');
+  if (!sug || !sug.classList.contains('open')) return;
+  const rows = sug.querySelectorAll('.ac-row');
+  if (!rows.length) return;
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    _acHlIdx[field] = Math.min(_acHlIdx[field]+1, rows.length-1);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    _acHlIdx[field] = Math.max(_acHlIdx[field]-1, 0);
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (_acHlIdx[field] >= 0) rows[_acHlIdx[field]].dispatchEvent(new MouseEvent('mousedown'));
+    else if (rows[0]) rows[0].dispatchEvent(new MouseEvent('mousedown'));
+    return;
+  } else if (e.key === 'Escape') {
+    acCloseSug(field); return;
+  }
+  rows.forEach((r,i) => r.classList.toggle('hl', i === _acHlIdx[field]));
+  rows[_acHlIdx[field]]?.scrollIntoView({block:'nearest'});
+}
+
+function acPick(field, a) {
+  document.getElementById(field+'-input').value = (a.city||a.name) + ' (' + a.iata + ')';
+  document.getElementById(field+'-val').value = a.iata;
+  const codeEl = document.getElementById(field+'-code');
+  if (codeEl) { codeEl.textContent = a.iata; codeEl.style.display = 'block'; }
+  acState[field] = a;
+  acCloseSug(field);
+  if (field === 'orig') {
+    setTimeout(() => {
+      const d = document.getElementById('dest-input');
+      d.focus();
+      acSuggest('dest', '');
+    }, 60);
+  } else {
+    setTimeout(() => {
+      const dep = document.getElementById('dep-date');
+      if (dep) dep.focus();
+    }, 60);
+  }
+}
+
+// Close suggestions on outside click
+document.addEventListener('mousedown', e => {
+  if (!e.target.closest('.nsf')) {
+    acCloseSug('orig');
+    acCloseSug('dest');
+  }
+});
+
+
+
+/* ═══════════════════════════════════════════════
+   MODAL
+═══════════════════════════════════════════════ */
+function openModal(offerRaw) {
+  quoteOffer = offerRaw ? JSON.parse(typeof offerRaw==='string'?offerRaw:JSON.stringify(offerRaw)) : null;
+  const w=document.getElementById('fprWrap');
+  if (quoteOffer) {
+    const j=quoteOffer.journeys?.[0]||{};
+    document.getElementById('fprRoute').textContent=`${j.origin||''} → ${j.destination||''}`;
+    document.getElementById('fprMeta').textContent=`${quoteOffer.carrierName||''} · ${quoteOffer.outboundDuration||''} · ${quoteOffer.totalStops===0?'Non-stop':quoteOffer.totalStops+' stop(s)'}`;
+    document.getElementById('fprPrice').textContent=`$${Math.round(quoteOffer.totalPrice||0).toLocaleString()} ${quoteOffer.currency||'USD'} / person (published fare)`;
+    w.style.display='block';
+  } else {
+    w.style.display='none';
+  }
+  document.getElementById('mForm').style.display='block';
+  document.getElementById('qSuccess').classList.remove('on');
+  document.getElementById('qModal').classList.add('on');
+  document.body.style.overflow='hidden';
+  setTimeout(()=>document.getElementById('qFirst').focus(),80);
+}
+function closeModal() {
+  document.getElementById('qModal').classList.remove('on');
+  document.body.style.overflow='';
+}
+async function submitQuote() {
+  const first=document.getElementById('qFirst').value.trim();
+  const last =document.getElementById('qLast').value.trim();
+  const email=document.getElementById('qEmail').value.trim();
+  const phone=document.getElementById('qPhone').value.trim();
+  const co   =document.getElementById('qCo').value.trim();
+  const flex =document.getElementById('qFlex').value;
+  const notes=document.getElementById('qNotes').value.trim();
+
+  if (!first||!last) { showToast('Please enter your full name.'); return; }
+  if (!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { document.getElementById('qEmailErr').classList.add('on'); document.getElementById('qEmail').focus(); return; }
+  document.getElementById('qEmailErr').classList.remove('on');
+
+  const btn=document.getElementById('qBtn');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spin" style="border-color:rgba(8,13,22,.2);border-top-color:#080d16"></span> Sending…';
+
+  try {
+    const orig=document.getElementById('orig-val').value;
+    const dest=document.getElementById('dest-val').value;
+    const dep=document.getElementById('dep-date').value;
+    const ret=tripType==='round'?document.getElementById('ret-date').value:null;
+    const res=await fetch(CFG.quoteUrl,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({firstName:first,lastName:last,email,phone,company:co,origin:orig,originName:acState.orig?.city||orig,destination:dest,destinationName:acState.dest?.city||dest,departureDate:dep,returnDate:ret,tripType,adults:1,cabin:'BUSINESS',flexibility:flex,notes,selectedOffer:quoteOffer||null}),
+    });
+    const data=await res.json();
+    if (!res.ok) { showToast(data.error||'Submit failed.','err'); return; }
+    document.getElementById('qRef').textContent=data.quoteId;
+    document.getElementById('mForm').style.display='none';
+    document.getElementById('qSuccess').classList.add('on');
+  } catch(e) {
+    showToast('Network error. Email quotes@businessworldtravel.com','err');
+  } finally {
+    btn.disabled=false;
+    btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Send Quote Request';
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════════════ */
+function fmtFullDate(dt) {
+  if (!dt) return '';
+  try {
+    const d = new Date(dt);
+    if (isNaN(d)) return '';
+    return d.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
+  } catch(e) { return ''; }
+}
+
+function fmtTime(dt) {
+  if (!dt) return '--:--';
+  const s = String(dt).trim();
+  // SearchAPI format: "8:35 PM" or "10:05 AM"
+  const ampm = s.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+  if (ampm) {
+    let h = parseInt(ampm[1]), m = ampm[2], period = ampm[3].toUpperCase();
+    if (period === 'AM' && h === 12) h = 0;
+    if (period === 'PM' && h !== 12) h += 12;
+    return String(h).padStart(2,'0') + ':' + m;
+  }
+  // ISO or "YYYY-MM-DD HH:MM" format
+  if (s.includes('T') || s.match(/\d{4}-\d{2}-\d{2}/)) {
+    const t = s.includes('T') ? s.split('T')[1] : s.split(' ')[1];
+    return (t||'').slice(0,5) || '--:--';
+  }
+  // HH:MM already
+  if (s.match(/^\d{1,2}:\d{2}$/)) return s.padStart(5,'0');
+  try { return new Date(s).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false}); }
+  catch { return '--:--'; }
+}
+function isNextDay(dep,arr) { if(!dep||!arr) return false; try { return new Date(arr).toDateString()!==new Date(dep).toDateString()&&new Date(arr)>new Date(dep); } catch { return false; } }
+function calcLay(arr,dep) {
+  if (!arr||!dep) return '';
+  // Try parsing as time strings first (SearchAPI format "6:20 AM")
+  // These can't be subtracted so fall back to empty
+  if (String(arr).match(/AM|PM/i) || String(dep).match(/AM|PM/i)) return '';
+  try {
+    const ms = new Date(dep) - new Date(arr);
+    if (isNaN(ms) || ms <= 0) return '';
+    const h = Math.floor(ms/3600000);
+    const m = Math.round((ms%3600000)/60000);
+    return m ? h+'h '+m+'m' : h+'h';
+  } catch { return ''; }
+}
+function parseDur(s) { if(!s) return 9999; const h=s.match(/(\d+)h/), m=s.match(/(\d+)m/); return (h?+h[1]*60:0)+(m?+m[1]:0); }
+function getHour(dt) { try { return new Date(dt).getHours(); } catch { return 0; } }
+function daysOut(n) { const d=new Date(); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); }
+function setRhCount(txt) { document.getElementById('rhCount').innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg> ${txt}`; }
+function setBadge(type,txt) { const b=document.getElementById('rhBadge'); b.className='badge '+type; b.textContent=txt; }
+function showToast(msg,type='') { const t=document.getElementById('toast'); t.textContent=msg; t.className='toast'+(type?' '+type:''); t.classList.add('on'); setTimeout(()=>t.classList.remove('on'),4000); }
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){acClose();closeModal();} });
+
+// ════════════════════════════════════════════
+//  ROUTE RANGE DATA — update weekly
+//  Format: [pubLow, pubHigh, bwtLow, bwtHigh]  (business class, per person, round trip)
+// ════════════════════════════════════════════
+const ROUTE_RANGES = {
+  'JFK-LHR':[3200,5800,1900,3400],'JFK-LGW':[3000,5400,1800,3200],
+  'JFK-CDG':[3300,5900,1950,3500],'JFK-FRA':[3100,5600,1850,3300],
+  'JFK-AMS':[3200,5700,1900,3400],'JFK-ZRH':[3300,5800,1950,3500],
+  'JFK-MAD':[3400,6000,2000,3600],'JFK-FCO':[3500,6200,2100,3750],
+  'JFK-MUC':[3200,5700,1900,3400],'JFK-VIE':[3300,5900,1950,3500],
+  'JFK-DUB':[3000,5400,1800,3200],'JFK-MXP':[3400,6100,2050,3650],
+  'JFK-BCN':[3500,6200,2100,3750],'JFK-LIS':[3200,5700,1900,3400],
+  'JFK-EDI':[3400,6000,2000,3600],'JFK-ATH':[3600,6400,2200,3900],
+  'JFK-CPH':[3400,6000,2000,3600],'JFK-ARN':[3500,6200,2100,3750],
+  'JFK-OSL':[3500,6200,2100,3750],'JFK-HEL':[3600,6400,2200,3900],
+  'JFK-WAW':[3500,6200,2100,3750],'JFK-PRG':[3500,6200,2100,3750],
+  'JFK-BUD':[3500,6200,2100,3750],'JFK-IST':[3400,6100,2050,3650],
+  'JFK-TLV':[3600,6400,2200,3900],'JFK-KEF':[2800,5000,1680,3000],
+  'EWR-LHR':[3100,5600,1850,3300],'EWR-LGW':[2950,5300,1780,3150],
+  'EWR-CDG':[3200,5800,1900,3400],'EWR-FRA':[3000,5500,1800,3250],
+  'EWR-AMS':[3100,5600,1850,3300],'EWR-MXP':[3300,5900,1950,3500],
+  'EWR-MAD':[3400,6000,2000,3600],'EWR-LIS':[3200,5700,1900,3400],
+  'EWR-ATH':[3600,6400,2200,3900],'EWR-DUB':[3000,5400,1800,3200],
+  'EWR-FCO':[3400,6100,2050,3650],'EWR-SPU':[3500,6200,2100,3750],
+  'EWR-SCQ':[3400,6000,2000,3600],'EWR-KEF':[2800,5000,1680,3000],
+  'BOS-LHR':[3300,5900,1950,3500],'BOS-LGW':[3100,5600,1860,3320],
+  'BOS-DUB':[2900,5200,1740,3120],'BOS-CDG':[3400,6000,2000,3600],
+  'BOS-FRA':[3300,5900,1950,3500],'BOS-AMS':[3200,5700,1900,3400],
+  'BOS-MUC':[3300,5900,1950,3500],'BOS-MAD':[3500,6200,2100,3750],
+  'BOS-BCN':[3500,6200,2100,3750],'BOS-LIS':[3200,5700,1900,3400],
+  'BOS-MXP':[3400,6100,2050,3650],'BOS-ATH':[3600,6400,2200,3900],
+  'BOS-CPH':[3400,6000,2000,3600],'BOS-EDI':[3400,6000,2000,3600],
+  'IAD-LHR':[3100,5600,1860,3320],'IAD-FRA':[3000,5500,1800,3250],
+  'IAD-CDG':[3200,5800,1900,3400],'IAD-DUB':[3000,5400,1800,3200],
+  'IAD-MUC':[3200,5700,1900,3400],'IAD-ZRH':[3300,5800,1950,3500],
+  'IAD-KEF':[2900,5200,1740,3120],'DCA-LHR':[3200,5800,1900,3400],
+  'ORD-LHR':[3400,6000,2000,3600],'ORD-FRA':[3300,5900,1950,3500],
+  'ORD-CDG':[3400,6100,2050,3650],'ORD-AMS':[3300,5900,1950,3500],
+  'ORD-MUC':[3400,6000,2000,3600],'ORD-MAD':[3500,6200,2100,3750],
+  'ORD-BCN':[3500,6200,2100,3750],'ORD-DUB':[3200,5800,1900,3400],
+  'ORD-MXP':[3400,6100,2050,3650],'ORD-ATH':[3700,6600,2300,4000],
+  'ORD-CPH':[3500,6200,2100,3750],'ORD-EDI':[3500,6200,2100,3750],
+  'ORD-BRU':[3300,5900,1950,3500],'ORD-KEF':[3200,5700,1900,3400],
+  'ORD-WAW':[3500,6200,2100,3750],'ORD-IST':[3500,6200,2100,3750],
+  'MIA-LHR':[3300,5800,1950,3450],'MIA-CDG':[3500,6200,2100,3750],
+  'MIA-MAD':[3400,6100,2050,3650],'MIA-BCN':[3500,6200,2100,3750],
+  'MIA-FRA':[3400,6100,2050,3650],'MIA-LIS':[3200,5700,1900,3400],
+  'ATL-LHR':[3350,5900,2000,3500],'ATL-CDG':[3500,6200,2100,3750],
+  'ATL-AMS':[3400,6000,2000,3600],'ATL-FRA':[3400,6000,2000,3600],
+  'ATL-MAD':[3500,6200,2100,3750],'ATL-FCO':[3600,6400,2200,3900],
+  'ATL-MUC':[3500,6200,2100,3750],'ATL-DUB':[3300,5900,1950,3500],
+  'ATL-CPH':[3500,6200,2100,3750],'ATL-MXP':[3600,6400,2200,3900],
+  'ATL-ATH':[3700,6600,2300,4000],'ATL-BRU':[3500,6200,2100,3750],
+  'DFW-LHR':[3450,6100,2050,3650],'DFW-CDG':[3600,6400,2200,3900],
+  'DFW-FRA':[3500,6200,2100,3750],'DFW-MAD':[3600,6400,2200,3900],
+  'DFW-FCO':[3700,6600,2300,4000],'DFW-ATH':[3800,6800,2400,4100],
+  'DFW-ZRH':[3700,6600,2300,4000],
+  'LAX-LHR':[3600,6400,2200,3900],'LAX-CDG':[3700,6600,2300,4000],
+  'LAX-FRA':[3600,6400,2200,3900],'LAX-AMS':[3700,6600,2300,4000],
+  'LAX-MAD':[3800,6800,2400,4100],'LAX-FCO':[3900,6900,2450,4150],
+  'LAX-MXP':[3800,6800,2400,4100],'LAX-ZRH':[3800,6800,2400,4100],
+  'SFO-LHR':[3700,6600,2300,4000],'SFO-CDG':[3800,6800,2400,4100],
+  'SFO-FRA':[3700,6600,2300,4000],'SFO-AMS':[3800,6800,2400,4100],
+  'SFO-ZRH':[3900,6900,2450,4150],'SFO-MUC':[3800,6800,2400,4100],
+  'SFO-MAD':[3900,6900,2450,4150],
+  'SEA-LHR':[3650,6500,2250,3950],'SEA-FCO':[3800,6800,2400,4100],
+  'SEA-KEF':[3000,5400,1800,3200],
+  'IAH-LHR':[3500,6200,2100,3750],'IAH-CDG':[3600,6400,2200,3900],
+  'IAH-FRA':[3500,6200,2100,3750],'IAH-MAD':[3600,6400,2200,3900],
+  'IAH-AMS':[3600,6400,2200,3900],
+  'PHL-LHR':[3200,5700,1900,3400],'PHL-CDG':[3300,5900,1950,3500],
+  'PHL-FRA':[3200,5700,1900,3400],'PHL-MAD':[3400,6000,2000,3600],
+  'PHL-DUB':[3000,5400,1800,3200],'PHL-ZRH':[3400,6000,2000,3600],
+  'PHL-BUD':[3500,6200,2100,3750],'PHL-FCO':[3500,6200,2100,3750],
+  'PHL-LIS':[3200,5700,1900,3400],
+  'DTW-LHR':[3400,6000,2000,3600],'DTW-CDG':[3500,6200,2100,3750],
+  'DTW-AMS':[3400,6000,2000,3600],'DTW-FCO':[3600,6400,2200,3900],
+  'DTW-MUC':[3500,6200,2100,3750],
+  'MSP-LHR':[3500,6200,2100,3750],'MSP-CDG':[3600,6400,2200,3900],
+  'MSP-AMS':[3500,6200,2100,3750],'MSP-KEF':[3100,5600,1860,3320],
+  'DEN-LHR':[3600,6400,2200,3900],'DEN-CDG':[3700,6600,2300,4000],
+  'DEN-FRA':[3600,6400,2200,3900],'DEN-KEF':[3200,5700,1900,3400],
+  'CLT-LHR':[3300,5900,1950,3500],'CLT-CDG':[3400,6000,2000,3600],
+  'CLT-FRA':[3300,5900,1950,3500],'CLT-MAD':[3500,6200,2100,3750],
+  'CLT-FCO':[3500,6200,2100,3750],
+  'PHX-LHR':[3700,6600,2300,4000],'PHX-CDG':[3800,6800,2400,4100],
+  'MSY-LHR':[3500,6200,2100,3750],'MSY-CDG':[3500,6200,2100,3750],
+  'YYZ-LHR':[3000,5400,1780,3200],'YYZ-CDG':[3200,5700,1900,3400],
+  'YYZ-FRA':[3100,5600,1850,3300],'YYZ-AMS':[3200,5700,1900,3400],
+  'YYZ-DUB':[2900,5200,1740,3120],'YYZ-MAD':[3300,5900,1950,3500],
+  'YYZ-FCO':[3400,6000,2000,3600],'YYZ-MUC':[3200,5700,1900,3400],
+  'YYZ-ZRH':[3200,5700,1900,3400],'YYZ-LIS':[3000,5400,1800,3200],
+  'YYZ-ATH':[3500,6200,2100,3750],'YYZ-BUD':[3500,6200,2100,3750],
+  'YYZ-VIE':[3300,5900,1950,3500],'YYZ-BCN':[3400,6000,2000,3600],
+  'YYZ-IST':[3200,5800,1900,3400],'YYZ-KEF':[2700,4900,1620,2940],
+  'YYZ-TIA':[3400,6000,2000,3600],
+  'YUL-LHR':[3000,5400,1780,3200],'YUL-CDG':[3000,5400,1780,3200],
+  'YUL-FRA':[3100,5600,1850,3300],'YUL-AMS':[3100,5600,1850,3300],
+  'YUL-DUB':[2900,5200,1740,3120],'YUL-LIS':[3000,5400,1800,3200],
+  'YUL-MAD':[3200,5700,1900,3400],'YUL-FCO':[3300,5900,1950,3500],
+  'YUL-BER':[3200,5700,1900,3400],'YUL-TLV':[3500,6200,2100,3750],
+  'YVR-LHR':[3500,6200,2100,3750],'YVR-CDG':[3600,6400,2200,3900],
+  'YVR-FRA':[3500,6200,2100,3750],'YVR-AMS':[3600,6400,2200,3900],
+  'YYC-LHR':[3300,5900,1950,3500],'YYC-CDG':[3400,6100,2050,3650],
+  'YEG-LHR':[3400,6000,2000,3600],
+  'YHZ-LHR':[2800,5000,1680,3000],'YHZ-DUB':[2600,4700,1560,2820],
+  'YHZ-BRU':[2900,5200,1740,3120],'YHZ-CPH':[2900,5200,1740,3120],
+  'YHZ-MAD':[2900,5200,1740,3120],
+};
+
+function getRouteRange(orig, dest) {
+  const key = orig+'-'+dest;
+  const rkey = dest+'-'+orig;
+  return ROUTE_RANGES[key] || ROUTE_RANGES[rkey] || null;
+}
+
+function injectRouteRangeBar(orig, dest) {
+  // Use live SerpApi price_insights if available, else fall back to static table
+  let r = getRouteRange(orig, dest);
+  const pi = window._priceInsights;
+  if (pi && pi.typical_price_range && pi.typical_price_range.length === 2) {
+    const [tLo, tHi] = pi.typical_price_range;
+    // Override published range with live data; keep BWT range from static table or estimate
+    const staticBWT = r ? [r[2], r[3]] : [Math.round(tLo * 0.55), Math.round(tHi * 0.62)];
+    r = [tLo, tHi, staticBWT[0], staticBWT[1]];
+  }
+  if (!r) return;
+  const [pubLo, pubHi, bwtLo, bwtHi] = r;
+  const savLo = Math.round(pubLo - bwtHi);
+  const savHi = Math.round(pubHi - bwtLo);
+  const pct   = Math.round(((pubLo - bwtLo) / pubLo) * 100);
+
+  // Insert after pub-banner
+  const banner = document.getElementById('pubBanner');
+  if (!banner) return;
+
+  const bar = document.createElement('div');
+  bar.className = 'route-range-bar';
+  bar.id = 'routeRangeBar';
+  bar.innerHTML = `
+    <div class="rrb-col">
+      <div class="rrb-label">Published fares on this route</div>
+      <div class="rrb-range">
+        <span class="rrb-amt rrb-amt--pub">$${pubLo.toLocaleString()}</span>
+        <span class="rrb-suffix rrb-suffix--pub">– $${pubHi.toLocaleString()}</span>
+      </div>
+      <div class="rrb-note">What you'd pay booking direct<br>with the airline today</div>
+    </div>
+    <div class="rrb-div"></div>
+    <div class="rrb-arrow">→</div>
+    <div class="rrb-col">
+      <div class="rrb-label">BWT clients typically pay</div>
+      <div class="rrb-range">
+        <span class="rrb-amt rrb-amt--bwt">$${bwtLo.toLocaleString()}</span>
+        <span class="rrb-suffix rrb-suffix--bwt">– $${bwtHi.toLocaleString()}</span>
+      </div>
+      <div class="rrb-note">Private contracted rate · Same airline<br>Same seat · Same flight</div>
+      <div class="rrb-saving"><span class="rrb-saving-txt">Save $${savLo.toLocaleString()}–$${savHi.toLocaleString()} · Up to ${pct}% below published</span></div>
+    </div>
+    <div class="rrb-disclaimer">
+      Fare ranges are based on historical route data updated weekly. Actual savings depend on specific travel dates, airline, booking class, and availability at time of ticketing. Not a guaranteed fare — request a quote to see your exact rate.
+    </div>`;
+
+  banner.insertAdjacentElement('afterend', bar);
+}
+
+function injectCardRangeHints(orig, dest) {
+  const r = getRouteRange(orig, dest);
+  if (!r) return;
+  const [pubLo, pubHi, bwtLo, bwtHi] = r;
+  const pct = Math.round(((pubLo - bwtLo) / pubLo) * 100);
+  // Inject under every flight card's cta area
+  document.querySelectorAll('.flt-card').forEach(card => {
+    if (card.querySelector('.card-range-hint')) return; // already injected
+    const hint = document.createElement('div');
+    hint.className = 'card-range-hint';
+    hint.innerHTML = `
+      <span class="crh-label">This route typically:</span>
+      <span class="crh-pub">$${pubLo.toLocaleString()}–$${pubHi.toLocaleString()}</span>
+      <span class="crh-arrow">→</span>
+      <span class="crh-bwt">BWT $${bwtLo.toLocaleString()}–$${bwtHi.toLocaleString()}</span>
+      <span class="crh-saving">Save up to ${pct}%</span>`;
+    card.appendChild(hint);
+  });
+}
+
+
+// ════════════════════════════════════════════
+//  WHATSAPP
+// ════════════════════════════════════════════
+const WA_NUMBER = 'YOUR_WA_NUMBER'; // ⚠ REPLACE with dedicated BWT WhatsApp Business number
+
+function waLink(msg) {
+  return 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg);
+}
+
+function waRouteMsg(orig, dest, dep, ret, cabin) {
+  const origN = acState.orig?.city || orig || '';
+  const destN = acState.dest?.city || dest || '';
+  const cabinStr = cabin || 'business class';
+  let msg = `Hi BWT, I'm looking for a ${cabinStr} quote:\n\n`;
+  msg += `Route: ${origN || orig} (${orig}) → ${destN || dest} (${dest})\n`;
+  if (dep) msg += `Depart: ${dep}\n`;
+  if (ret) msg += `Return: ${ret}\n`;
+  msg += `\nCan you check your rates?`;
+  return msg;
+}
+
+function updateWALinks() {
+  const orig = document.getElementById('orig-val')?.value?.toUpperCase() || '';
+  const dest = document.getElementById('dest-val')?.value?.toUpperCase() || '';
+  const dep  = document.getElementById('dep-date')?.value || '';
+  const ret  = document.getElementById('ret-date')?.value || '';
+  const msg  = orig && dest ? waRouteMsg(orig, dest, dep, ret, 'business class')
+                            : 'Hi BWT, I\'d like a business class quote. Can you help?';
+  // Update bubble
+  const bubble = document.getElementById('waBubble');
+  if (bubble) bubble.href = waLink(msg);
+  // Update any wa-strip buttons
+  document.querySelectorAll('.wa-strip-btn[data-wa]').forEach(btn => btn.href = waLink(msg));
+  document.querySelectorAll('.wa-ur-btn-wa[data-wa]').forEach(btn => btn.href = waLink(msg));
+}
+
+function injectWAStrip(orig, dest) {
+  // Remove old if exists
+  const old = document.getElementById('waStrip');
+  if (old) old.remove();
+
+  const routeInDB = !!getRouteRange(orig, dest);
+  const origN = acState.orig?.city || orig;
+  const destN = acState.dest?.city || dest;
+  const dep   = document.getElementById('dep-date')?.value || '';
+  const ret   = document.getElementById('ret-date')?.value || '';
+  const msg   = waRouteMsg(orig, dest, dep, ret, 'business class');
+  const link  = waLink(msg);
+
+  const strip = document.createElement('div');
+  strip.id = 'waStrip';
+  strip.className = 'wa-strip';
+  strip.innerHTML = `
+    <div class="wa-strip-left">
+      <div class="wa-strip-icon">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+      </div>
+      <div>
+        <div class="wa-strip-title">Skip the form — WhatsApp us your dates right now</div>
+        <div class="wa-strip-sub">${origN} → ${destN} · A specialist quotes you directly in the chat · No forms, no waiting</div>
+      </div>
+    </div>
+    <a class="wa-strip-btn" data-wa href="${link}" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+      WhatsApp Us Now
+    </a>
+    <div class="wa-strip-timing">Reply within the hour<br>Mon–Fri 9am–7pm ET</div>`;
+
+  // Insert after routeRangeBar if it exists, else after pubBanner
+  const rangeBar = document.getElementById('routeRangeBar');
+  const pubBanner = document.getElementById('pubBanner');
+  const anchor = rangeBar || pubBanner;
+  if (anchor) anchor.insertAdjacentElement('afterend', strip);
+}
+
+function injectUnknownRoutePanel(orig, dest) {
+  const old = document.getElementById('unknownRoutePanel');
+  if (old) old.remove();
+
+  const origN = acState.orig?.city || orig;
+  const destN = acState.dest?.city || dest;
+  const dep   = document.getElementById('dep-date')?.value || '';
+  const ret   = document.getElementById('ret-date')?.value || '';
+  const msg   = waRouteMsg(orig, dest, dep, ret, 'business class');
+  const waHref = waLink(msg);
+
+  const panel = document.createElement('div');
+  panel.id = 'unknownRoutePanel';
+  panel.className = 'wa-unknown-route';
+  panel.innerHTML = `
+    <div class="wa-ur-icon">✈️</div>
+    <div class="wa-ur-title">We cover ${origN} → ${destN}</div>
+    <div class="wa-ur-sub">
+      This route falls outside our transatlantic fare database — but our specialists source business class fares on routes worldwide including Asia, Middle East, Africa, Australia and Latin America.<br><br>
+      WhatsApp us your dates and we'll come back with a quote, typically within the hour.
+    </div>
+    <div class="wa-ur-btns">
+      <a class="wa-ur-btn-wa" data-wa href="${waHref}" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+        WhatsApp Us — Get a Quote
+      </a>
+      <a class="wa-ur-btn-call" href="tel:+12129130450">
+        📞 Call (212) 913-0450
+      </a>
+    </div>`;
+
+  // Insert before the cards div
+  const cards = document.getElementById('cards');
+  if (cards) cards.insertAdjacentElement('beforebegin', panel);
+}
+
+</script>
+
+<!-- ══ WHATSAPP FLOATING BUBBLE ══ -->
+<a class="wa-bubble" id="waBubble" href="#" target="_blank" rel="noopener" title="WhatsApp BWT">
+  <div class="wa-bubble-label">
+    WhatsApp us your route
+    <span>We respond within the hour · any time</span>
+  </div>
+  <div class="wa-bubble-btn">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+    </svg>
+  </div>
+</a>
+
+</body>
+</html>
