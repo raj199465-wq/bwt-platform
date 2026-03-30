@@ -90,6 +90,69 @@ const GUEST_LIMIT  = { max: 8,  windowMs: 60 * 60 * 1000 };
 const USER_LIMIT   = { max: 40, windowMs: 60 * 60 * 1000 };
 const GLOBAL_LIMIT = { max: 15, windowMs: 60 * 1000 };
 
+// ── POST /api/cockpit-search (agent-only, higher limits) ────────────────────
+// Same as /api/search but with:
+//   - No guest/user rate limit (agents are trusted)
+//   - Returns top 3 offers for comparison
+//   - Includes raw price_insights
+
+app.post('/api/cockpit-search', async (req, res) => {
+  const { origin, destination, departureDate, cabin = 'business', adults = 1 } = req.body;
+  if (!origin || !destination || !departureDate) {
+    return res.status(400).json({ error: 'Missing fields' });
+  }
+
+  const apiKey = process.env.SEARCHAPI_KEY;
+  if (!apiKey) return res.status(503).json({ error: 'SEARCHAPI_KEY not set' });
+
+  const CABIN_CODE = {
+    BUSINESS: 'business', FIRST: 'first',
+    PREMIUM_ECONOMY: 'premium_economy', ECONOMY: 'economy',
+    business: 'business', first: 'first', economy: 'economy',
+  };
+
+  try {
+    const params = {
+      engine: 'google_flights', api_key: apiKey,
+      departure_id: origin.toUpperCase(),
+      arrival_id: destination.toUpperCase(),
+      outbound_date: departureDate,
+      travel_class: CABIN_CODE[cabin] || 'business',
+      adults: String(adults),
+      currency: 'USD', hl: 'en', gl: 'us',
+      flight_type: 'one_way',
+    };
+    const qs = new URLSearchParams(params);
+    const raw = await fetch(`${SEARCHAPI_BASE}?${qs}`, { signal: AbortSignal.timeout(20000) });
+    if (!raw.ok) throw new Error('SearchAPI ' + raw.status);
+    const data = await raw.json();
+    if (data.error) throw new Error(data.error);
+
+    const all = [...(data.best_flights||[]), ...(data.other_flights||[])];
+    const top3 = all.slice(0,3).map(f => ({
+      price: f.price || 0,
+      airline: f.flights?.[0]?.airline || '',
+      code: (f.flights?.[0]?.flight_number||'').slice(0,2),
+      airlineLogo: f.flights?.[0]?.airline_logo || '',
+      flightNumber: f.flights?.[0]?.flight_number || '',
+      stops: (f.flights?.length||1)-1,
+      duration: f.total_duration ? Math.floor(f.total_duration/60)+'h '+(f.total_duration%60)+'m' : '',
+      dep: f.flights?.[0]?.departure_airport?.id || origin,
+      arr: f.flights?.[f.flights.length-1]?.arrival_airport?.id || destination,
+      depTime: f.flights?.[0]?.departure_airport?.time || '',
+      arrTime: f.flights?.[f.flights.length-1]?.arrival_airport?.time || '',
+    }));
+
+    return res.json({
+      offers: top3,
+      cheapest: top3.reduce((a,b) => a.price < b.price ? a : b, top3[0] || {}),
+      priceInsights: data.price_insights || null,
+    });
+  } catch(e) {
+    return res.status(502).json({ error: e.message });
+  }
+});
+
 // ── GET /api/health ────────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {
   res.json({
@@ -297,7 +360,7 @@ app.post('/api/search', async (req, res) => {
       flight_type:   tripType === 'round' ? 'round_trip' : 'one_way',
     };
     if (returnDate)  params.return_date = returnDate;
-    if (stops === 0) params.stops = '0';
+    if (stops === 0) params.stops = 'nonstop';
 
     const qs  = new URLSearchParams(params);
     const url = `${SEARCHAPI_BASE}?${qs.toString()}`;

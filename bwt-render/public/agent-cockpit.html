@@ -359,7 +359,7 @@ input,select,textarea{font-family:inherit}
     BWT
     <span class="topbar-tag">Agent Cockpit</span>
   </div>
-  <div class="topbar-status">Live · SearchAPI Connected</div>
+  <div class="topbar-status" id="cockpitStatus">Connecting…</div>
   <div class="topbar-warning">⚠ INTERNAL ONLY — DO NOT SHARE</div>
 </div>
 
@@ -527,7 +527,7 @@ input,select,textarea{font-family:inherit}
 
 <script>
 // ══ STATE ══
-const SEARCHAPI_KEY = ''; // Set via env or prompt — cockpit calls backend
+// Cockpit calls /api/search on this Render server — no client-side API key needed
 let activeHacks = new Set(['throwaway','nearby','calendar','hub','reverse','openjaw','mixedcabin']);
 let allResults = [];
 let selectedOption = null;
@@ -538,6 +538,20 @@ let searchParams = {};
   const today = new Date();
   const dep = new Date(today); dep.setDate(dep.getDate()+21);
   document.getElementById('depDate').value = dep.toISOString().slice(0,10);
+  // Check API connection
+  fetch('/api/health').then(r=>r.json()).then(d=>{
+    const el = document.getElementById('cockpitStatus');
+    if (d.env?.searchapi) {
+      el.textContent = 'Live · SearchAPI Connected';
+      el.style.color = 'var(--green)';
+    } else {
+      el.textContent = 'SEARCHAPI KEY MISSING';
+      el.style.color = 'var(--red)';
+    }
+  }).catch(()=>{
+    document.getElementById('cockpitStatus').textContent = 'Server offline';
+    document.getElementById('cockpitStatus').style.color = 'var(--red)';
+  });
   document.getElementById('depDate').min = today.toISOString().slice(0,10);
 })();
 
@@ -694,18 +708,84 @@ function log(msg, type='dim') {
 }
 
 // ══ SIMULATE API CALL (in production this calls /.netlify/functions/search) ══
+// Cache for API calls within a session — avoid duplicate searches
+const _searchCache = {};
+
 async function searchFlights(orig, dest, date, cabin, opts={}) {
-  // In production: real SearchAPI call via your Netlify/Render function
-  // For now: realistic simulated data based on route characteristics
-  await new Promise(r => setTimeout(r, 300 + Math.random()*400));
+  const cacheKey = [orig,dest,date,cabin,opts.preferredCarrier||''].join('|');
   
+  // Return cached result if available (saves API credits)
+  if (_searchCache[cacheKey] && !opts.bypassCache) {
+    return _searchCache[cacheKey];
+  }
+
+  try {
+    const body = {
+      origin: orig,
+      destination: dest,
+      departureDate: date,
+      adults: 1,
+      cabin: cabin || 'business',
+      sort: 'best',
+      isGuest: false,
+    };
+
+    const res = await fetch('/api/cockpit-search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+
+    if (!res.ok) throw new Error('API ' + res.status);
+    const data = await res.json();
+    const offers = data.offers || [];
+
+    if (!offers.length) {
+      // Fall back to estimate if no results
+      return _estimateFlight(orig, dest, date, cabin, opts);
+    }
+
+    // Pick best matching offer
+    let offer = offers[0];
+    if (opts.preferredCarrier) {
+      const match = offers.find(o => o.validatingCarrier === opts.preferredCarrier);
+      if (match) offer = match;
+    }
+    if (opts.cheaperHack) {
+      // Pick cheapest
+      offer = offers.reduce((a,b) => a.totalPrice < b.totalPrice ? a : b);
+    }
+
+    const result = {
+      price:        offer.totalPrice || 0,
+      airline:      offer.carrierName || offer.validatingCarrier || '',
+      code:         offer.validatingCarrier || '',
+      airlineLogo:  offer.airlineLogo || '',
+      flightNumber: offer.journeys?.[0]?.segments?.[0]?.flightNumber || '',
+      dep: orig, arr: dest, date,
+      stops:    offer.totalStops || 0,
+      duration: offer.outboundDuration || getDuration(orig, dest),
+      cabin,
+      fromAPI: true,
+    };
+
+    _searchCache[cacheKey] = result;
+    return result;
+
+  } catch(e) {
+    // Graceful fallback to estimate on API error
+    console.warn('[cockpit] API search failed for ' + orig + '→' + dest + ':', e.message);
+    return _estimateFlight(orig, dest, date, cabin, opts);
+  }
+}
+
+// Estimate when API unavailable (throwaway legs, obscure routes etc.)
+function _estimateFlight(orig, dest, date, cabin, opts={}) {
   const basePrice = getBasePrice(orig, dest, cabin);
   const variance = opts.cheaperHack ? 0.65 + Math.random()*0.2 : 0.85 + Math.random()*0.3;
   const price = Math.round(basePrice * variance / 50) * 50;
-  
   const airlines = getAirlinesForRoute(orig, dest, opts.preferredCarrier);
   const airline = airlines[Math.floor(Math.random()*airlines.length)];
-  
   return {
     price,
     airline: airline.name,
@@ -715,6 +795,8 @@ async function searchFlights(orig, dest, date, cabin, opts={}) {
     stops: opts.hubRoute ? 1 : (Math.random()>0.4 ? 0 : 1),
     duration: getDuration(orig, dest),
     cabin,
+    fromAPI: false,
+    estimated: true,
   };
 }
 
@@ -812,9 +894,10 @@ async function runCockpit() {
 
   // ── 0. Published fare baseline ──
   log(`Starting analysis: ${orig} → ${dest} · ${dep} · ${cabin}`, 'info');
-  log(`Fetching published baseline fare…`, 'dim');
-  const baseline = await searchFlights(orig, dest, dep, cabin);
-  log(`✓ Published fare: $${baseline.price.toLocaleString()} · ${baseline.airline}`, 'ok');
+  log(`Fetching published baseline fare via SearchAPI…`, 'dim');
+  const baseline = await searchFlights(orig, dest, dep, cabin, {bypassCache:true});
+  const baselineSource = baseline.fromAPI ? '(live)' : '(estimated)';
+  log(`✓ Baseline: $${baseline.price.toLocaleString()} · ${baseline.airline} ${baselineSource}`, 'ok');
 
   const results = { throwaway:[], nearby:[], calendar:[], hub:[], reverse:[], openjaw:[], mixedcabin:[] };
 
@@ -1087,8 +1170,9 @@ function renderResults(results, baseline, orig, dest, dep, cabin) {
           <div class="ri-rank ${i===0?'top'}">${i===0?'★':'0'+(i+1)}</div>
           <div class="ri-route">
             <div class="ri-route-main">${r.ticket1.dep} → ${r.ticket1.arr}</div>
-            <div class="ri-route-sub">${r.ticket1.airline} · ${r.ticket1.flightNumber} · ${cabin} · ${r.ticket1.dep}</div>
-            <div class="ri-route-sub" style="color:var(--green)">Price: $${r.ticket1.price.toLocaleString()}</div>
+            <div class="ri-route-sub">${r.ticket1.airline} · ${r.ticket1.flightNumber} · ${cabin}</div>
+            <div class="ri-route-sub" style="color:var(--green)">$${r.ticket1.price.toLocaleString()} · ${r.ticket1.duration||''} · ${r.ticket1.stops===0?'Non-stop':r.ticket1.stops+' stop'}</div>
+            ${r.ticket1.estimated ? '<div class="ri-route-sub" style="color:var(--amber)">⚠ Estimated — verify live</div>' : '<div class="ri-route-sub" style="color:var(--green)">✓ Live SearchAPI price</div>'}
           </div>
           <div class="ri-route">
             <div class="ri-route-main">${r.ticket2.dep} → ${r.ticket2.arr} <span style="color:var(--muted);font-size:11px">(${r.ticket2.name})</span></div>

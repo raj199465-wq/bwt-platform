@@ -237,6 +237,33 @@ a{color:inherit;text-decoration:none}
 .main{flex:1;min-width:0;padding-left:14px}
 
 /* Published fares context banner */
+.results-headline{
+  display:flex;align-items:center;justify-content:space-between;gap:24px;
+  background:linear-gradient(135deg,rgba(10,17,40,.95) 0%,rgba(6,18,55,.9) 100%);
+  border:1px solid rgba(200,168,75,.2);border-radius:12px;
+  padding:28px 32px;margin-bottom:20px;
+}
+.rh-eyebrow{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold,#c8a84b);margin-bottom:8px}
+.rh-title{font-size:26px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:10px;font-family:'Syne',sans-serif}
+.rh-sub{font-size:13px;color:rgba(255,255,255,.6);line-height:1.65;max-width:600px}
+.rh-cta{
+  flex-shrink:0;display:flex;align-items:center;gap:8px;
+  background:var(--gold,#c8a84b);color:#0a1228;
+  border:none;border-radius:8px;padding:14px 24px;
+  font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;
+  font-family:'Syne',sans-serif;letter-spacing:.04em;
+  transition:opacity .15s;
+}
+.rh-cta:hover{opacity:.88}
+.rh-cta svg{width:14px;height:14px}
+
+/* Expanded segment detail */
+.seg-endpoint{display:flex;flex-direction:column;gap:2px;min-width:140px}
+.seg-endpoint.seg-r{align-items:flex-end;text-align:right}
+.seg-date{font-size:10px;font-weight:600;color:var(--gold,#c8a84b);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px}
+.seg-apt-name{font-size:12px;color:rgba(255,255,255,.7);line-height:1.3}
+.seg-city{font-size:11px;color:rgba(255,255,255,.4);margin-top:1px}
+
 .pub-banner{
   display:flex;align-items:center;justify-content:space-between;gap:16px;
   background:linear-gradient(135deg,var(--navy),var(--navy2));
@@ -260,7 +287,34 @@ a{color:inherit;text-decoration:none}
 }
 .pub-banner-cta svg{width:13px;height:13px;stroke:currentColor}
 .pub-banner-cta:hover{background:var(--gold-l);transform:translateY(-1px)}
-@media(max-width:640px){.pub-banner{flex-direction:column}.pub-banner-cta{width:100%;justify-content:center}}
+@media(max-width:640px){.results-headline{
+  display:flex;align-items:center;justify-content:space-between;gap:24px;
+  background:linear-gradient(135deg,rgba(10,17,40,.95) 0%,rgba(6,18,55,.9) 100%);
+  border:1px solid rgba(200,168,75,.2);border-radius:12px;
+  padding:28px 32px;margin-bottom:20px;
+}
+.rh-eyebrow{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold,#c8a84b);margin-bottom:8px}
+.rh-title{font-size:26px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:10px;font-family:'Syne',sans-serif}
+.rh-sub{font-size:13px;color:rgba(255,255,255,.6);line-height:1.65;max-width:600px}
+.rh-cta{
+  flex-shrink:0;display:flex;align-items:center;gap:8px;
+  background:var(--gold,#c8a84b);color:#0a1228;
+  border:none;border-radius:8px;padding:14px 24px;
+  font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;
+  font-family:'Syne',sans-serif;letter-spacing:.04em;
+  transition:opacity .15s;
+}
+.rh-cta:hover{opacity:.88}
+.rh-cta svg{width:14px;height:14px}
+
+/* Expanded segment detail */
+.seg-endpoint{display:flex;flex-direction:column;gap:2px;min-width:140px}
+.seg-endpoint.seg-r{align-items:flex-end;text-align:right}
+.seg-date{font-size:10px;font-weight:600;color:var(--gold,#c8a84b);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px}
+.seg-apt-name{font-size:12px;color:rgba(255,255,255,.7);line-height:1.3}
+.seg-city{font-size:11px;color:rgba(255,255,255,.4);margin-top:1px}
+
+.pub-banner{flex-direction:column}.pub-banner-cta{width:100%;justify-content:center}}
 
 /* Histogram */
 .hist-card{background:var(--s1);border:1px solid var(--bdr);border-top:2px solid var(--navy);border-radius:var(--r);padding:13px 15px 9px;margin-bottom:10px;display:none}
@@ -596,18 +650,22 @@ a{color:inherit;text-decoration:none}
 /* ══════════════════════════════════════════════════════════
    AIRPORT DROPDOWN
 ══════════════════════════════════════════════════════════ */
-.acdrop{
-  position:fixed;z-index:99999;background:#ffffff;
-  border:1px solid var(--gold-b);border-top:2px solid var(--gold);
-  border-radius:12px;box-shadow:var(--sh2);overflow-y:auto;display:none;
+.ac-sug{
+  position:absolute;top:calc(100% + 4px);left:0;
+  width:320px;
+  background:#0d1b3e;
+  border:1px solid rgba(200,168,75,.25);
+  border-radius:10px;
+  box-shadow:0 12px 40px rgba(0,0,0,.7);
+  overflow:hidden;z-index:99999;
+  display:none;
 }
-.acdrop.on{display:block;animation:acIn .12s ease both}
+.ac-sug.open{display:block;animation:acIn .1s ease both}
 @keyframes acIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
-.ac-hd{padding:8px 13px 6px;font-size:8.5px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:rgba(160,120,40,.7);border-bottom:1px solid rgba(0,0,0,.07);background:#f8fafc;border-radius:10px 10px 0 0}
-.ac-row{display:flex;align-items:center;gap:10px;padding:9px 13px;cursor:pointer;border-bottom:1px solid rgba(0,0,0,.06);transition:background .1s}
+.ac-row{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.05);transition:background .1s}
 .ac-row:last-child{border-bottom:none}
-.ac-row:hover,.ac-row.hl{background:#f8fafc}
-.ac-flag{font-size:16px;width:22px;text-align:center;flex-shrink:0}
+.ac-row:hover,.ac-row.hl{background:rgba(200,168,75,.1)}
+.ac-flag{font-size:15px;width:22px;text-align:center;flex-shrink:0}
 .ac-inf{flex:1;min-width:0}
 .ac-city{font-size:12.5px;font-weight:600;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ac-name{font-size:10.5px;color:#64748b;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -917,6 +975,12 @@ mark.m{background:rgba(201,168,76,.18);border-radius:2px;padding:0 1px;color:inh
 .seg-ac{font-size:10px;color:var(--subtle);margin-top:1px}
 .seg-leg{font-size:10px;color:var(--gold);margin-top:2px;font-weight:600}
 .layover-detail{font-size:10px;color:var(--subtle);margin-top:2px}
+/* Date field — hide native calendar icon, entire field clickable */
+.nsf-date-inp::-webkit-calendar-picker-indicator {
+  position:absolute;top:0;left:0;right:0;bottom:0;
+  width:auto;height:auto;opacity:0;cursor:pointer;
+}
+.nsf-date{position:relative}
 </style>
 </head>
 <body>
@@ -944,27 +1008,37 @@ mark.m{background:rgba(201,168,76,.18);border-radius:2px;padding:0 1px;color:inh
     <!-- Origin -->
     <div class="nsf">
       <svg class="nsf-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z"/></svg>
-      <input class="nsf-inp" id="orig-input" placeholder="From" autocomplete="off" spellcheck="false"
-        oninput="acType('orig')" onfocus="acFocus('orig')" onkeydown="acKey(event,'orig')">
+      <input class="nsf-inp" id="orig-input" placeholder="City or airport" autocomplete="off" spellcheck="false"
+        oninput="acSuggest('orig',this.value)"
+        onfocus="acSuggest('orig',this.value)"
+        onblur="setTimeout(()=>acCloseSug('orig'),160)"
+        onkeydown="acNavSug(event,'orig')">
       <input type="hidden" id="orig-val">
+      <div class="ac-sug" id="orig-sug"></div>
     </div>
     <span class="nsf-arrow">→</span>
     <!-- Destination -->
     <div class="nsf">
       <svg class="nsf-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-      <input class="nsf-inp" id="dest-input" placeholder="To" autocomplete="off" spellcheck="false"
-        oninput="acType('dest')" onfocus="acFocus('dest')" onkeydown="acKey(event,'dest')">
+      <input class="nsf-inp" id="dest-input" placeholder="City or airport" autocomplete="off" spellcheck="false"
+        oninput="acSuggest('dest',this.value)"
+        onfocus="acSuggest('dest',this.value)"
+        onblur="setTimeout(()=>acCloseSug('dest'),160)"
+        onkeydown="acNavSug(event,'dest')">
       <input type="hidden" id="dest-val">
+      <div class="ac-sug" id="dest-sug"></div>
     </div>
     <!-- Depart -->
-    <div class="nsf" onclick="document.getElementById('dep-date').showPicker()" style="cursor:pointer">
+    <div class="nsf nsf-date" onclick="this.querySelector('input').showPicker()" style="cursor:pointer">
       <svg class="nsf-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
-      <input type="date" class="nsf-inp" id="dep-date">
+      <input type="date" class="nsf-inp nsf-date-inp" id="dep-date"
+        onclick="event.stopPropagation();this.showPicker()">
     </div>
     <!-- Return -->
-    <div class="nsf" id="ret-field" onclick="document.getElementById('ret-date').showPicker()" style="cursor:pointer">
+    <div class="nsf nsf-date" id="ret-field" onclick="this.querySelector('input').showPicker()" style="cursor:pointer">
       <svg class="nsf-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
-      <input type="date" class="nsf-inp" id="ret-date">
+      <input type="date" class="nsf-inp nsf-date-inp" id="ret-date"
+        onclick="event.stopPropagation();this.showPicker()">
     </div>
     <button class="nav-go" id="searchBtn" onclick="doSearch()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
@@ -1115,20 +1189,16 @@ mark.m{background:rgba(201,168,76,.18);border-radius:2px;padding:0 1px;color:inh
       <div class="hc-bot" id="histBot"></div>
     </div>
 
-    <!-- Published fares context banner -->
-    <div class="pub-banner" id="pubBanner">
-      <div class="pub-banner-left">
-        <div class="pub-banner-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        </div>
-        <div>
-          <div class="pub-banner-title">Published business class fares — transatlantic routes</div>
-          <div class="pub-banner-sub">These are the retail rates airlines publish — what you'd pay booking direct. Select any flight and request a quote. Our specialists check private business class rates on the same route. We often come back lower.</div>
-        </div>
+    <!-- Results headline -->
+    <div class="results-headline" id="pubBanner">
+      <div class="rh-left">
+        <div class="rh-eyebrow">Published Fares</div>
+        <div class="rh-title">What the airlines charge.<br>We exist to beat it.</div>
+        <div class="rh-sub">The fares below are live published rates — exactly what you'd pay booking direct with the airline today, for one-way, round-trip, or multi-city travel. Select any flight and request a quote. Our specialists source private contracted rates on the same airline, same seat, same flight — and come back lower.</div>
       </div>
-      <button class="pub-banner-cta" onclick="openModal(null)">
-        Skip search — just get a quote
+      <button class="rh-cta" onclick="openModal(null)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Request a Quote
       </button>
     </div>
 
@@ -1176,7 +1246,7 @@ mark.m{background:rgba(201,168,76,.18);border-radius:2px;padding:0 1px;color:inh
 <div class="modal-bg" id="qModal" onclick="if(event.target===this)closeModal()">
   <div class="modal">
     <div class="modal-hd">
-      <div><h2>Request a Quote</h2><p>Specialists check private fares · Free · No card required</p></div>
+      <div><h2>Beat This Fare</h2><p>Specialists check private fares · Free · No card required</p></div>
       <button class="modal-x" onclick="closeModal()">×</button>
     </div>
     <div id="mForm">
@@ -1233,8 +1303,6 @@ mark.m{background:rgba(201,168,76,.18);border-radius:2px;padding:0 1px;color:inh
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<!-- AIRPORT DROPDOWN -->
-<div class="acdrop" id="acdrop"></div>
 
 <script>
 /* BWT v2.1 — 2026-03-19 18:54 */
@@ -1780,8 +1848,7 @@ async function doSearch() {
     buildSpecialistFinds(allOffers);
     // Route range injection
     setTimeout(() => {
-      injectRouteRangeBar(orig, dest);
-      injectCardRangeHints(orig, dest);
+      // Route range bar removed — showing published fares directly
       injectWAStrip(orig, dest);
       if (!getRouteRange(orig, dest)) injectUnknownRoutePanel(orig, dest);
       updateWALinks();
@@ -1797,8 +1864,7 @@ async function doSearch() {
     renderCards(filteredOffers);
     buildSpecialistFinds(allOffers);
     setTimeout(() => {
-      injectRouteRangeBar(orig, dest);
-      injectCardRangeHints(orig, dest);
+      // Route range bar removed — showing published fares directly
       injectWAStrip(orig, dest);
       if (!getRouteRange(orig, dest)) injectUnknownRoutePanel(orig, dest);
       updateWALinks();
@@ -1826,7 +1892,7 @@ function renderCards(offers) {
   if (sf) sf.style.display = (offers.length===allOffers.length && allOffers.length>0) ? 'block' : 'none';
 
   if (!offers.length) {
-    stack.innerHTML=`<div class="empty"><div class="empty-emo">✈️</div><div class="empty-h">No matching flights</div><p class="empty-p">Try adjusting your filters or different dates. Our specialists can also find routes not in standard search.</p><button class="pr-cta" style="max-width:200px;margin:0 auto;display:block" onclick="openModal(null)">Request a Quote</button></div>`;
+    stack.innerHTML=`<div class="empty"><div class="empty-emo">✈️</div><div class="empty-h">No matching flights</div><p class="empty-p">Try adjusting your filters or different dates. Our specialists can also find routes not in standard search.</p><button class="pr-cta" style="max-width:200px;margin:0 auto;display:block" onclick="openModal(null)">Beat This Fare</button></div>`;
     return;
   }
 
@@ -1959,15 +2025,29 @@ function buildCard(offer, idx, gated=false, starPriority=false) {
       </div>`;
     }
     const segLogoUrl = seg.carrier?.logo||LOGOS[seg.carrier?.code||'']||'';
+    const depDate = fmtFullDate(seg.departure?.datetime);
+    const depCity = seg.departure?.city || seg.departure?.airport || '';
+    const depAptName = seg.departure?.name || seg.departure?.airport || '';
+    const arrCity = seg.arrival?.city || seg.arrival?.airport || '';
+    const arrAptName = seg.arrival?.name || seg.arrival?.airport || '';
     segHTML+=`<div class="seg-row">
-      <div><div class="seg-t">${fmtTime(seg.departure?.datetime)}</div><div class="seg-a">${seg.departure?.airport||''}${seg.departure?.terminal?' T'+seg.departure.terminal:''}</div></div>
+      <div class="seg-endpoint">
+        <div class="seg-date">${depDate}</div>
+        <div class="seg-t">${fmtTime(seg.departure?.datetime)}</div>
+        <div class="seg-apt-name">${depAptName}${seg.departure?.terminal?' · Terminal '+seg.departure.terminal:''}</div>
+        <div class="seg-city">${depCity}</div>
+      </div>
       <div class="seg-mid">
         <div class="seg-fn">${seg.flightNumber||''}</div>
         <div class="seg-ac">${seg.aircraft||''}</div>
         ${seg.legroom?'<div class="seg-leg">💺 '+seg.legroom+'</div>':''}
         <div class="seg-du">${seg.duration||''}</div>
       </div>
-      <div class="seg-r"><div class="seg-t">${fmtTime(seg.arrival?.datetime)}</div><div class="seg-a">${seg.arrival?.airport||''}${seg.arrival?.terminal?' T'+seg.arrival.terminal:''}</div></div>
+      <div class="seg-endpoint seg-r">
+        <div class="seg-t">${fmtTime(seg.arrival?.datetime)}</div>
+        <div class="seg-apt-name">${arrAptName}${seg.arrival?.terminal?' · Terminal '+seg.arrival.terminal:''}</div>
+        <div class="seg-city">${arrCity}</div>
+      </div>
     </div>`;
   });
 
@@ -2083,17 +2163,29 @@ function buildReturnSegHTML(returnJourney) {
         (layName && layName !== layApt ? ' <span class="layover-detail">' + layName + '</span>' : '') +
         '</div>';
     }
+    const rDepDate = fmtFullDate(seg.departure?.datetime);
+    const rDepApt = seg.departure?.name || seg.departure?.airport || '';
+    const rArrApt = seg.arrival?.name || seg.arrival?.airport || '';
+    const rDepCity = seg.departure?.city || seg.departure?.airport || '';
+    const rArrCity = seg.arrival?.city || seg.arrival?.airport || '';
     html += '<div class="seg-row">' +
-      '<div><div class="seg-t">' + fmtTime(seg.departure?.datetime) + '</div>' +
-      '<div class="seg-a">' + (seg.departure?.airport||'') + (seg.departure?.terminal?' T'+seg.departure.terminal:'') + '</div></div>' +
+      '<div class="seg-endpoint">' +
+        '<div class="seg-date">' + rDepDate + '</div>' +
+        '<div class="seg-t">' + fmtTime(seg.departure?.datetime) + '</div>' +
+        '<div class="seg-apt-name">' + rDepApt + (seg.departure?.terminal?' · Terminal '+seg.departure.terminal:'') + '</div>' +
+        '<div class="seg-city">' + rDepCity + '</div>' +
+      '</div>' +
       '<div class="seg-mid">' +
         '<div class="seg-fn">' + (seg.flightNumber||'') + '</div>' +
         '<div class="seg-ac">' + (seg.aircraft||'') + '</div>' +
         (seg.legroom ? '<div class="seg-leg">💺 ' + seg.legroom + '</div>' : '') +
         '<div class="seg-du">' + (seg.duration||'') + '</div>' +
       '</div>' +
-      '<div class="seg-r"><div class="seg-t">' + fmtTime(seg.arrival?.datetime) + '</div>' +
-      '<div class="seg-a">' + (seg.arrival?.airport||'') + (seg.arrival?.terminal?' T'+seg.arrival.terminal:'') + '</div></div>' +
+      '<div class="seg-endpoint seg-r">' +
+        '<div class="seg-t">' + fmtTime(seg.arrival?.datetime) + '</div>' +
+        '<div class="seg-apt-name">' + rArrApt + (seg.arrival?.terminal?' · Terminal '+seg.arrival.terminal:'') + '</div>' +
+        '<div class="seg-city">' + rArrCity + '</div>' +
+      '</div>' +
       '</div>';
   });
   html += '</div>';
@@ -2295,7 +2387,7 @@ function buildICTA() {
       <p>Our specialists access consolidated and private fare stacks unavailable in standard online search. Business class transatlantic routes see the biggest savings.</p>
     </div>
     <div class="icta-act">
-      <button class="icta-btn p" onclick="openModal(null)">Request a Quote</button>
+      <button class="icta-btn p" onclick="openModal(null)">Beat This Fare</button>
       <button class="icta-btn g" onclick="this.closest('.icta').remove()">Continue browsing</button>
     </div>`;
   // All specialist finds are gated — sign-up required
@@ -2512,78 +2604,33 @@ function setTrip(type,btn) {
 /* ═══════════════════════════════════════════════
    AUTOCOMPLETE
 ═══════════════════════════════════════════════ */
-const acdrop=document.getElementById('acdrop');
-
-function acType(field) {
-  const inp=document.getElementById(field+'-input'), hid=document.getElementById(field+'-val');
-  acState[field]=null; hid.value='';
-  const q=inp.value.trim();
-  if (!q) { acClose(); return; }
-  clearTimeout(acTimer);
-  acTimer=setTimeout(()=>{ fetchAC(q,r=>acShow(inp,r,q,a=>acPick(field,a))); }, 160);
-}
-function acFocus(field) {
-  const inp=document.getElementById(field+'-input'), hid=document.getElementById(field+'-val');
-  if (inp.value.trim()&&!hid.value) acType(field);
-  else if (!hid.value) fetchAC('',r=>acShow(inp,r,'',a=>acPick(field,a)));
-}
-function acKey(e,field) {
-  if (!acdrop.classList.contains('on')) return;
-  const items=acdrop.querySelectorAll('.ac-row');
-  if (e.key==='ArrowDown') { e.preventDefault(); acdrop._i=Math.min((acdrop._i??-1)+1,items.length-1); items.forEach((el,i)=>el.classList.toggle('hl',i===acdrop._i)); items[acdrop._i]?.scrollIntoView({block:'nearest'}); }
-  else if (e.key==='ArrowUp') { e.preventDefault(); acdrop._i=Math.max((acdrop._i??0)-1,0); items.forEach((el,i)=>el.classList.toggle('hl',i===acdrop._i)); items[acdrop._i]?.scrollIntoView({block:'nearest'}); }
-  else if (e.key==='Enter') { e.preventDefault(); const a=acdrop._res?.[acdrop._i]; if(a){acPick(field,a);acClose();} }
-  else if (e.key==='Escape') acClose();
-}
-function acShow(inp, results, q, onSelect) {
-  acdrop._inp=inp; acdrop._res=results; acdrop._i=-1;
-  acdrop.innerHTML='<div class="ac-hd">'+(q?'Matching airports':'Popular destinations')+'</div>';
-  if (!results.length) acdrop.innerHTML+='<div class="ac-none">No airports found</div>';
-  else results.forEach((a,i)=>{
-    const d=document.createElement('div'); d.className='ac-row';
-    d.innerHTML=`<div class="ac-flag">${a.flag||'🌍'}</div><div class="ac-inf"><div class="ac-city">${hlTxt(a.city||a.name,q)}</div><div class="ac-name">${hlTxt(a.name||'',q)}</div></div><div class="ac-code">${a.iata}</div>`;
-    d.addEventListener('mousedown',e=>{e.preventDefault();onSelect(a);acClose();});
-    d.addEventListener('mouseover',()=>{acdrop.querySelectorAll('.ac-row').forEach(el=>el.classList.remove('hl'));d.classList.add('hl');acdrop._i=i;});
-    acdrop.appendChild(d);
-  });
-  acPos(inp); acdrop.classList.add('on');
-}
-function acPos(inp) {
-  const r=inp.getBoundingClientRect(), w=Math.max(270,Math.min(340,r.width+40));
-  acdrop.style.width=Math.min(w,window.innerWidth-16)+'px';
-  acdrop.style.left=Math.max(8,r.left-8)+'px';
-  acdrop.style.top=(r.bottom+4)+'px';
-  acdrop.style.maxHeight=Math.min(300,window.innerHeight-r.bottom-16)+'px';
-}
-function acClose() { acdrop.classList.remove('on'); }
-function acPick(field,a) {
-  document.getElementById(field+'-input').value=(a.city||a.name)+' ('+a.iata+')';
-  document.getElementById(field+'-val').value=a.iata;
-  // Show IATA code badge
-  const codeEl=document.getElementById(field+'-code');
-  if(codeEl){codeEl.textContent=a.iata;codeEl.style.display='block';}
-  acState[field]=a;
-  acClose();
-  // Auto-advance: after picking origin, focus destination
-  if (field==='orig') {
-    setTimeout(()=>{
-      document.getElementById('dest-input').focus();
-      fetchAC('',r=>acShow(document.getElementById('dest-input'),r,'',a2=>acPick('dest',a2)));
-    },80);
-  } else {
-    // After picking destination, focus departure date
-    setTimeout(()=>document.getElementById('dep-date').focus(),80);
-  }
-}
+// ══ AIRPORT DATA ══
 const AIRPORTS_DB=[
   {iata:'JFK',city:'New York',name:'John F. Kennedy International',flag:'🇺🇸'},
   {iata:'EWR',city:'Newark',name:'Newark Liberty International',flag:'🇺🇸'},
   {iata:'LGA',city:'New York',name:'LaGuardia Airport',flag:'🇺🇸'},
+  {iata:'BOS',city:'Boston',name:'Logan International Airport',flag:'🇺🇸'},
+  {iata:'MIA',city:'Miami',name:'Miami International Airport',flag:'🇺🇸'},
+  {iata:'ATL',city:'Atlanta',name:'Hartsfield-Jackson Atlanta',flag:'🇺🇸'},
+  {iata:'ORD',city:'Chicago',name:"O'Hare International Airport",flag:'🇺🇸'},
+  {iata:'LAX',city:'Los Angeles',name:'Los Angeles International',flag:'🇺🇸'},
+  {iata:'SFO',city:'San Francisco',name:'San Francisco International',flag:'🇺🇸'},
+  {iata:'IAD',city:'Washington DC',name:'Washington Dulles International',flag:'🇺🇸'},
+  {iata:'DFW',city:'Dallas',name:'Dallas/Fort Worth International',flag:'🇺🇸'},
+  {iata:'SEA',city:'Seattle',name:'Seattle-Tacoma International',flag:'🇺🇸'},
+  {iata:'DEN',city:'Denver',name:'Denver International Airport',flag:'🇺🇸'},
+  {iata:'YYZ',city:'Toronto',name:'Toronto Pearson International',flag:'🇨🇦'},
+  {iata:'YUL',city:'Montreal',name:'Montréal-Trudeau International',flag:'🇨🇦'},
+  {iata:'YVR',city:'Vancouver',name:'Vancouver International Airport',flag:'🇨🇦'},
   {iata:'LHR',city:'London',name:'Heathrow Airport',flag:'🇬🇧'},
   {iata:'LGW',city:'London',name:'Gatwick Airport',flag:'🇬🇧'},
+  {iata:'MAN',city:'Manchester',name:'Manchester Airport',flag:'🇬🇧'},
   {iata:'CDG',city:'Paris',name:'Charles de Gaulle Airport',flag:'🇫🇷'},
+  {iata:'ORY',city:'Paris',name:'Paris Orly Airport',flag:'🇫🇷'},
   {iata:'FRA',city:'Frankfurt',name:'Frankfurt Airport',flag:'🇩🇪'},
   {iata:'MUC',city:'Munich',name:'Munich Airport',flag:'🇩🇪'},
+  {iata:'BER',city:'Berlin',name:'Berlin Brandenburg Airport',flag:'🇩🇪'},
+  {iata:'DUS',city:'Düsseldorf',name:'Düsseldorf Airport',flag:'🇩🇪'},
   {iata:'AMS',city:'Amsterdam',name:'Amsterdam Schiphol Airport',flag:'🇳🇱'},
   {iata:'MAD',city:'Madrid',name:'Adolfo Suárez Madrid-Barajas',flag:'🇪🇸'},
   {iata:'BCN',city:'Barcelona',name:'Barcelona El Prat Airport',flag:'🇪🇸'},
@@ -2595,49 +2642,145 @@ const AIRPORTS_DB=[
   {iata:'BRU',city:'Brussels',name:'Brussels Airport',flag:'🇧🇪'},
   {iata:'CPH',city:'Copenhagen',name:'Copenhagen Airport',flag:'🇩🇰'},
   {iata:'ARN',city:'Stockholm',name:'Stockholm Arlanda Airport',flag:'🇸🇪'},
+  {iata:'OSL',city:'Oslo',name:'Oslo Gardermoen Airport',flag:'🇳🇴'},
+  {iata:'HEL',city:'Helsinki',name:'Helsinki Vantaa Airport',flag:'🇫🇮'},
   {iata:'DUB',city:'Dublin',name:'Dublin Airport',flag:'🇮🇪'},
-  {iata:'MAN',city:'Manchester',name:'Manchester Airport',flag:'🇬🇧'},
+  {iata:'LIS',city:'Lisbon',name:'Lisbon Humberto Delgado Airport',flag:'🇵🇹'},
   {iata:'IST',city:'Istanbul',name:'Istanbul Airport',flag:'🇹🇷'},
   {iata:'ATH',city:'Athens',name:'Athens Eleftherios Venizelos',flag:'🇬🇷'},
-  {iata:'LIS',city:'Lisbon',name:'Lisbon Humberto Delgado Airport',flag:'🇵🇹'},
   {iata:'PRG',city:'Prague',name:'Václav Havel Airport Prague',flag:'🇨🇿'},
-  {iata:'IAD',city:'Washington DC',name:'Washington Dulles International',flag:'🇺🇸'},
-  {iata:'ORD',city:'Chicago',name:"O'Hare International Airport",flag:'🇺🇸'},
-  {iata:'LAX',city:'Los Angeles',name:'Los Angeles International',flag:'🇺🇸'},
-  {iata:'SFO',city:'San Francisco',name:'San Francisco International',flag:'🇺🇸'},
-  {iata:'BOS',city:'Boston',name:'Logan International Airport',flag:'🇺🇸'},
-  {iata:'MIA',city:'Miami',name:'Miami International Airport',flag:'🇺🇸'},
-  {iata:'ATL',city:'Atlanta',name:'Hartsfield-Jackson Atlanta',flag:'🇺🇸'},
-  {iata:'YYZ',city:'Toronto',name:'Toronto Pearson International',flag:'🇨🇦'},
-  {iata:'YUL',city:'Montreal',name:'Montréal-Trudeau International',flag:'🇨🇦'},
+  {iata:'WAW',city:'Warsaw',name:'Warsaw Chopin Airport',flag:'🇵🇱'},
   {iata:'DOH',city:'Doha',name:'Hamad International Airport',flag:'🇶🇦'},
   {iata:'DXB',city:'Dubai',name:'Dubai International Airport',flag:'🇦🇪'},
+  {iata:'AUH',city:'Abu Dhabi',name:'Abu Dhabi International Airport',flag:'🇦🇪'},
+  {iata:'RUH',city:'Riyadh',name:'King Khalid International Airport',flag:'🇸🇦'},
   {iata:'NRT',city:'Tokyo',name:'Narita International Airport',flag:'🇯🇵'},
+  {iata:'HND',city:'Tokyo',name:'Haneda Airport',flag:'🇯🇵'},
+  {iata:'ICN',city:'Seoul',name:'Incheon International Airport',flag:'🇰🇷'},
+  {iata:'PEK',city:'Beijing',name:'Beijing Capital International',flag:'🇨🇳'},
+  {iata:'PVG',city:'Shanghai',name:'Shanghai Pudong International',flag:'🇨🇳'},
   {iata:'HKG',city:'Hong Kong',name:'Hong Kong International',flag:'🇭🇰'},
   {iata:'SIN',city:'Singapore',name:'Singapore Changi Airport',flag:'🇸🇬'},
+  {iata:'BKK',city:'Bangkok',name:'Suvarnabhumi Airport',flag:'🇹🇭'},
+  {iata:'KUL',city:'Kuala Lumpur',name:'Kuala Lumpur International',flag:'🇲🇾'},
+  {iata:'DEL',city:'Delhi',name:'Indira Gandhi International',flag:'🇮🇳'},
+  {iata:'BOM',city:'Mumbai',name:'Chhatrapati Shivaji Maharaj International',flag:'🇮🇳'},
   {iata:'SYD',city:'Sydney',name:'Kingsford Smith Airport',flag:'🇦🇺'},
+  {iata:'JNB',city:'Johannesburg',name:'O.R. Tambo International',flag:'🇿🇦'},
+  {iata:'NBO',city:'Nairobi',name:'Jomo Kenyatta International',flag:'🇰🇪'},
+  {iata:'CAI',city:'Cairo',name:'Cairo International Airport',flag:'🇪🇬'},
   {iata:'MEX',city:'Mexico City',name:'Benito Juárez International',flag:'🇲🇽'},
   {iata:'GRU',city:'São Paulo',name:'São Paulo Guarulhos International',flag:'🇧🇷'},
+  {iata:'EZE',city:'Buenos Aires',name:'Ministro Pistarini International',flag:'🇦🇷'},
+  {iata:'BOG',city:'Bogotá',name:'El Dorado International Airport',flag:'🇨🇴'},
+  {iata:'LIM',city:'Lima',name:'Jorge Chávez International Airport',flag:'🇵🇪'},
+  {iata:'SCL',city:'Santiago',name:'Arturo Merino Benítez International',flag:'🇨🇱'},
 ];
-const POPULAR_AC=['JFK','EWR','LHR','CDG','FRA','AMS','MAD','FCO','ZRH','DUB'];
-function localAirports(q){
-  if(!q) return POPULAR_AC.map(c=>AIRPORTS_DB.find(a=>a.iata===c)).filter(Boolean);
-  const ql=q.toLowerCase();
-  return AIRPORTS_DB.filter(a=>a.iata.toLowerCase().startsWith(ql)||a.city.toLowerCase().includes(ql)||a.name.toLowerCase().includes(ql)).slice(0,8);
-}
-async function fetchAC(q,cb) {
-  // Always use local airport data — fast, reliable, no API call needed
-  // The static list in airports.js has 130+ airports covering all major routes
-  cb(localAirports(q));
-}
-function hlTxt(text,q) {
+const POPULAR_AC=['JFK','EWR','LHR','CDG','FRA','AMS','MAD','DXB','DOH','SIN','LAX','NRT'];
+
+function hlTxt(text, q) {
   if (!q||!text) return text||'';
   const i=text.toLowerCase().indexOf(q.toLowerCase());
   if (i<0) return text;
   return text.slice(0,i)+'<mark class="m">'+text.slice(i,i+q.length)+'</mark>'+text.slice(i+q.length);
 }
-document.addEventListener('mousedown',e=>{ if(!acdrop.contains(e.target)&&!e.target.classList.contains('nsf-inp')) acClose(); });
-window.addEventListener('scroll',()=>{ if(acdrop._inp) acPos(acdrop._inp); },{passive:true});
+
+// ══ AIRPORT TYPEAHEAD (Google Flights style) ══
+const _acHlIdx = {orig:-1, dest:-1};
+
+function acSuggest(field, q) {
+  const ql = (q||'').trim().toLowerCase();
+  const sug = document.getElementById(field+'-sug');
+  const list = ql
+    ? AIRPORTS_DB.filter(a =>
+        a.iata.toLowerCase().startsWith(ql) ||
+        a.city.toLowerCase().startsWith(ql) ||
+        a.city.toLowerCase().includes(ql) ||
+        a.name.toLowerCase().includes(ql)
+      ).slice(0, 7)
+    : POPULAR_AC.map(c => AIRPORTS_DB.find(a => a.iata===c)).filter(Boolean);
+
+  _acHlIdx[field] = -1;
+  sug.innerHTML = '';
+
+  list.forEach(a => {
+    const row = document.createElement('div');
+    row.className = 'ac-row';
+    row.innerHTML =
+      '<div class="ac-flag">' + (a.flag||'🌍') + '</div>' +
+      '<div class="ac-inf">' +
+        '<div class="ac-city">' + hlTxt(a.city, q) + '</div>' +
+        '<div class="ac-name">' + a.name + '</div>' +
+      '</div>' +
+      '<div class="ac-code">' + a.iata + '</div>';
+    row.addEventListener('mousedown', e => {
+      e.preventDefault();
+      acPick(field, a);
+    });
+    sug.appendChild(row);
+  });
+
+  sug.classList.toggle('open', list.length > 0);
+}
+
+function acCloseSug(field) {
+  const sug = document.getElementById(field+'-sug');
+  if (sug) sug.classList.remove('open');
+}
+
+function acNavSug(e, field) {
+  const sug = document.getElementById(field+'-sug');
+  if (!sug || !sug.classList.contains('open')) return;
+  const rows = sug.querySelectorAll('.ac-row');
+  if (!rows.length) return;
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    _acHlIdx[field] = Math.min(_acHlIdx[field]+1, rows.length-1);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    _acHlIdx[field] = Math.max(_acHlIdx[field]-1, 0);
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (_acHlIdx[field] >= 0) rows[_acHlIdx[field]].dispatchEvent(new MouseEvent('mousedown'));
+    else if (rows[0]) rows[0].dispatchEvent(new MouseEvent('mousedown'));
+    return;
+  } else if (e.key === 'Escape') {
+    acCloseSug(field); return;
+  }
+  rows.forEach((r,i) => r.classList.toggle('hl', i === _acHlIdx[field]));
+  rows[_acHlIdx[field]]?.scrollIntoView({block:'nearest'});
+}
+
+function acPick(field, a) {
+  document.getElementById(field+'-input').value = (a.city||a.name) + ' (' + a.iata + ')';
+  document.getElementById(field+'-val').value = a.iata;
+  const codeEl = document.getElementById(field+'-code');
+  if (codeEl) { codeEl.textContent = a.iata; codeEl.style.display = 'block'; }
+  acState[field] = a;
+  acCloseSug(field);
+  if (field === 'orig') {
+    setTimeout(() => {
+      const d = document.getElementById('dest-input');
+      d.focus();
+      acSuggest('dest', '');
+    }, 60);
+  } else {
+    setTimeout(() => {
+      const dep = document.getElementById('dep-date');
+      if (dep) dep.focus();
+    }, 60);
+  }
+}
+
+// Close suggestions on outside click
+document.addEventListener('mousedown', e => {
+  if (!e.target.closest('.nsf')) {
+    acCloseSug('orig');
+    acCloseSug('dest');
+  }
+});
+
+
 
 /* ═══════════════════════════════════════════════
    MODAL
@@ -2706,6 +2849,15 @@ async function submitQuote() {
 /* ═══════════════════════════════════════════════
    HELPERS
 ═══════════════════════════════════════════════ */
+function fmtFullDate(dt) {
+  if (!dt) return '';
+  try {
+    const d = new Date(dt);
+    if (isNaN(d)) return '';
+    return d.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
+  } catch(e) { return ''; }
+}
+
 function fmtTime(dt) {
   if (!dt) return '--:--';
   const s = String(dt).trim();
