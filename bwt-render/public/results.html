@@ -1028,18 +1028,19 @@ mark.m{background:rgba(201,168,76,.18);border-radius:2px;padding:0 1px;color:inh
 .seg-leg{font-size:10px;color:var(--gold);margin-top:2px;font-weight:600}
 .layover-detail{font-size:10px;color:var(--subtle);margin-top:2px}
 /* Date field — native input fills entire field, picker opens on any click */
-.nsf-date{position:relative}
+.nsf-date{position:relative;cursor:pointer}
 .nsf-date-inp{
-  position:absolute;top:0;left:0;width:100%;height:100%;
-  opacity:0;cursor:pointer;z-index:10;
+  position:absolute;inset:0;opacity:0;
+  cursor:pointer;z-index:5;width:100%;
 }
 .nsf-date-inp::-webkit-calendar-picker-indicator{
-  position:absolute;top:0;left:0;width:100%;height:100%;
+  position:absolute;inset:0;
+  width:100%;height:100%;
   opacity:0;cursor:pointer;
 }
 .nsf-date-display{
   font-size:14px;color:rgba(255,255,255,.9);
-  white-space:nowrap;pointer-events:none;
+  white-space:nowrap;pointer-events:none;position:relative;z-index:1;
 }
 .nsf-date-display.placeholder{color:rgba(255,255,255,.38)}
 </style>
@@ -1241,8 +1242,8 @@ mark.m{background:rgba(201,168,76,.18);border-radius:2px;padding:0 1px;color:inh
     <div class="hist-card" id="histCard">
       <div class="hc-top">
         <div>
-          <span class="hc-lbl">Price Range</span>
-          <div class="hc-sub">Each bar = number of flights at that price. Drag slider to filter.</div>
+          <span class="hc-lbl">These are published fares — what you'd pay booking direct with the airline.</span>
+          <div class="hc-sub">See a price that works? Select the flight and hit <strong>Request Quote</strong> — we'll come back with our rate, often lower.</div>
         </div>
         <span class="hc-range" id="histRange">—</span>
       </div>
@@ -1259,7 +1260,7 @@ mark.m{background:rgba(201,168,76,.18);border-radius:2px;padding:0 1px;color:inh
           <div class="rh-step-num">1</div>
           <div>
             <div class="rh-step-title">Search your flight</div>
-            <div class="rh-step-sub">Use the search bar above. We show you live published fares — the exact price the airline charges today.</div>
+            <div class="rh-step-sub">Enter your route above. We pull live published fares — exactly what the airline charges today.</div>
           </div>
         </div>
 
@@ -1268,8 +1269,8 @@ mark.m{background:rgba(201,168,76,.18);border-radius:2px;padding:0 1px;color:inh
         <div class="rh-step">
           <div class="rh-step-num">2</div>
           <div>
-            <div class="rh-step-title">Find a fare you like</div>
-            <div class="rh-step-sub">See a flight and price that works for you? That's the published fare you're about to buy.</div>
+            <div class="rh-step-title">Find your fare</div>
+            <div class="rh-step-sub">Select the flight and price that works for you.</div>
           </div>
         </div>
 
@@ -1278,12 +1279,8 @@ mark.m{background:rgba(201,168,76,.18);border-radius:2px;padding:0 1px;color:inh
         <div class="rh-step">
           <div class="rh-step-num">3</div>
           <div>
-            <div class="rh-step-title">Click and let us beat it</div>
-            <div class="rh-step-sub">Hit the button below any flight. We'll come back with our rate — often lower than what you see here.</div>
-            <div class="rh-step-cta-preview">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-              Beat This Fare
-            </div>
+            <div class="rh-step-title">Click to compare</div>
+            <div class="rh-step-sub">Hit <strong style="color:var(--gold,#c8a84b)">Request Quote</strong> below your selection. We'll come back with our rate — often lower than what you see here.</div>
           </div>
         </div>
 
@@ -1334,7 +1331,7 @@ mark.m{background:rgba(201,168,76,.18);border-radius:2px;padding:0 1px;color:inh
 <div class="modal-bg" id="qModal" onclick="if(event.target===this)closeModal()">
   <div class="modal">
     <div class="modal-hd">
-      <div><h2>Beat This Fare</h2><p>Specialists check private fares · Free · No card required</p></div>
+      <div><h2>Request Quote</h2><p>Specialists check private fares · Free · No card required</p></div>
       <button class="modal-x" onclick="closeModal()">×</button>
     </div>
     <div id="mForm">
@@ -1983,7 +1980,7 @@ function renderCards(offers) {
   if (sf) sf.style.display = (offers.length===allOffers.length && allOffers.length>0) ? 'block' : 'none';
 
   if (!offers.length) {
-    stack.innerHTML=`<div class="empty"><div class="empty-emo">✈️</div><div class="empty-h">No matching flights</div><p class="empty-p">Try adjusting your filters or different dates. Our specialists can also find routes not in standard search.</p><button class="pr-cta" style="max-width:200px;margin:0 auto;display:block" onclick="openModal(null)">Beat This Fare</button></div>`;
+    stack.innerHTML=`<div class="empty"><div class="empty-emo">✈️</div><div class="empty-h">No matching flights</div><p class="empty-p">Try adjusting your filters or different dates. Our specialists can also find routes not in standard search.</p><button class="pr-cta" style="max-width:200px;margin:0 auto;display:block" onclick="openModal(null)">Request Quote</button></div>`;
     return;
   }
 
@@ -2118,9 +2115,9 @@ function buildCard(offer, idx, gated=false, starPriority=false) {
     const segLogoUrl = seg.carrier?.logo||LOGOS[seg.carrier?.code||'']||'';
     const depDate = fmtFullDate(seg.departure?.datetime);
     const depCity = seg.departure?.city || seg.departure?.airport || '';
-    const depAptName = seg.departure?.name || seg.departure?.airport || '';
+    const depAptName = getAirportName(seg.departure?.airport) || seg.departure?.city || '';
     const arrCity = seg.arrival?.city || seg.arrival?.airport || '';
-    const arrAptName = seg.arrival?.name || seg.arrival?.airport || '';
+    const arrAptName = getAirportName(seg.arrival?.airport) || seg.arrival?.city || '';
     segHTML+=`<div class="seg-row">
       <div class="seg-endpoint">
         <div class="seg-date">${depDate}</div>
@@ -2255,8 +2252,8 @@ function buildReturnSegHTML(returnJourney) {
         '</div>';
     }
     const rDepDate = fmtFullDate(seg.departure?.datetime);
-    const rDepApt = seg.departure?.name || seg.departure?.airport || '';
-    const rArrApt = seg.arrival?.name || seg.arrival?.airport || '';
+    const rDepApt = getAirportName(seg.departure?.airport) || seg.departure?.city || '';
+    const rArrApt = getAirportName(seg.arrival?.airport) || seg.arrival?.city || '';
     const rDepCity = seg.departure?.city || seg.departure?.airport || '';
     const rArrCity = seg.arrival?.city || seg.arrival?.airport || '';
     html += '<div class="seg-row">' +
@@ -2478,7 +2475,7 @@ function buildICTA() {
       <p>Our specialists access consolidated and private fare stacks unavailable in standard online search. Business class transatlantic routes see the biggest savings.</p>
     </div>
     <div class="icta-act">
-      <button class="icta-btn p" onclick="openModal(null)">Beat This Fare</button>
+      <button class="icta-btn p" onclick="openModal(null)">Request Quote</button>
       <button class="icta-btn g" onclick="this.closest('.icta').remove()">Continue browsing</button>
     </div>`;
   // All specialist finds are gated — sign-up required
@@ -2696,6 +2693,12 @@ function setTrip(type,btn) {
    AUTOCOMPLETE
 ═══════════════════════════════════════════════ */
 // ══ DATE DISPLAY HELPER ══
+function getAirportName(iata) {
+  if (!iata) return '';
+  const a = AIRPORTS_DB.find(x => x.iata === iata);
+  return a ? a.name + ' (' + iata + ')' : iata;
+}
+
 function setDateDisplay(field, val) {
   const el = document.getElementById(field+'-display');
   if (!el) return;
