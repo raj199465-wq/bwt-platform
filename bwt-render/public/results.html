@@ -238,24 +238,52 @@ a{color:inherit;text-decoration:none}
 
 /* Published fares context banner */
 .results-headline{
-  display:flex;align-items:center;justify-content:space-between;gap:24px;
-  background:linear-gradient(135deg,rgba(10,17,40,.95) 0%,rgba(6,18,55,.9) 100%);
-  border:1px solid rgba(200,168,75,.2);border-radius:12px;
-  padding:28px 32px;margin-bottom:20px;
+  background:linear-gradient(135deg,rgba(12,22,55,.98) 0%,rgba(8,16,42,.98) 100%);
+  border:1px solid rgba(200,168,75,.25);
+  border-radius:14px;
+  padding:28px 32px 24px;
+  margin-bottom:24px;
+  position:relative;
+  overflow:hidden;
 }
-.rh-eyebrow{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold,#c8a84b);margin-bottom:8px}
-.rh-title{font-size:26px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:10px;font-family:'Syne',sans-serif}
-.rh-sub{font-size:13px;color:rgba(255,255,255,.6);line-height:1.65;max-width:600px}
-.rh-cta{
-  flex-shrink:0;display:flex;align-items:center;gap:8px;
+.results-headline::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold,#c8a84b),transparent);
+}
+.rh-how-label{
+  font-size:9px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold,#c8a84b);margin-bottom:20px;opacity:.8;
+}
+.rh-steps{
+  display:flex;align-items:stretch;gap:0;
+}
+.rh-step{
+  display:flex;align-items:flex-start;gap:14px;flex:1;
+  padding-right:24px;
+}
+.rh-step-num{
+  width:36px;height:36px;border-radius:50%;
   background:var(--gold,#c8a84b);color:#0a1228;
-  border:none;border-radius:8px;padding:14px 24px;
-  font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;
-  font-family:'Syne',sans-serif;letter-spacing:.04em;
-  transition:opacity .15s;
+  font-size:16px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-family:'Syne',sans-serif;
 }
-.rh-cta:hover{opacity:.88}
-.rh-cta svg{width:14px;height:14px}
+.rh-step-title{
+  font-size:15px;font-weight:700;color:#fff;
+  margin-bottom:6px;font-family:'Syne',sans-serif;
+  line-height:1.2;
+}
+.rh-step-sub{font-size:12px;color:rgba(255,255,255,.55);line-height:1.6;}
+.rh-step-divider{
+  display:flex;align-items:center;
+  font-size:20px;color:rgba(200,168,75,.3);
+  padding:0 8px;flex-shrink:0;padding-top:8px;
+}
+@media(max-width:700px){
+  .rh-steps{flex-direction:column;gap:20px;}
+  .rh-step-divider{display:none;}
+  .rh-step{padding-right:0;}
+}
 
 /* Expanded segment detail */
 .seg-endpoint{display:flex;flex-direction:column;gap:2px;min-width:140px}
@@ -288,24 +316,52 @@ a{color:inherit;text-decoration:none}
 .pub-banner-cta svg{width:13px;height:13px;stroke:currentColor}
 .pub-banner-cta:hover{background:var(--gold-l);transform:translateY(-1px)}
 @media(max-width:640px){.results-headline{
-  display:flex;align-items:center;justify-content:space-between;gap:24px;
-  background:linear-gradient(135deg,rgba(10,17,40,.95) 0%,rgba(6,18,55,.9) 100%);
-  border:1px solid rgba(200,168,75,.2);border-radius:12px;
-  padding:28px 32px;margin-bottom:20px;
+  background:linear-gradient(135deg,rgba(12,22,55,.98) 0%,rgba(8,16,42,.98) 100%);
+  border:1px solid rgba(200,168,75,.25);
+  border-radius:14px;
+  padding:28px 32px 24px;
+  margin-bottom:24px;
+  position:relative;
+  overflow:hidden;
 }
-.rh-eyebrow{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold,#c8a84b);margin-bottom:8px}
-.rh-title{font-size:26px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:10px;font-family:'Syne',sans-serif}
-.rh-sub{font-size:13px;color:rgba(255,255,255,.6);line-height:1.65;max-width:600px}
-.rh-cta{
-  flex-shrink:0;display:flex;align-items:center;gap:8px;
+.results-headline::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold,#c8a84b),transparent);
+}
+.rh-how-label{
+  font-size:9px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold,#c8a84b);margin-bottom:20px;opacity:.8;
+}
+.rh-steps{
+  display:flex;align-items:stretch;gap:0;
+}
+.rh-step{
+  display:flex;align-items:flex-start;gap:14px;flex:1;
+  padding-right:24px;
+}
+.rh-step-num{
+  width:36px;height:36px;border-radius:50%;
   background:var(--gold,#c8a84b);color:#0a1228;
-  border:none;border-radius:8px;padding:14px 24px;
-  font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;
-  font-family:'Syne',sans-serif;letter-spacing:.04em;
-  transition:opacity .15s;
+  font-size:16px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-family:'Syne',sans-serif;
 }
-.rh-cta:hover{opacity:.88}
-.rh-cta svg{width:14px;height:14px}
+.rh-step-title{
+  font-size:15px;font-weight:700;color:#fff;
+  margin-bottom:6px;font-family:'Syne',sans-serif;
+  line-height:1.2;
+}
+.rh-step-sub{font-size:12px;color:rgba(255,255,255,.55);line-height:1.6;}
+.rh-step-divider{
+  display:flex;align-items:center;
+  font-size:20px;color:rgba(200,168,75,.3);
+  padding:0 8px;flex-shrink:0;padding-top:8px;
+}
+@media(max-width:700px){
+  .rh-steps{flex-direction:column;gap:20px;}
+  .rh-step-divider{display:none;}
+  .rh-step{padding-right:0;}
+}
 
 /* Expanded segment detail */
 .seg-endpoint{display:flex;flex-direction:column;gap:2px;min-width:140px}
@@ -975,12 +1031,21 @@ mark.m{background:rgba(201,168,76,.18);border-radius:2px;padding:0 1px;color:inh
 .seg-ac{font-size:10px;color:var(--subtle);margin-top:1px}
 .seg-leg{font-size:10px;color:var(--gold);margin-top:2px;font-weight:600}
 .layover-detail{font-size:10px;color:var(--subtle);margin-top:2px}
-/* Date field — hide native calendar icon, entire field clickable */
-.nsf-date-inp::-webkit-calendar-picker-indicator {
-  position:absolute;top:0;left:0;right:0;bottom:0;
-  width:auto;height:auto;opacity:0;cursor:pointer;
-}
+/* Date field — native input fills entire field, picker opens on any click */
 .nsf-date{position:relative}
+.nsf-date-inp{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  opacity:0;cursor:pointer;z-index:10;
+}
+.nsf-date-inp::-webkit-calendar-picker-indicator{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  opacity:0;cursor:pointer;
+}
+.nsf-date-display{
+  font-size:14px;color:rgba(255,255,255,.9);
+  white-space:nowrap;pointer-events:none;
+}
+.nsf-date-display.placeholder{color:rgba(255,255,255,.38)}
 </style>
 </head>
 <body>
@@ -1029,16 +1094,16 @@ mark.m{background:rgba(201,168,76,.18);border-radius:2px;padding:0 1px;color:inh
       <div class="ac-sug" id="dest-sug"></div>
     </div>
     <!-- Depart -->
-    <div class="nsf nsf-date" onclick="this.querySelector('input').showPicker()" style="cursor:pointer">
+    <div class="nsf nsf-date" style="cursor:pointer">
       <svg class="nsf-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
-      <input type="date" class="nsf-inp nsf-date-inp" id="dep-date"
-        onclick="event.stopPropagation();this.showPicker()">
+      <span class="nsf-date-display placeholder" id="dep-display">Depart</span>
+      <input type="date" class="nsf-date-inp" id="dep-date">
     </div>
     <!-- Return -->
-    <div class="nsf nsf-date" id="ret-field" onclick="this.querySelector('input').showPicker()" style="cursor:pointer">
+    <div class="nsf nsf-date" id="ret-field" style="cursor:pointer">
       <svg class="nsf-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
-      <input type="date" class="nsf-inp nsf-date-inp" id="ret-date"
-        onclick="event.stopPropagation();this.showPicker()">
+      <span class="nsf-date-display placeholder" id="ret-display">Return</span>
+      <input type="date" class="nsf-date-inp" id="ret-date">
     </div>
     <button class="nav-go" id="searchBtn" onclick="doSearch()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
@@ -1191,15 +1256,32 @@ mark.m{background:rgba(201,168,76,.18);border-radius:2px;padding:0 1px;color:inh
 
     <!-- Results headline -->
     <div class="results-headline" id="pubBanner">
-      <div class="rh-left">
-        <div class="rh-eyebrow">Published Fares</div>
-        <div class="rh-title">What the airlines charge.<br>We exist to beat it.</div>
-        <div class="rh-sub">The fares below are live published rates — exactly what you'd pay booking direct with the airline today, for one-way, round-trip, or multi-city travel. Select any flight and request a quote. Our specialists source private contracted rates on the same airline, same seat, same flight — and come back lower.</div>
+      <div class="rh-how-label">How it works</div>
+      <div class="rh-steps">
+        <div class="rh-step">
+          <div class="rh-step-num">1</div>
+          <div class="rh-step-body">
+            <div class="rh-step-title">Search your flight</div>
+            <div class="rh-step-sub">Enter your route and dates above. Results show live published fares — exactly what airlines charge today.</div>
+          </div>
+        </div>
+        <div class="rh-step-divider">→</div>
+        <div class="rh-step">
+          <div class="rh-step-num">2</div>
+          <div class="rh-step-body">
+            <div class="rh-step-title">Find a fare you want</div>
+            <div class="rh-step-sub">Browse the flights below. Pick the airline, routing and price that works for you.</div>
+          </div>
+        </div>
+        <div class="rh-step-divider">→</div>
+        <div class="rh-step">
+          <div class="rh-step-num">3</div>
+          <div class="rh-step-body">
+            <div class="rh-step-title">Select it and submit</div>
+            <div class="rh-step-sub">Hit <strong style="color:var(--gold,#c8a84b)">"Beat This Fare"</strong> on any flight. We'll come back with our best rate — often 20–40% below what you see here.</div>
+          </div>
+        </div>
       </div>
-      <button class="rh-cta" onclick="openModal(null)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        Request a Quote
-      </button>
     </div>
 
     <!-- Sort -->
@@ -1772,8 +1854,11 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('orig-val').value   = orig;
   document.getElementById('dest-input').value = destN!==dest ? `${destN} (${dest})` : dest;
   document.getElementById('dest-val').value   = dest;
-  document.getElementById('dep-date').value   = dep;
-  document.getElementById('dep-date').min     = new Date().toISOString().slice(0,10);
+  document.getElementById('dep-date').value = dep;
+  setDateDisplay('dep', dep);
+  document.getElementById('dep-date').min = new Date().toISOString().slice(0,10);
+  document.getElementById('dep-date').addEventListener('change', function(){ setDateDisplay('dep', this.value); });
+  document.getElementById('ret-date').addEventListener('change', function(){ setDateDisplay('ret', this.value); });
   if (ret) { document.getElementById('ret-date').value=ret; document.getElementById('ret-date').min=dep; }
   document.getElementById('paxLbl').textContent   = `${pax} Adult${pax>1?'s':''}`;
   document.getElementById('cabinLbl').textContent  = {BUSINESS:'Business',FIRST:'First Class',PREMIUM_ECONOMY:'Prem. Economy'}[cabin]||cabin;
@@ -2604,77 +2689,263 @@ function setTrip(type,btn) {
 /* ═══════════════════════════════════════════════
    AUTOCOMPLETE
 ═══════════════════════════════════════════════ */
+// ══ DATE DISPLAY HELPER ══
+function setDateDisplay(field, val) {
+  const el = document.getElementById(field+'-display');
+  if (!el) return;
+  if (val) {
+    el.textContent = new Date(val+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+    el.classList.remove('placeholder');
+  } else {
+    el.textContent = field==='dep' ? 'Depart' : 'Return';
+    el.classList.add('placeholder');
+  }
+}
+
 // ══ AIRPORT DATA ══
 const AIRPORTS_DB=[
+  // ── North America ──
   {iata:'JFK',city:'New York',name:'John F. Kennedy International',flag:'🇺🇸'},
   {iata:'EWR',city:'Newark',name:'Newark Liberty International',flag:'🇺🇸'},
   {iata:'LGA',city:'New York',name:'LaGuardia Airport',flag:'🇺🇸'},
   {iata:'BOS',city:'Boston',name:'Logan International Airport',flag:'🇺🇸'},
   {iata:'MIA',city:'Miami',name:'Miami International Airport',flag:'🇺🇸'},
-  {iata:'ATL',city:'Atlanta',name:'Hartsfield-Jackson Atlanta',flag:'🇺🇸'},
+  {iata:'FLL',city:'Fort Lauderdale',name:'Fort Lauderdale-Hollywood International',flag:'🇺🇸'},
+  {iata:'ATL',city:'Atlanta',name:'Hartsfield-Jackson Atlanta International',flag:'🇺🇸'},
   {iata:'ORD',city:'Chicago',name:"O'Hare International Airport",flag:'🇺🇸'},
+  {iata:'MDW',city:'Chicago',name:'Chicago Midway Airport',flag:'🇺🇸'},
   {iata:'LAX',city:'Los Angeles',name:'Los Angeles International',flag:'🇺🇸'},
   {iata:'SFO',city:'San Francisco',name:'San Francisco International',flag:'🇺🇸'},
+  {iata:'SJC',city:'San Jose',name:'Norman Y. Mineta San Jose International',flag:'🇺🇸'},
+  {iata:'OAK',city:'Oakland',name:'Oakland International Airport',flag:'🇺🇸'},
   {iata:'IAD',city:'Washington DC',name:'Washington Dulles International',flag:'🇺🇸'},
+  {iata:'DCA',city:'Washington DC',name:'Ronald Reagan Washington National',flag:'🇺🇸'},
+  {iata:'BWI',city:'Baltimore',name:'Baltimore/Washington International',flag:'🇺🇸'},
   {iata:'DFW',city:'Dallas',name:'Dallas/Fort Worth International',flag:'🇺🇸'},
+  {iata:'DAL',city:'Dallas',name:'Dallas Love Field',flag:'🇺🇸'},
+  {iata:'IAH',city:'Houston',name:'George Bush Intercontinental',flag:'🇺🇸'},
+  {iata:'HOU',city:'Houston',name:'William P. Hobby Airport',flag:'🇺🇸'},
   {iata:'SEA',city:'Seattle',name:'Seattle-Tacoma International',flag:'🇺🇸'},
   {iata:'DEN',city:'Denver',name:'Denver International Airport',flag:'🇺🇸'},
+  {iata:'LAS',city:'Las Vegas',name:'Harry Reid International Airport',flag:'🇺🇸'},
+  {iata:'PHX',city:'Phoenix',name:'Phoenix Sky Harbor International',flag:'🇺🇸'},
+  {iata:'MSP',city:'Minneapolis',name:'Minneapolis-Saint Paul International',flag:'🇺🇸'},
+  {iata:'DTW',city:'Detroit',name:'Detroit Metropolitan Wayne County',flag:'🇺🇸'},
+  {iata:'CLT',city:'Charlotte',name:'Charlotte Douglas International',flag:'🇺🇸'},
+  {iata:'PHL',city:'Philadelphia',name:'Philadelphia International Airport',flag:'🇺🇸'},
+  {iata:'SLC',city:'Salt Lake City',name:'Salt Lake City International',flag:'🇺🇸'},
+  {iata:'PDX',city:'Portland',name:'Portland International Airport',flag:'🇺🇸'},
+  {iata:'MCO',city:'Orlando',name:'Orlando International Airport',flag:'🇺🇸'},
+  {iata:'TPA',city:'Tampa',name:'Tampa International Airport',flag:'🇺🇸'},
+  {iata:'BNA',city:'Nashville',name:'Nashville International Airport',flag:'🇺🇸'},
+  {iata:'AUS',city:'Austin',name:'Austin-Bergstrom International',flag:'🇺🇸'},
+  {iata:'SAN',city:'San Diego',name:'San Diego International Airport',flag:'🇺🇸'},
+  {iata:'HNL',city:'Honolulu',name:'Daniel K. Inouye International',flag:'🇺🇸'},
+  {iata:'ANC',city:'Anchorage',name:'Ted Stevens Anchorage International',flag:'🇺🇸'},
   {iata:'YYZ',city:'Toronto',name:'Toronto Pearson International',flag:'🇨🇦'},
   {iata:'YUL',city:'Montreal',name:'Montréal-Trudeau International',flag:'🇨🇦'},
   {iata:'YVR',city:'Vancouver',name:'Vancouver International Airport',flag:'🇨🇦'},
+  {iata:'YYC',city:'Calgary',name:'Calgary International Airport',flag:'🇨🇦'},
+  {iata:'YEG',city:'Edmonton',name:'Edmonton International Airport',flag:'🇨🇦'},
+  {iata:'YOW',city:'Ottawa',name:'Ottawa Macdonald-Cartier International',flag:'🇨🇦'},
+  {iata:'MEX',city:'Mexico City',name:'Benito Juárez International',flag:'🇲🇽'},
+  {iata:'CUN',city:'Cancún',name:'Cancún International Airport',flag:'🇲🇽'},
+  {iata:'GDL',city:'Guadalajara',name:'Miguel Hidalgo y Costilla International',flag:'🇲🇽'},
+  // ── Europe ──
   {iata:'LHR',city:'London',name:'Heathrow Airport',flag:'🇬🇧'},
   {iata:'LGW',city:'London',name:'Gatwick Airport',flag:'🇬🇧'},
+  {iata:'STN',city:'London',name:'Stansted Airport',flag:'🇬🇧'},
+  {iata:'LTN',city:'London',name:'Luton Airport',flag:'🇬🇧'},
+  {iata:'LCY',city:'London',name:'City Airport',flag:'🇬🇧'},
   {iata:'MAN',city:'Manchester',name:'Manchester Airport',flag:'🇬🇧'},
+  {iata:'BHX',city:'Birmingham',name:'Birmingham Airport',flag:'🇬🇧'},
+  {iata:'EDI',city:'Edinburgh',name:'Edinburgh Airport',flag:'🇬🇧'},
+  {iata:'GLA',city:'Glasgow',name:'Glasgow Airport',flag:'🇬🇧'},
   {iata:'CDG',city:'Paris',name:'Charles de Gaulle Airport',flag:'🇫🇷'},
   {iata:'ORY',city:'Paris',name:'Paris Orly Airport',flag:'🇫🇷'},
+  {iata:'NCE',city:'Nice',name:'Côte d'Azur Airport',flag:'🇫🇷'},
+  {iata:'LYS',city:'Lyon',name:'Lyon-Saint Exupéry Airport',flag:'🇫🇷'},
+  {iata:'MRS',city:'Marseille',name:'Marseille Provence Airport',flag:'🇫🇷'},
   {iata:'FRA',city:'Frankfurt',name:'Frankfurt Airport',flag:'🇩🇪'},
   {iata:'MUC',city:'Munich',name:'Munich Airport',flag:'🇩🇪'},
   {iata:'BER',city:'Berlin',name:'Berlin Brandenburg Airport',flag:'🇩🇪'},
   {iata:'DUS',city:'Düsseldorf',name:'Düsseldorf Airport',flag:'🇩🇪'},
+  {iata:'HAM',city:'Hamburg',name:'Hamburg Airport',flag:'🇩🇪'},
+  {iata:'STR',city:'Stuttgart',name:'Stuttgart Airport',flag:'🇩🇪'},
+  {iata:'CGN',city:'Cologne',name:'Cologne Bonn Airport',flag:'🇩🇪'},
   {iata:'AMS',city:'Amsterdam',name:'Amsterdam Schiphol Airport',flag:'🇳🇱'},
   {iata:'MAD',city:'Madrid',name:'Adolfo Suárez Madrid-Barajas',flag:'🇪🇸'},
   {iata:'BCN',city:'Barcelona',name:'Barcelona El Prat Airport',flag:'🇪🇸'},
+  {iata:'AGP',city:'Málaga',name:'Málaga-Costa del Sol Airport',flag:'🇪🇸'},
+  {iata:'PMI',city:'Palma de Mallorca',name:'Palma de Mallorca Airport',flag:'🇪🇸'},
+  {iata:'VLC',city:'Valencia',name:'Valencia Airport',flag:'🇪🇸'},
   {iata:'FCO',city:'Rome',name:'Leonardo da Vinci International',flag:'🇮🇹'},
   {iata:'MXP',city:'Milan',name:'Milan Malpensa Airport',flag:'🇮🇹'},
+  {iata:'LIN',city:'Milan',name:'Milan Linate Airport',flag:'🇮🇹'},
+  {iata:'VCE',city:'Venice',name:'Venice Marco Polo Airport',flag:'🇮🇹'},
+  {iata:'NAP',city:'Naples',name:'Naples International Airport',flag:'🇮🇹'},
+  {iata:'BGY',city:'Bergamo',name:'Bergamo Orio al Serio Airport',flag:'🇮🇹'},
   {iata:'ZRH',city:'Zurich',name:'Zurich Airport',flag:'🇨🇭'},
   {iata:'GVA',city:'Geneva',name:'Geneva Airport',flag:'🇨🇭'},
   {iata:'VIE',city:'Vienna',name:'Vienna International Airport',flag:'🇦🇹'},
   {iata:'BRU',city:'Brussels',name:'Brussels Airport',flag:'🇧🇪'},
   {iata:'CPH',city:'Copenhagen',name:'Copenhagen Airport',flag:'🇩🇰'},
   {iata:'ARN',city:'Stockholm',name:'Stockholm Arlanda Airport',flag:'🇸🇪'},
+  {iata:'GOT',city:'Gothenburg',name:'Gothenburg Landvetter Airport',flag:'🇸🇪'},
   {iata:'OSL',city:'Oslo',name:'Oslo Gardermoen Airport',flag:'🇳🇴'},
   {iata:'HEL',city:'Helsinki',name:'Helsinki Vantaa Airport',flag:'🇫🇮'},
   {iata:'DUB',city:'Dublin',name:'Dublin Airport',flag:'🇮🇪'},
   {iata:'LIS',city:'Lisbon',name:'Lisbon Humberto Delgado Airport',flag:'🇵🇹'},
-  {iata:'IST',city:'Istanbul',name:'Istanbul Airport',flag:'🇹🇷'},
+  {iata:'OPO',city:'Porto',name:'Francisco Sá Carneiro Airport',flag:'🇵🇹'},
   {iata:'ATH',city:'Athens',name:'Athens Eleftherios Venizelos',flag:'🇬🇷'},
+  {iata:'SKG',city:'Thessaloniki',name:'Thessaloniki Macedonia Airport',flag:'🇬🇷'},
+  {iata:'IST',city:'Istanbul',name:'Istanbul Airport',flag:'🇹🇷'},
+  {iata:'SAW',city:'Istanbul',name:'Istanbul Sabiha Gökçen Airport',flag:'🇹🇷'},
+  {iata:'ADB',city:'Izmir',name:'Izmir Adnan Menderes Airport',flag:'🇹🇷'},
   {iata:'PRG',city:'Prague',name:'Václav Havel Airport Prague',flag:'🇨🇿'},
   {iata:'WAW',city:'Warsaw',name:'Warsaw Chopin Airport',flag:'🇵🇱'},
-  {iata:'DOH',city:'Doha',name:'Hamad International Airport',flag:'🇶🇦'},
+  {iata:'BUD',city:'Budapest',name:'Budapest Ferenc Liszt Airport',flag:'🇭🇺'},
+  {iata:'OTP',city:'Bucharest',name:'Henri Coandă International',flag:'🇷🇴'},
+  {iata:'SOF',city:'Sofia',name:'Sofia Airport',flag:'🇧🇬'},
+  {iata:'KBP',city:'Kyiv',name:'Boryspil International Airport',flag:'🇺🇦'},
+  {iata:'SVO',city:'Moscow',name:'Sheremetyevo International',flag:'🇷🇺'},
+  {iata:'DME',city:'Moscow',name:'Domodedovo International',flag:'🇷🇺'},
+  {iata:'LED',city:'St Petersburg',name:'Pulkovo Airport',flag:'🇷🇺'},
+  {iata:'KEF',city:'Reykjavik',name:'Keflavík International Airport',flag:'🇮🇸'},
+  {iata:'LUX',city:'Luxembourg',name:'Luxembourg Airport',flag:'🇱🇺'},
+  {iata:'GRO',city:'Girona',name:'Girona-Costa Brava Airport',flag:'🇪🇸'},
+  {iata:'SVQ',city:'Seville',name:'Seville Airport',flag:'🇪🇸'},
+  // ── Middle East & Africa ──
   {iata:'DXB',city:'Dubai',name:'Dubai International Airport',flag:'🇦🇪'},
+  {iata:'DWC',city:'Dubai',name:'Al Maktoum International Airport',flag:'🇦🇪'},
   {iata:'AUH',city:'Abu Dhabi',name:'Abu Dhabi International Airport',flag:'🇦🇪'},
+  {iata:'SHJ',city:'Sharjah',name:'Sharjah International Airport',flag:'🇦🇪'},
+  {iata:'DOH',city:'Doha',name:'Hamad International Airport',flag:'🇶🇦'},
   {iata:'RUH',city:'Riyadh',name:'King Khalid International Airport',flag:'🇸🇦'},
+  {iata:'JED',city:'Jeddah',name:'King Abdulaziz International',flag:'🇸🇦'},
+  {iata:'MCT',city:'Muscat',name:'Muscat International Airport',flag:'🇴🇲'},
+  {iata:'KWI',city:'Kuwait City',name:'Kuwait International Airport',flag:'🇰🇼'},
+  {iata:'BAH',city:'Bahrain',name:'Bahrain International Airport',flag:'🇧🇭'},
+  {iata:'AMM',city:'Amman',name:'Queen Alia International Airport',flag:'🇯🇴'},
+  {iata:'BEY',city:'Beirut',name:'Rafic Hariri International Airport',flag:'🇱🇧'},
+  {iata:'TLV',city:'Tel Aviv',name:'Ben Gurion International Airport',flag:'🇮🇱'},
+  {iata:'CAI',city:'Cairo',name:'Cairo International Airport',flag:'🇪🇬'},
+  {iata:'HRG',city:'Hurghada',name:'Hurghada International Airport',flag:'🇪🇬'},
+  {iata:'SSH',city:'Sharm el-Sheikh',name:'Sharm el-Sheikh International',flag:'🇪🇬'},
+  {iata:'CMN',city:'Casablanca',name:'Mohammed V International Airport',flag:'🇲🇦'},
+  {iata:'RAK',city:'Marrakech',name:'Marrakech Menara Airport',flag:'🇲🇦'},
+  {iata:'TUN',city:'Tunis',name:'Tunis-Carthage International',flag:'🇹🇳'},
+  {iata:'ALG',city:'Algiers',name:'Houari Boumediene Airport',flag:'🇩🇿'},
+  {iata:'JNB',city:'Johannesburg',name:'O.R. Tambo International',flag:'🇿🇦'},
+  {iata:'CPT',city:'Cape Town',name:'Cape Town International',flag:'🇿🇦'},
+  {iata:'DUR',city:'Durban',name:'King Shaka International Airport',flag:'🇿🇦'},
+  {iata:'NBO',city:'Nairobi',name:'Jomo Kenyatta International',flag:'🇰🇪'},
+  {iata:'MBA',city:'Mombasa',name:'Moi International Airport',flag:'🇰🇪'},
+  {iata:'ADD',city:'Addis Ababa',name:'Addis Ababa Bole International',flag:'🇪🇹'},
+  {iata:'DAR',city:'Dar es Salaam',name:'Julius Nyerere International',flag:'🇹🇿'},
+  {iata:'EBB',city:'Kampala',name:'Entebbe International Airport',flag:'🇺🇬'},
+  {iata:'ACC',city:'Accra',name:'Kotoka International Airport',flag:'🇬🇭'},
+  {iata:'LOS',city:'Lagos',name:'Murtala Muhammed International',flag:'🇳🇬'},
+  {iata:'ABV',city:'Abuja',name:'Nnamdi Azikiwe International',flag:'🇳🇬'},
+  {iata:'DKR',city:'Dakar',name:'Blaise Diagne International Airport',flag:'🇸🇳'},
+  {iata:'ABJ',city:'Abidjan',name:'Félix-Houphouët-Boigny International',flag:'🇨🇮'},
+  {iata:'TUN',city:'Tunis',name:'Tunis-Carthage International',flag:'🇹🇳'},
+  // ── Asia Pacific ──
   {iata:'NRT',city:'Tokyo',name:'Narita International Airport',flag:'🇯🇵'},
   {iata:'HND',city:'Tokyo',name:'Haneda Airport',flag:'🇯🇵'},
+  {iata:'KIX',city:'Osaka',name:'Kansai International Airport',flag:'🇯🇵'},
+  {iata:'ITM',city:'Osaka',name:'Itami Airport',flag:'🇯🇵'},
+  {iata:'NGO',city:'Nagoya',name:'Chubu Centrair International',flag:'🇯🇵'},
+  {iata:'CTS',city:'Sapporo',name:'New Chitose Airport',flag:'🇯🇵'},
   {iata:'ICN',city:'Seoul',name:'Incheon International Airport',flag:'🇰🇷'},
+  {iata:'GMP',city:'Seoul',name:'Gimpo International Airport',flag:'🇰🇷'},
   {iata:'PEK',city:'Beijing',name:'Beijing Capital International',flag:'🇨🇳'},
+  {iata:'PKX',city:'Beijing',name:'Beijing Daxing International',flag:'🇨🇳'},
   {iata:'PVG',city:'Shanghai',name:'Shanghai Pudong International',flag:'🇨🇳'},
+  {iata:'SHA',city:'Shanghai',name:'Shanghai Hongqiao International',flag:'🇨🇳'},
+  {iata:'CAN',city:'Guangzhou',name:'Guangzhou Baiyun International',flag:'🇨🇳'},
+  {iata:'SZX',city:'Shenzhen',name:'Shenzhen Bao'an International',flag:'🇨🇳'},
+  {iata:'CTU',city:'Chengdu',name:'Chengdu Tianfu International',flag:'🇨🇳'},
   {iata:'HKG',city:'Hong Kong',name:'Hong Kong International',flag:'🇭🇰'},
+  {iata:'TPE',city:'Taipei',name:'Taiwan Taoyuan International',flag:'🇹🇼'},
+  {iata:'TSA',city:'Taipei',name:'Taipei Songshan Airport',flag:'🇹🇼'},
+  {iata:'MNL',city:'Manila',name:'Ninoy Aquino International',flag:'🇵🇭'},
+  {iata:'CEB',city:'Cebu',name:'Mactan-Cebu International',flag:'🇵🇭'},
   {iata:'SIN',city:'Singapore',name:'Singapore Changi Airport',flag:'🇸🇬'},
-  {iata:'BKK',city:'Bangkok',name:'Suvarnabhumi Airport',flag:'🇹🇭'},
   {iata:'KUL',city:'Kuala Lumpur',name:'Kuala Lumpur International',flag:'🇲🇾'},
+  {iata:'SZB',city:'Kuala Lumpur',name:'Sultan Abdul Aziz Shah Airport',flag:'🇲🇾'},
+  {iata:'BKK',city:'Bangkok',name:'Suvarnabhumi Airport',flag:'🇹🇭'},
+  {iata:'DMK',city:'Bangkok',name:'Don Mueang International',flag:'🇹🇭'},
+  {iata:'HKT',city:'Phuket',name:'Phuket International Airport',flag:'🇹🇭'},
+  {iata:'CNX',city:'Chiang Mai',name:'Chiang Mai International',flag:'🇹🇭'},
+  {iata:'CGK',city:'Jakarta',name:'Soekarno-Hatta International',flag:'🇮🇩'},
+  {iata:'DPS',city:'Bali',name:'Ngurah Rai International',flag:'🇮🇩'},
+  {iata:'SUB',city:'Surabaya',name:'Juanda International Airport',flag:'🇮🇩'},
+  {iata:'SGN',city:'Ho Chi Minh City',name:'Tan Son Nhat International',flag:'🇻🇳'},
+  {iata:'HAN',city:'Hanoi',name:'Noi Bai International Airport',flag:'🇻🇳'},
+  {iata:'DAD',city:'Da Nang',name:'Da Nang International Airport',flag:'🇻🇳'},
+  {iata:'RGN',city:'Yangon',name:'Yangon International Airport',flag:'🇲🇲'},
+  {iata:'PNH',city:'Phnom Penh',name:'Phnom Penh International',flag:'🇰🇭'},
+  {iata:'REP',city:'Siem Reap',name:'Siem Reap-Angkor International',flag:'🇰🇭'},
+  {iata:'VTE',city:'Vientiane',name:'Wattay International Airport',flag:'🇱🇦'},
   {iata:'DEL',city:'Delhi',name:'Indira Gandhi International',flag:'🇮🇳'},
   {iata:'BOM',city:'Mumbai',name:'Chhatrapati Shivaji Maharaj International',flag:'🇮🇳'},
+  {iata:'BLR',city:'Bangalore',name:'Kempegowda International Airport',flag:'🇮🇳'},
+  {iata:'MAA',city:'Chennai',name:'Chennai International Airport',flag:'🇮🇳'},
+  {iata:'HYD',city:'Hyderabad',name:'Rajiv Gandhi International Airport',flag:'🇮🇳'},
+  {iata:'CCU',city:'Kolkata',name:'Netaji Subhas Chandra Bose International',flag:'🇮🇳'},
+  {iata:'COK',city:'Kochi',name:'Cochin International Airport',flag:'🇮🇳'},
+  {iata:'AMD',city:'Ahmedabad',name:'Sardar Vallabhbhai Patel International',flag:'🇮🇳'},
+  {iata:'CMB',city:'Colombo',name:'Bandaranaike International Airport',flag:'🇱🇰'},
+  {iata:'KTM',city:'Kathmandu',name:'Tribhuvan International Airport',flag:'🇳🇵'},
+  {iata:'DAC',city:'Dhaka',name:'Hazrat Shahjalal International',flag:'🇧🇩'},
+  {iata:'KHI',city:'Karachi',name:'Jinnah International Airport',flag:'🇵🇰'},
+  {iata:'LHE',city:'Lahore',name:'Allama Iqbal International Airport',flag:'🇵🇰'},
+  {iata:'ISB',city:'Islamabad',name:'New Islamabad International',flag:'🇵🇰'},
+  {iata:'KBL',city:'Kabul',name:'Hamid Karzai International',flag:'🇦🇫'},
+  {iata:'TAS',city:'Tashkent',name:'Islam Karimov Tashkent International',flag:'🇺🇿'},
+  {iata:'ALA',city:'Almaty',name:'Almaty International Airport',flag:'🇰🇿'},
   {iata:'SYD',city:'Sydney',name:'Kingsford Smith Airport',flag:'🇦🇺'},
-  {iata:'JNB',city:'Johannesburg',name:'O.R. Tambo International',flag:'🇿🇦'},
-  {iata:'NBO',city:'Nairobi',name:'Jomo Kenyatta International',flag:'🇰🇪'},
-  {iata:'CAI',city:'Cairo',name:'Cairo International Airport',flag:'🇪🇬'},
-  {iata:'MEX',city:'Mexico City',name:'Benito Juárez International',flag:'🇲🇽'},
+  {iata:'MEL',city:'Melbourne',name:'Melbourne Airport',flag:'🇦🇺'},
+  {iata:'BNE',city:'Brisbane',name:'Brisbane Airport',flag:'🇦🇺'},
+  {iata:'PER',city:'Perth',name:'Perth Airport',flag:'🇦🇺'},
+  {iata:'ADL',city:'Adelaide',name:'Adelaide Airport',flag:'🇦🇺'},
+  {iata:'AKL',city:'Auckland',name:'Auckland Airport',flag:'🇳🇿'},
+  {iata:'CHC',city:'Christchurch',name:'Christchurch Airport',flag:'🇳🇿'},
+  {iata:'WLG',city:'Wellington',name:'Wellington International Airport',flag:'🇳🇿'},
+  // ── Caribbean & Latin America ──
   {iata:'GRU',city:'São Paulo',name:'São Paulo Guarulhos International',flag:'🇧🇷'},
+  {iata:'CGH',city:'São Paulo',name:'São Paulo Congonhas Airport',flag:'🇧🇷'},
+  {iata:'GIG',city:'Rio de Janeiro',name:'Rio de Janeiro Galeão International',flag:'🇧🇷'},
+  {iata:'SDU',city:'Rio de Janeiro',name:'Santos Dumont Airport',flag:'🇧🇷'},
+  {iata:'BSB',city:'Brasília',name:'Brasília International Airport',flag:'🇧🇷'},
+  {iata:'FOR',city:'Fortaleza',name:'Pinto Martins International',flag:'🇧🇷'},
+  {iata:'REC',city:'Recife',name:'Recife/Guararapes International',flag:'🇧🇷'},
   {iata:'EZE',city:'Buenos Aires',name:'Ministro Pistarini International',flag:'🇦🇷'},
-  {iata:'BOG',city:'Bogotá',name:'El Dorado International Airport',flag:'🇨🇴'},
-  {iata:'LIM',city:'Lima',name:'Jorge Chávez International Airport',flag:'🇵🇪'},
+  {iata:'AEP',city:'Buenos Aires',name:'Jorge Newbery Airfield',flag:'🇦🇷'},
   {iata:'SCL',city:'Santiago',name:'Arturo Merino Benítez International',flag:'🇨🇱'},
+  {iata:'LIM',city:'Lima',name:'Jorge Chávez International Airport',flag:'🇵🇪'},
+  {iata:'BOG',city:'Bogotá',name:'El Dorado International Airport',flag:'🇨🇴'},
+  {iata:'MDE',city:'Medellín',name:'José María Córdova International',flag:'🇨🇴'},
+  {iata:'CTG',city:'Cartagena',name:'Rafael Núñez International Airport',flag:'🇨🇴'},
+  {iata:'UIO',city:'Quito',name:'Mariscal Sucre International',flag:'🇪🇨'},
+  {iata:'GYE',city:'Guayaquil',name:'José Joaquín de Olmedo International',flag:'🇪🇨'},
+  {iata:'CCS',city:'Caracas',name:'Simón Bolívar International',flag:'🇻🇪'},
+  {iata:'GUA',city:'Guatemala City',name:'La Aurora International Airport',flag:'🇬🇹'},
+  {iata:'SAL',city:'San Salvador',name:'Monseñor Óscar Arnulfo Romero',flag:'🇸🇻'},
+  {iata:'PTY',city:'Panama City',name:'Tocumen International Airport',flag:'🇵🇦'},
+  {iata:'SJO',city:'San José',name:'Juan Santamaría International',flag:'🇨🇷'},
+  {iata:'SDQ',city:'Santo Domingo',name:'Las Américas International',flag:'🇩🇴'},
+  {iata:'PUJ',city:'Punta Cana',name:'Punta Cana International Airport',flag:'🇩🇴'},
+  {iata:'HAV',city:'Havana',name:'José Martí International Airport',flag:'🇨🇺'},
+  {iata:'MBJ',city:'Montego Bay',name:'Sangster International Airport',flag:'🇯🇲'},
+  {iata:'KIN',city:'Kingston',name:'Norman Manley International',flag:'🇯🇲'},
+  {iata:'NAS',city:'Nassau',name:'Lynden Pindling International',flag:'🇧🇸'},
+  {iata:'AUA',city:'Aruba',name:'Queen Beatrix International Airport',flag:'🇦🇼'},
+  {iata:'CUR',city:'Curaçao',name:'Hato International Airport',flag:'🇨🇼'},
+  {iata:'SXM',city:'St Maarten',name:'Princess Juliana International',flag:'🇸🇽'},
+  {iata:'BGI',city:'Bridgetown',name:'Grantley Adams International',flag:'🇧🇧'},
+  {iata:'POS',city:'Port of Spain',name:'Piarco International Airport',flag:'🇹🇹'},
 ];
 const POPULAR_AC=['JFK','EWR','LHR','CDG','FRA','AMS','MAD','DXB','DOH','SIN','LAX','NRT'];
 
