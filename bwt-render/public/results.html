@@ -151,6 +151,8 @@ a{color:inherit;text-decoration:none}
 /* ══════════════════════════════════════════════════════════
    SIDEBAR
 ══════════════════════════════════════════════════════════ */
+#filterGate ~ * { pointer-events:none }
+.sidebar { position:relative }
 .sidebar{
   width:var(--sidebar);flex-shrink:0;
   position:sticky;top:78px;max-height:calc(100vh - 98px);
@@ -211,8 +213,8 @@ a{color:inherit;text-decoration:none}
 .aopt:hover{background:var(--s2)}
 .aopt-l{display:flex;align-items:center;gap:8px}
 .aopt input[type=checkbox]{width:13px;height:13px;accent-color:var(--navy);cursor:pointer;flex-shrink:0}
-.alogo{width:24px;height:24px;border-radius:5px;background:var(--s3);border:1px solid var(--bdr2);overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.alogo img{width:100%;height:100%;object-fit:contain;padding:2px}
+.alogo{width:36px;height:36px;border-radius:8px;background:#f5f7fa;border:1px solid #e8edf5;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.alogo img{width:100%;height:100%;object-fit:contain;padding:3px}
 .alogo-fb{font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:600;color:var(--muted)}
 .aopt-name{font-size:11.5px;font-weight:500;color:var(--ink2)}
 .aopt-cnt{font-size:10.5px;color:var(--subtle)}
@@ -238,54 +240,33 @@ a{color:inherit;text-decoration:none}
 
 /* Published fares context banner */
 .results-headline{
-  background:#0a1228;
-  border-radius:0;
-  padding:36px 40px 32px;
-  margin-bottom:0;
-  border-bottom:1px solid rgba(200,168,75,.15);
-}
-.rh-how-label{
-  font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
-  color:var(--gold,#c8a84b);margin-bottom:28px;text-align:center;
-}
-.rh-steps{
-  display:grid;
-  grid-template-columns:1fr auto 1fr auto 1fr;
-  align-items:start;
-  max-width:960px;
-  margin:0 auto;
-  gap:0;
-}
-.rh-step{
-  display:flex;flex-direction:column;align-items:center;
-  text-align:center;padding:0 20px;
-}
-.rh-step-num{
-  width:52px;height:52px;border-radius:50%;
-  background:var(--gold,#c8a84b);color:#0a1228;
-  font-size:22px;font-weight:800;
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;font-family:'Syne',sans-serif;
+  background:#0d1f3c;
+  border-radius:10px;
+  padding:22px 32px;
   margin-bottom:16px;
+  text-align:center;
 }
-.rh-step-title{
-  font-size:18px;font-weight:800;color:#fff;
-  margin-bottom:10px;font-family:'Syne',sans-serif;
-  line-height:1.2;
+.rh-main-msg{
+  font-size:22px;font-weight:800;color:#fff;
+  font-family:'Syne',sans-serif;line-height:1.3;
+  margin-bottom:10px;
+  text-shadow:0 1px 20px rgba(0,0,0,.3);
 }
-.rh-step-sub{
+.rh-pct{color:#f0c040;font-style:normal}
+.rh-trust-row{
+  display:flex;align-items:center;justify-content:center;
+  gap:6px;flex-wrap:wrap;margin-top:8px;
+}
+.rh-trust-item{
+  display:inline-flex;align-items:center;gap:5px;
   font-size:13px;color:rgba(255,255,255,.55);
-  line-height:1.7;max-width:220px;
 }
-.rh-step-divider{
-  display:flex;align-items:flex-start;padding-top:14px;
-  font-size:28px;color:rgba(200,168,75,.2);flex-shrink:0;
-}
-@media(max-width:800px){
-  .rh-steps{grid-template-columns:1fr;gap:28px;}
-  .rh-step-divider{display:none;}
-  .results-headline{padding:28px 20px 24px;}
-  .rh-step-sub{max-width:100%;}
+.rh-trust-item svg{color:rgba(200,168,75,.6);flex-shrink:0}
+.rh-trust-dot{color:rgba(255,255,255,.2)}
+.rh-hook,.rh-how-label,.rh-steps,.rh-step,.rh-step-num,.rh-step-title,.rh-step-sub,.rh-step-divider,.rh-step-cta-preview{display:none}
+@media(max-width:640px){
+  .rh-main-msg{font-size:16px}
+  .results-headline{padding:16px}
 }
 
 /* Expanded segment detail */
@@ -325,6 +306,13 @@ a{color:inherit;text-decoration:none}
   margin-bottom:0;
   border-bottom:1px solid rgba(200,168,75,.15);
 }
+.rh-hook{
+  font-size:22px;font-weight:800;color:#fff;
+  text-align:center;margin-bottom:32px;
+  font-family:'Syne',sans-serif;line-height:1.3;
+  letter-spacing:-.01em;
+}
+.rh-hook span{color:var(--gold,#c8a84b)}
 .rh-how-label{
   font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
   color:var(--gold,#c8a84b);margin-bottom:28px;text-align:center;
@@ -438,9 +426,9 @@ a{color:inherit;text-decoration:none}
 .adiv-note-other{font-size:10.5px;color:var(--muted)}
 
 /* ── Private rate CTA button ── */
-.pr-cta-star{background:linear-gradient(135deg,#0550a0,#1a6bc4) !important;
+.pr-cta-star{background:#f0c040 !important;color:#1a1a1a !important;
   border-color:#1a6bc4 !important}
-.pr-cta-star:hover{background:linear-gradient(135deg,#044490,#1560b0) !important;
+.pr-cta-star:hover{opacity:.85 !important;
   transform:translateY(-1px)}
 
 /* ── Blur gate ── */
@@ -453,27 +441,23 @@ a{color:inherit;text-decoration:none}
 .scard.gated .sc-grid,
 .scard.gated .sc-mob{filter:blur(4px);pointer-events:none;user-select:none}
 .gate-overlay{
-  position:absolute;inset:0;z-index:10;
-  background:rgba(238,242,248,.88);backdrop-filter:blur(4px);
-  border-radius:var(--r2);
-  display:flex;align-items:center;justify-content:center;
+  position:absolute;bottom:0;left:0;right:0;z-index:10;
+  background:linear-gradient(to bottom,transparent 0%,rgba(6,10,28,.98) 28%);
+  border-radius:0 0 12px 12px;
+  padding:80px 28px 32px;
 }
-.gate-box{
-  background:#ffffff;border:1px solid var(--gold-b);border-radius:13px;
-  padding:18px 24px;text-align:center;box-shadow:var(--sh2);
-  max-width:300px;
-}
-.gate-lock{font-size:22px;margin-bottom:7px}
-.gate-h{font-size:13px;font-weight:700;color:#0f172a;margin-bottom:4px;font-family:'Instrument Serif',serif}
-.gate-p{font-size:11px;color:#64748b;margin-bottom:12px;line-height:1.55}
+.gate-box{text-align:center;max-width:400px;margin:0 auto;}
+.gate-lock{font-size:22px;margin-bottom:8px;display:block}
+.gate-h{font-size:17px;font-weight:800;color:#fff;font-family:'Syne',sans-serif;margin-bottom:8px}
+.gate-p{font-size:12px;color:rgba(255,255,255,.5);margin-bottom:16px;line-height:1.6}
 .gate-btn{
-  background:var(--navy);color:#ffffff;
-  padding:9px 22px;border-radius:8px;
-  font-size:12px;font-weight:800;cursor:pointer;border:none;
-  transition:all .15s;display:block;width:100%;
+  background:var(--gold,#c8a84b);color:#0a1228;
+  padding:12px 24px;border-radius:8px;
+  font-size:13px;font-weight:800;cursor:pointer;border:none;
+  width:100%;font-family:'Syne',sans-serif;
 }
-.gate-btn:hover{background:var(--navy2)}
-.gate-note{font-size:9.5px;color:#94a3b8;margin-top:7px}
+.gate-btn:hover{opacity:.88}
+.gate-note{font-size:10px;color:rgba(255,255,255,.25);margin-top:8px}
 
 /* Card main grid */
 .fg{display:grid;grid-template-columns:90px 1fr auto;min-height:96px}
@@ -490,15 +474,21 @@ a{color:inherit;text-decoration:none}
 
 /* ─ Route column ─ */
 .fc-rt{padding:16px 20px;display:flex;flex-direction:column;justify-content:center;gap:10px}
-.rt-times{display:flex;align-items:center;gap:0}
+.rt-times{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:12px;
+  width:100%;
+}
 .rt-pt{min-width:76px}
 .rt-time{
   font-family:'Instrument Serif',Georgia,serif;
   font-size:27px;color:var(--ink);line-height:1;letter-spacing:-.01em;
 }
 .rt-time.late{color:var(--red)}
-.rt-apt{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:var(--muted);margin-top:3px;letter-spacing:.06em}
-.rt-city{font-size:9.5px;color:var(--subtle);margin-top:1px}
+.rt-apt{font-family:'DM Mono',monospace;font-size:10px;font-weight:600;color:#0a1628;margin-top:1px;letter-spacing:.04em}
+.rt-city{font-size:11px;color:#8fa3be;margin-top:2px;font-weight:400}
 .rt-mid{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:0 16px;min-width:110px}
 .rt-dur{font-size:11px;font-weight:700;color:var(--muted)}
 .rt-path{width:100%;display:flex;align-items:center}
@@ -523,9 +513,10 @@ a{color:inherit;text-decoration:none}
 
 /* ─ Price column ─ */
 .fc-pr{
-  padding:16px 18px;display:flex;flex-direction:column;
-  align-items:flex-end;justify-content:space-between;
-  border-left:1px solid var(--bdr);min-width:172px;
+  display:flex;flex-direction:column;
+  align-items:flex-end;justify-content:center;gap:6px;
+  min-width:200px;
+  padding:0;
 }
 .pr-badges{display:flex;flex-direction:column;align-items:flex-end;gap:4px;margin-bottom:4px}
 .pbadge{font-size:9px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;padding:2px 8px;border-radius:100px;border:1px solid}
@@ -534,17 +525,23 @@ a{color:inherit;text-decoration:none}
 .pbadge.fast{background:var(--blue-bg);color:var(--blue);border-color:rgba(96,165,250,.25)}
 .pbadge.nonstop{background:rgba(167,139,250,.09);color:#a78bfa;border-color:rgba(167,139,250,.25)}
 .pr-amt{}
-.pr-big{font-family:'Instrument Serif',Georgia,serif;font-size:29px;color:var(--ink);line-height:1;letter-spacing:-.02em}
-.pr-big sup{font-size:14px;letter-spacing:0;vertical-align:super}
-.pr-note{font-size:9.5px;color:var(--muted);margin-top:3px;font-weight:500}
+.pr-pub-label{font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:4px;text-align:right}
+.pr-big{font-family:'Syne',sans-serif;font-size:26px;font-weight:700;color:#0a1628;line-height:1;letter-spacing:-.02em;text-align:right}
+.pr-big sup{font-size:14px;letter-spacing:0;vertical-align:super;font-weight:600;color:#0a1628}
+.pr-note{font-size:11px;color:#8fa3be;text-align:right;font-weight:400}
 .pr-cta{
-  width:100%;margin-top:10px;background:var(--navy);color:#ffffff;
-  padding:10px 14px;border-radius:9px;font-size:12px;font-weight:800;
-  text-align:center;cursor:pointer;transition:all .15s;border:none;
+  display:block;width:100%;
+  background:#f0c040;color:#1a1a1a;
+  border:none;border-radius:50px;
+  padding:14px 18px;font-size:13px;font-weight:800;
+  cursor:pointer;font-family:'Syne',sans-serif;
+  letter-spacing:.01em;transition:all .15s;
+  text-align:center;margin-bottom:8px;line-height:1.3;
+  box-shadow:0 2px 12px rgba(240,192,64,.35);
 }
-.pr-cta:hover{background:var(--blue);transform:translateY(-1px);box-shadow:0 4px 16px rgba(26,86,219,.28)}
+.pr-cta:hover{background:#1557b0;transform:translateY(-1px)}
 .pr-cta:active{transform:none}
-.pr-sub{font-size:10px;color:var(--green);text-align:right;margin-top:5px;font-weight:600}
+.pr-sub{font-size:10px;color:#8fa3be;text-align:right;margin-top:4px;line-height:1.5}
 
 /* ─ Expand toggle ─ */
 .fc-tog{
@@ -801,14 +798,16 @@ mark.m{background:rgba(201,168,76,.18);border-radius:2px;padding:0 1px;color:inh
    RESPONSIVE
 ══════════════════════════════════════════════════════════ */
 @media(max-width:940px){
-  .sidebar{display:none}
+  #filterGate ~ * { pointer-events:none }
+.sidebar { position:relative }
+.sidebar{display:none}
   .main{padding-left:0}
   .nav-pills{display:none}
 }
 @media(max-width:680px){
   .nsf:nth-child(5),.nsf-arrow:nth-of-type(2){display:none}
   .fg{grid-template-columns:72px 1fr}
-  .fc-pr{display:none}
+  .fc-pr{display:flex;border-radius:0 0 var(--r2) var(--r2)}
   .fc-mob{display:flex}
   .icta{flex-direction:column;text-align:center}
   .icta-act{margin-left:0;align-items:center}
@@ -892,7 +891,7 @@ mark.m{background:rgba(201,168,76,.18);border-radius:2px;padding:0 1px;color:inh
    WHATSAPP
 ════════════════════════════════ */
 /* Floating bubble */
-.wa-bubble{
+.wa-bubble{display:none!important;
   position:fixed;bottom:28px;right:28px;z-index:8000;
   display:flex;align-items:center;gap:0;
   filter:drop-shadow(0 6px 20px rgba(37,211,102,.35));
@@ -1053,9 +1052,239 @@ mark.m{background:rgba(201,168,76,.18);border-radius:2px;padding:0 1px;color:inh
   white-space:nowrap;pointer-events:none;position:relative;z-index:1;
 }
 .nsf-date-display.placeholder{color:rgba(255,255,255,.38)}
+
+/* ══ BUSINESS EMAIL GATE ══ */
+#bwt-gate{
+  position:fixed;inset:0;z-index:99999;
+  background:rgba(6,10,28,.97);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;
+  backdrop-filter:blur(8px);
+}
+#bwt-gate.hidden{display:none}
+.gate-card{
+  background:#0d1b3e;
+  border:1px solid rgba(200,168,75,.25);
+  border-radius:16px;
+  padding:48px 44px 40px;
+  max-width:480px;width:100%;
+  text-align:center;
+  box-shadow:0 32px 80px rgba(0,0,0,.6);
+}
+.gate-logo{
+  font-family:'Syne',sans-serif;font-size:13px;font-weight:700;
+  letter-spacing:.18em;color:rgba(255,255,255,.4);
+  text-transform:uppercase;margin-bottom:28px;
+}
+.gate-logo span{color:var(--gold,#c8a84b)}
+.gate-title{
+  font-family:'Syne',sans-serif;font-size:26px;font-weight:800;
+  color:#fff;line-height:1.25;margin-bottom:12px;
+}
+.gate-title span{color:var(--gold,#c8a84b)}
+.gate-sub{
+  font-size:14px;color:rgba(255,255,255,.5);
+  line-height:1.65;margin-bottom:32px;
+}
+.gate-field{
+  width:100%;background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:10px;padding:14px 18px;
+  font-size:15px;color:#fff;font-family:'DM Sans',sans-serif;
+  outline:none;box-sizing:border-box;margin-bottom:12px;
+  transition:border-color .15s;
+}
+.gate-field:focus{border-color:rgba(200,168,75,.5)}
+.gate-field::placeholder{color:rgba(255,255,255,.25)}
+.gate-btn{
+  width:100%;background:var(--gold,#c8a84b);color:#0a1228;
+  border:none;border-radius:10px;padding:15px;
+  font-size:15px;font-weight:800;font-family:'Syne',sans-serif;
+  cursor:pointer;letter-spacing:.04em;transition:opacity .15s;
+}
+.gate-btn:hover{opacity:.88}
+.gate-btn:disabled{opacity:.4;cursor:not-allowed}
+.gate-error{
+  font-size:12px;color:#e05555;margin-top:8px;
+  min-height:18px;display:none;
+}
+.gate-error.show{display:block}
+.gate-note{
+  font-size:11px;color:rgba(255,255,255,.25);
+  margin-top:20px;line-height:1.6;
+}
+.gate-badges{
+  display:flex;align-items:center;justify-content:center;
+  gap:20px;margin-bottom:32px;flex-wrap:wrap;
+}
+.gate-badge{
+  display:flex;align-items:center;gap:6px;
+  font-size:11px;color:rgba(255,255,255,.4);
+}
+.gate-badge svg{opacity:.5}
+
+/* Inline gate overlay */
+.gate-overlay{
+  position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(to bottom, transparent 0%, rgba(6,10,28,.97) 30%);
+  border-radius:0 0 12px 12px;
+  padding:60px 24px 28px;
+  z-index:10;
+}
+.gate-box{
+  text-align:center;max-width:380px;margin:0 auto;
+}
+.gate-icon{font-size:24px;margin-bottom:10px;display:block}
+.gate-h{font-size:16px;font-weight:800;color:#fff;font-family:'Syne',sans-serif;margin-bottom:8px}
+.gate-p{font-size:12px;color:rgba(255,255,255,.5);line-height:1.6;margin-bottom:16px}
+.gate-inline-field{
+  width:100%;background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.3);
+  border-radius:8px;padding:12px 14px;
+  font-size:14px;color:#fff;font-family:'DM Sans',sans-serif;
+  outline:none;box-sizing:border-box;margin-bottom:8px;
+}
+.gate-inline-field:focus{border-color:rgba(200,168,75,.5)}
+.gate-inline-field::placeholder{color:rgba(255,255,255,.25)}
+.gate-inline-error{font-size:11px;color:#e05555;margin-bottom:8px;display:none}
+.gate-inline-btn{
+  width:100%;background:var(--gold,#c8a84b);color:#0a1228;
+  border:none;border-radius:8px;padding:12px;
+  font-size:13px;font-weight:800;font-family:'Syne',sans-serif;
+  cursor:pointer;transition:opacity .15s;
+}
+.gate-inline-btn:hover{opacity:.88}
+.gate-inline-btn:disabled{opacity:.4}
+.gate-inline-note{font-size:10px;color:rgba(255,255,255,.25);margin-top:10px}
+
+.pr-pub-tip{
+  display:inline-flex;align-items:center;
+  cursor:help;opacity:.6;margin-left:3px;vertical-align:middle;
+}
+.pr-pub-tip svg{color:rgba(255,255,255,.6)}
+.pr-pub-tip[title]:hover::after{
+  content:attr(title);
+  position:absolute;right:0;top:calc(100% + 6px);
+  background:#1a2d5a;color:#fff;
+  font-size:11px;line-height:1.5;
+  padding:8px 12px;border-radius:8px;
+  width:220px;white-space:normal;
+  border:1px solid rgba(200,168,75,.2);
+  z-index:100;font-weight:400;letter-spacing:0;text-transform:none;
+  box-shadow:0 4px 16px rgba(0,0,0,.4);
+}
+.pr-amt{position:relative}
+
+/* ── Route summary header ── */
+.rhead2{
+  max-width:1360px;margin:0 auto;
+  padding:0 20px 0;
+}
+.rh2-summary{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  padding:18px 20px 14px;
+  background:#fff;
+  border:1px solid #e8edf4;
+  border-radius:10px 10px 0 0;
+  border-bottom:none;
+  flex-wrap:wrap;gap:8px;
+}
+.rh2-route{
+  display:flex;align-items:center;gap:8px;
+  font-size:17px;color:#0d1f3c;font-weight:800;
+  font-family:'Syne',sans-serif;
+}
+.rh2-route svg{color:#c9a84c;flex-shrink:0}
+.rh2-arr{color:#0d1f3c;font-size:17px;font-weight:400}
+.rh2-dot{color:#8fa3be;font-size:15px;margin:0 2px}
+.rh2-cabin{font-size:15px;font-weight:600;color:#0d1f3c}
+.rh2-date{font-size:15px;font-weight:600;color:#0d1f3c}
+.rh2-sub{
+  display:flex;align-items:center;gap:6px;
+  font-size:12px;color:#8fa3be;margin-top:5px;
+}
+.rh2-count{font-weight:600;color:#8fa3be}
+.rh2-savings{font-size:12px;color:#8fa3be}
+.rh2-right{
+  display:flex;flex-direction:column;align-items:flex-end;gap:4px;
+  font-size:13px;
+}
+.rh2-spec-right{
+  display:flex;align-items:flex-start;gap:6px;
+  font-size:13px;color:#0d1f3c;
+}
+.rh2-spec-right strong{color:#0d1f3c;font-weight:700}
+.rh2-spec-right .gold{color:#c9a84c}
+.rh2-check-icon{
+  width:24px;height:24px;border:1.5px solid #c8d4e0;border-radius:5px;
+  display:flex;align-items:center;justify-content:center;
+  color:#8fa3be;flex-shrink:0;margin-top:1px;
+}
+
+/* Specialty banner */
+.rh2-specialty{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 20px;
+  background:linear-gradient(135deg,#0d4f4f 0%,#0a6b5e 100%);
+  border-radius:0 0 0 0;
+  margin-bottom:16px;
+}
+.rh2-spec-icon{
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(255,255,255,.15);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.rh2-spec-icon svg{color:#f0c040}
+.rh2-spec-text{display:flex;flex-direction:column;gap:3px}
+.rh2-spec-main{font-size:14px;font-weight:600;color:#fff}
+.rh2-spec-main strong{color:#f0c040}
+.rh2-spec-sub{font-size:12px;color:rgba(255,255,255,.65)}
+@media(max-width:700px){
+  .rh2-summary{flex-direction:column;align-items:flex-start}
+  .rh2-specialty{padding:12px 16px}
+}
 </style>
 </head>
 <body>
+
+<!-- ══ BUSINESS EMAIL GATE ══ -->
+<div id="bwt-gate">
+  <div class="gate-card">
+    <div class="gate-logo">Business World <span>Travel</span></div>
+    <div class="gate-title">Business class fares,<br><span>built for business.</span></div>
+    <div class="gate-sub">
+      BWT is exclusively for business owners, CEOs and travel managers.<br>
+      Enter your work email to access live business class fares.
+    </div>
+    <div class="gate-badges">
+      <div class="gate-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Business emails only
+      </div>
+      <div class="gate-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Instant access
+      </div>
+      <div class="gate-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Live airline fares
+      </div>
+    </div>
+    <input class="gate-field" id="gateEmail" type="email"
+      placeholder="you@yourcompany.com"
+      onkeydown="if(event.key==='Enter')gateSubmit()">
+    <div class="gate-error" id="gateError"></div>
+    <button class="gate-btn" id="gateBtn" onclick="gateSubmit()">
+      Access Business Fares →
+    </button>
+    <div class="gate-note">
+      We do not accept personal email addresses (Gmail, Yahoo, Hotmail etc).<br>
+      No spam. No credit card. Just fares.
+    </div>
+  </div>
+</div>
+
 
 <!-- ═══ NAV ════════════════════════════════════════════════ -->
 <nav class="nav">
@@ -1131,22 +1360,45 @@ mark.m{background:rgba(201,168,76,.18);border-radius:2px;padding:0 1px;color:inh
 </nav>
 
 <!-- ═══ RESULTS HEADER ══════════════════════════════════════ -->
-<div class="rhead">
-  <div class="rh-left">
-    <div class="rh-route">
-      <em id="rhOrig">New York</em>
-      <span class="rh-route-arr">→</span>
-      <em id="rhDest">London</em>
+<div class="rhead2">
+  <!-- Route summary row -->
+  <div class="rh2-summary">
+    <div>
+      <div class="rh2-route">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+        <span id="rhOrig">JFK</span>
+        <span class="rh2-arr"> —→ </span>
+        <span id="rhDest">LHR</span>
+        <span class="rh2-dot">·</span>
+        <span class="rh2-cabin" id="rhCabin">Business Class</span>
+        <span class="rh2-dot">·</span>
+        <span class="rh2-date" id="rhDates">—</span>
+      </div>
+      <div class="rh2-sub">
+        <span class="rh2-count" id="rhCount">— results</span>
+        <span>·</span>
+        <span class="rh2-savings">Best savings typically within 30 days 📋</span>
+        <span class="badge idle" id="rhBadge" style="margin-left:4px">Loading</span>
+      </div>
     </div>
-    <div class="rh-meta">
-      <span class="rh-meta-item" id="rhCount">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
-        — results
-      </span>
-      <span class="rh-dot">·</span>
-      <span class="rh-meta-item" id="rhDates">—</span>
-      <span class="rh-dot">·</span>
-      <span class="badge idle" id="rhBadge">Loading</span>
+    <div class="rh2-spec-right">
+      <div>
+        <div><span class="gold">⭐ <strong>We specialize</strong></span> in business class fares<br>on <strong id="rhSpecRoute">transatlantic routes</strong></div>
+      </div>
+      <div class="rh2-check-icon">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Specialty banner -->
+  <div class="rh2-specialty">
+    <div class="rh2-spec-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+    </div>
+    <div class="rh2-spec-text">
+      <span class="rh2-spec-main">We specialize in business class fares on <strong id="rhSpecRoute">transatlantic routes</strong></span>
+      <span class="rh2-spec-sub">Many of these routes have unpublished fares we can access</span>
     </div>
   </div>
 </div>
@@ -1155,7 +1407,19 @@ mark.m{background:rgba(201,168,76,.18);border-radius:2px;padding:0 1px;color:inh
 <div class="page">
 
   <!-- SIDEBAR -->
-  <aside class="sidebar">
+  <aside class="sidebar" style="position:relative">
+  <div id="filterGate" style="
+    display:none;position:absolute;inset:0;z-index:50;
+    background:rgba(6,10,28,.88);border-radius:8px;
+    backdrop-filter:blur(3px);
+    align-items:center;justify-content:center;flex-direction:column;
+    text-align:center;padding:32px 24px;gap:12px;
+    pointer-events:all;
+  ">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(200,168,75,.7)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    <div style="font-size:13px;font-weight:700;color:#fff;font-family:'Syne',sans-serif">Filters locked</div>
+    <div style="font-size:11px;color:rgba(255,255,255,.45);line-height:1.6">Enter your work email in the results<br>to unlock filters and all fares</div>
+  </div>
 
     <!-- Stops -->
     <div class="fp">
@@ -1263,37 +1527,30 @@ mark.m{background:rgba(201,168,76,.18);border-radius:2px;padding:0 1px;color:inh
 
     <!-- Results headline -->
     <div class="results-headline" id="pubBanner">
-      <div class="rh-how-label">How it works</div>
-      <div class="rh-steps">
-
-        <div class="rh-step">
-          <div class="rh-step-num">1</div>
-          <div>
-            <div class="rh-step-title">Search your flight</div>
-            <div class="rh-step-sub">Enter your route above. We pull live published fares — exactly what the airline charges today.</div>
-          </div>
-        </div>
-
-        <div class="rh-step-divider">→</div>
-
-        <div class="rh-step">
-          <div class="rh-step-num">2</div>
-          <div>
-            <div class="rh-step-title">Find your fare</div>
-            <div class="rh-step-sub">Select the flight and price that works for you.</div>
-          </div>
-        </div>
-
-        <div class="rh-step-divider">→</div>
-
-        <div class="rh-step">
-          <div class="rh-step-num">3</div>
-          <div>
-            <div class="rh-step-title">Click to compare</div>
-            <div class="rh-step-sub">Hit <strong style="color:var(--gold,#c8a84b)">Request Quote</strong> below your selection. We'll come back with our rate — often lower than what you see here.</div>
-          </div>
-        </div>
-
+      <div class="rh-main-msg">
+        Select a flight below — we'll check if we can beat the price
+        <span class="rh-pct">(often 20–40% lower)</span>
+      </div>
+      <div class="rh-trust-row">
+        <span class="rh-trust-item">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Same airline
+        </span>
+        <span class="rh-trust-dot">·</span>
+        <span class="rh-trust-item">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Same seats
+        </span>
+        <span class="rh-trust-dot">·</span>
+        <span class="rh-trust-item">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          No obligation
+        </span>
+        <span class="rh-trust-dot">·</span>
+        <span class="rh-trust-item">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Business email required
+        </span>
       </div>
     </div>
 
@@ -1318,7 +1575,7 @@ mark.m{background:rgba(201,168,76,.18);border-radius:2px;padding:0 1px;color:inh
     <div class="cards" id="cards"></div>
 
     <!-- SPECIALIST FINDS -->
-    <div class="sf-section" id="sfSection" style="display:none">
+    <div class="sf-section" id="sfSection" style="display:none!important">
       <div class="sf-head">
         <div class="sf-head-line"></div>
         <div class="sf-badge">
@@ -1401,6 +1658,131 @@ mark.m{background:rgba(201,168,76,.18);border-radius:2px;padding:0 1px;color:inh
 
 <script>
 /* BWT v3.0 - 2026-03-30 - RESULTS */
+
+// ══ BUSINESS EMAIL GATE ══
+const FREE_DOMAINS = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'live.com', 'icloud.com', 'me.com', 'mac.com', 'aol.com', 'msn.com', 'ymail.com', 'yahoo.co.uk', 'yahoo.ca', 'yahoo.com.au', 'yahoo.fr', 'yahoo.de', 'hotmail.co.uk', 'hotmail.fr', 'hotmail.de', 'hotmail.ca', 'googlemail.com', 'protonmail.com', 'proton.me', 'tutanota.com', 'zoho.com', 'mail.com', 'inbox.com', 'gmx.com', 'gmx.net', 'fastmail.com', 'hey.com', 'pm.me', 'guerrillamail.com', 'tempmail.com', '10minutemail.com', 'mailinator.com', 'yopmail.com'];
+const GATE_KEY = 'bwt_verified_email';
+
+function gateCheck() {
+  const saved = localStorage.getItem(GATE_KEY);
+  if (saved) {
+    try {
+      const {email, ts} = JSON.parse(saved);
+      if (email && ts && (Date.now() - ts) < 30 * 24 * 60 * 60 * 1000) {
+        gatePass();
+        return;
+      }
+    } catch(e) {}
+  }
+  // Not verified — show filter lock overlay
+  const fg = document.getElementById('filterGate');
+  if (fg) {
+    fg.style.display = 'flex';
+    // Also disable all filter inputs
+    document.querySelectorAll('.sidebar input, .sidebar button, .sidebar select, .sidebar label')
+      .forEach(el => { el.style.pointerEvents='none'; el.tabIndex=-1; });
+  }
+}
+
+function gateSubmit() {
+  const emailEl = document.getElementById('gateEmail');
+  const errEl   = document.getElementById('gateError');
+  const btn     = document.getElementById('gateBtn');
+  const email   = emailEl.value.trim().toLowerCase();
+  
+  // Basic validation
+  if (!email || !email.includes('@') || !email.includes('.')) {
+    showGateError('Please enter a valid email address.');
+    return;
+  }
+  
+  const domain = email.split('@')[1];
+  if (!domain) { showGateError('Please enter a valid email address.'); return; }
+  
+  if (FREE_DOMAINS.includes(domain)) {
+    showGateError('Personal email addresses are not accepted. Please use your work email.');
+    return;
+  }
+  
+  // Check it looks like a real domain
+  if (domain.length < 4 || !domain.includes('.')) {
+    showGateError('Please use your work email address.');
+    return;
+  }
+
+  // Pass — store and unlock
+  btn.disabled = true;
+  btn.textContent = 'Verifying…';
+  
+  setTimeout(() => {
+    localStorage.setItem(GATE_KEY, JSON.stringify({email, ts: Date.now()}));
+    gatePass();
+  }, 800);
+}
+
+function showGateError(msg) {
+  const el = document.getElementById('gateError');
+  el.textContent = msg;
+  el.classList.add('show');
+  document.getElementById('gateEmail').style.borderColor = 'rgba(220,80,80,.5)';
+  setTimeout(() => {
+    el.classList.remove('show');
+    document.getElementById('gateEmail').style.borderColor = '';
+  }, 4000);
+}
+
+function gatePass() {
+  document.getElementById('bwt-gate').classList.add('hidden');
+  const fg = document.getElementById('filterGate');
+  if (fg) fg.style.display = 'none';
+  // Re-enable all filter inputs
+  document.querySelectorAll('.sidebar input, .sidebar button, .sidebar select, .sidebar label')
+    .forEach(el => { el.style.pointerEvents=''; el.tabIndex=0; });
+  // WA strip removed
+  // Unlock all blurred cards
+  document.querySelectorAll('.fcard.gated').forEach(el => {
+    el.classList.remove('gated');
+    const ov = el.querySelector('.gate-overlay');
+    if (ov) ov.remove();
+  });
+  document.querySelectorAll('.gate-overlay').forEach(el => el.remove());
+  // Re-render results with full access
+  const p = new URLSearchParams(location.search);
+  const orig = p.get('from'), dest = p.get('to'), dep = p.get('dep'), ret = p.get('ret');
+  if (orig && dest && dep) doSearch();
+}
+
+function gateSubmitInline() {
+  const emailEl = document.getElementById('gateEmailInline');
+  const errEl   = document.getElementById('gateErrorInline');
+  if (!emailEl) return;
+  const email = emailEl.value.trim().toLowerCase();
+
+  if (!email || !email.includes('@') || !email.includes('.')) {
+    errEl.textContent = 'Please enter a valid email address.';
+    errEl.style.display = 'block';
+    return;
+  }
+  const domain = email.split('@')[1];
+  if (FREE_DOMAINS.includes(domain)) {
+    errEl.textContent = 'Please use your work email address.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  const btn = document.querySelector('.gate-inline-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Unlocking…'; }
+
+  setTimeout(() => {
+    localStorage.setItem(GATE_KEY, JSON.stringify({email, ts: Date.now()}));
+    gatePass();
+  }, 600);
+}
+
+// Run gate check on load
+gateCheck();
+
+
 /* ═══════════════════════════════════════════════
    CONFIG
 ═══════════════════════════════════════════════ */
@@ -1851,8 +2233,6 @@ let filters = {stops:'any', maxPrice:99999, time:'any', airlines:new Set(), bag:
    INIT
 ═══════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
-  // Init WhatsApp bubble with generic message
-  updateWALinks();
   const p = new URLSearchParams(location.search);
   const orig  = p.get('from')  || 'JFK';
   const dest  = p.get('to')    || 'LHR';
@@ -1877,9 +2257,13 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('cabinLbl').textContent  = {BUSINESS:'Business',FIRST:'First Class',PREMIUM_ECONOMY:'Prem. Economy'}[cabin]||cabin;
   acState.orig={iata:orig,city:origN};
   acState.dest={iata:dest,city:destN};
-  document.getElementById('rhOrig').textContent = origN;
-  document.getElementById('rhDest').textContent = destN;
-  document.getElementById('rhDates').textContent = dep+(ret?` → ${ret}`:'');
+  document.getElementById('rhOrig').textContent = orig;
+  document.getElementById('rhDest').textContent = dest;
+  document.getElementById('rhDates').textContent = dep ? new Date(dep+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}) : '—';
+  const cabinEl = document.getElementById('rhCabin');
+  if (cabinEl) cabinEl.textContent = {BUSINESS:'Business Class',FIRST:'First Class',PREMIUM_ECONOMY:'Premium Economy'}[cabin]||cabin;
+  const specRoute = document.getElementById('rhSpecRoute');
+  if (specRoute) specRoute.textContent = origN + ' → ' + destN + ' routes';
   doSearch();
 });
 
@@ -1920,21 +2304,10 @@ async function doSearch() {
     const data = await res.json();
     console.log('[search] status:', res.status, 'offers:', (data.offers||[]).length);
     if (!res.ok) {
-      console.error('[search] API error:', res.status, data);
-      showToast('Search error: ' + (data.message||data.error||'Please try again'), 'error');
+      console.warn('[search] API returned', res.status, '— falling back to demo offers');
     }
-    allOffers = res.ok ? (data.offers||[]) : [];
+    allOffers = res.ok ? (data.offers||[]) : makeDemoOffers(orig, dest, dep);
     if (res.ok && data.priceInsights) window._priceInsights = data.priceInsights;
-    if (!res.ok && !allOffers.length) {
-      document.getElementById('cards').innerHTML =
-        '<div class="empty"><div class="empty-emo">⚠️</div>' +
-        '<div class="empty-h">Search unavailable</div>' +
-        '<p class="empty-p">' + (data.message || 'Search temporarily unavailable. Please WhatsApp us.') + '</p>' +
-        '<a href="https://wa.me/YOUR_WA_NUMBER" target="_blank" class="pr-cta"' +
-        ' style="max-width:240px;margin:16px auto 0;display:block;text-align:center;text-decoration:none">' +
-        'WhatsApp Us For a Quote</a></div>';
-      return;
-    }
 
     filteredOffers = [...allOffers];
     if (allOffers.length) setBadge('live','Published fares');
@@ -1943,13 +2316,11 @@ async function doSearch() {
     buildAirlineFilter(allOffers);
     buildHistogram(allOffers);
     renderCards(filteredOffers);
-    buildSpecialistFinds(allOffers);
+    // buildSpecialistFinds removed — fake estimates
     // Route range injection
     setTimeout(() => {
       // Route range bar removed — showing published fares directly
-      injectWAStrip(orig, dest);
       if (!getRouteRange(orig, dest)) injectUnknownRoutePanel(orig, dest);
-      updateWALinks();
     }, 150);
   } catch(e) {
     console.error('[doSearch error]', e);
@@ -1960,12 +2331,10 @@ async function doSearch() {
     buildAirlineFilter(allOffers);
     buildHistogram(allOffers);
     renderCards(filteredOffers);
-    buildSpecialistFinds(allOffers);
+    // buildSpecialistFinds removed — fake estimates
     setTimeout(() => {
       // Route range bar removed — showing published fares directly
-      injectWAStrip(orig, dest);
       if (!getRouteRange(orig, dest)) injectUnknownRoutePanel(orig, dest);
-      updateWALinks();
     }, 150);
   } finally {
     document.getElementById('skels').style.display='none';
@@ -1998,14 +2367,14 @@ function renderCards(offers) {
   const lhOffers    = offers.filter(o => LH_GROUP.has(o.validatingCarrier));
   const otherOffers = offers.filter(o => !LH_GROUP.has(o.validatingCarrier));
 
-  const FREE_CARDS = 3;
+  const FREE_CARDS = 2; // Show 2 teasers then gate
   let cardIdx = 0;
 
   // ── Lufthansa Group section ──
   if (lhOffers.length) {
     stack.appendChild(buildLHGroupDivider(lhOffers.length));
     lhOffers.forEach(o => {
-      if (cardIdx===FREE_CARDS && offers.length>FREE_CARDS) stack.appendChild(buildICTA());
+      // ICTA removed — email gate handles access
       const card = buildCard(o, cardIdx, cardIdx>=FREE_CARDS, true);
       card.style.animationDelay=(Math.min(cardIdx,7)*32)+'ms';
       stack.appendChild(card);
@@ -2017,7 +2386,7 @@ function renderCards(offers) {
   if (otherOffers.length) {
     if (lhOffers.length) stack.appendChild(buildOtherDivider());
     otherOffers.forEach(o => {
-      if (cardIdx===FREE_CARDS && offers.length>FREE_CARDS && !lhOffers.length) stack.appendChild(buildICTA());
+      // ICTA removed — email gate handles access
       const card = buildCard(o, cardIdx, cardIdx>=FREE_CARDS, false);
       card.style.animationDelay=(Math.min(cardIdx,7)*32)+'ms';
       stack.appendChild(card);
@@ -2116,10 +2485,13 @@ function buildCard(offer, idx, gated=false, starPriority=false) {
       const lay=calcLay(segs[si-1].arrival?.datetime, seg.departure?.datetime);
       const layName = segs[si-1].arrival?.city || segs[si-1].arrival?.airport || '';
       const layAirport = segs[si-1].arrival?.airport || '';
+      const layFullName = getAirportName(layAirport) || layName || layAirport;
       segHTML+=`<div class="layover">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        ${lay} layover · ${layAirport}
-        ${layName&&layName!==layAirport?'<span class="layover-detail">'+layName+'</span>':''}
+        <div class="layover-main">
+          <span class="layover-dur">${lay} layover</span>
+          <span class="layover-at">at ${layFullName}</span>
+        </div>
       </div>`;
     }
     const segLogoUrl = seg.carrier?.logo||LOGOS[seg.carrier?.code||'']||'';
@@ -2165,22 +2537,22 @@ function buildCard(offer, idx, gated=false, starPriority=false) {
         <div class="rt-times">
           <div class="rt-pt">
             <div class="rt-time">${depT}</div>
+            <div class="rt-city">${s0.departure?.city||j.origin||''}</div>
             <div class="rt-apt">${j.origin||''}</div>
-            <div class="rt-city">${s0.departure?.city||''}</div>
           </div>
           <div class="rt-mid">
             <div class="rt-dur">${offer.outboundDuration||''}</div>
             <div class="rt-path">
               <div class="rt-line"></div>
-              ${offer.totalStops>0?'<div class="rt-dot"></div><div class="rt-line"></div>':''}
+              ${offer.totalStops>0?`<div class="rt-dot" title="${segs.slice(0,-1).map(s=>s.arrival?.city||s.arrival?.airport||'').join(', ')}"></div><div class="rt-line"></div>`:'<div class="rt-line"></div>'}
               <div class="rt-plane">✈</div>
             </div>
-            <div class="rt-stp ${stopsCls}">${stopsLbl}</div>
+            <div class="rt-stp ${stopsCls}">${stopsLbl}${offer.totalStops>0?' · via '+segs.slice(0,-1).map(s=>s.arrival?.city||s.arrival?.airport||'').filter(Boolean).join(', '):''}</div>
           </div>
           <div class="rt-pt" style="text-align:right">
             <div class="rt-time${nd?' late':''}">${arrT}${nd?'<sup style="font-size:10px"> +1</sup>':''}</div>
+            <div class="rt-city">${sN.arrival?.city||j.destination||''}</div>
             <div class="rt-apt">${j.destination||''}</div>
-            <div class="rt-city">${sN.arrival?.city||''}</div>
           </div>
         </div>
         <div class="rt-tags">
@@ -2194,12 +2566,18 @@ function buildCard(offer, idx, gated=false, starPriority=false) {
       <div class="fc-pr">
         <div class="pr-badges">${bdgHTML}</div>
         <div class="pr-amt">
+          <div class="pr-pub-label">
+            Published fare
+            <span class="pr-pub-tip" title="This is the fare available directly from the airline and on major booking sites like Google Flights, Expedia and Kayak. BWT may be able to offer a lower rate for the same flight.">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </span>
+          </div>
           <div class="pr-big"><sup>$</sup>${Math.round(offer.totalPrice||0).toLocaleString()}</div>
-          <div class="pr-note">${offer.isRoundTrip?'round trip':'one way'} · per person · ${offer.currency||'USD'}</div>
+          <div class="pr-note">${offer.isRoundTrip?'round trip':'one way'} · per person</div>
         </div>
         <div>
-          <button class="pr-cta ${starPriority?'pr-cta-star':''}" onclick="openModal(window._offerMap[${idx}])">${starPriority?'Request Private Rate →':'Request Quote →'}</button>
-          <div class="pr-sub">${starPriority?'⚡ We specialize in beating these fares':"We'll check if we can beat this price"}</div>
+          <button class="pr-cta ${starPriority?'pr-cta-star':''}" onclick="openModal(window._offerMap[${idx}])">${starPriority?'Select →':'Select →'}</button>
+          <div class="pr-sub">Takes 30 seconds · No obligation · Same flight, same seat</div>
         </div>
       </div>
     </div>
@@ -2231,11 +2609,15 @@ function buildCard(offer, idx, gated=false, starPriority=false) {
     const ov = document.createElement('div');
     ov.className = 'gate-overlay';
     ov.innerHTML = `<div class="gate-box">
-      <div class="gate-lock">🔒</div>
-      <div class="gate-h">See All Results</div>
-      <p class="gate-p">Create a free account to view all available fares and request a quote from our specialists.</p>
-      <button class="gate-btn" onclick="openModal(null)">Sign Up Free — Instant Access</button>
-      <div class="gate-note">No credit card · No spam · Cancel anytime</div>
+      <div class="gate-icon">✈</div>
+      <div class="gate-h">You're seeing 2 of ' + (window._totalOffers||'all') + ' results</div>
+      <p class="gate-p">Enter your work email to access all fares and request a quote. Business emails only.</p>
+      <input class="gate-inline-field" id="gateEmailInline" type="email"
+        placeholder="you@yourcompany.com"
+        onkeydown="if(event.key==='Enter')gateSubmitInline()">
+      <div class="gate-inline-error" id="gateErrorInline"></div>
+      <button class="gate-inline-btn" onclick="gateSubmitInline()">Access All Fares →</button>
+      <div class="gate-inline-note">No spam · No credit card · Business emails only</div>
     </div>`;
     card.appendChild(ov);
   }
@@ -2247,7 +2629,7 @@ function buildReturnSegHTML(returnJourney) {
   if (!returnJourney || !returnJourney.segments || !returnJourney.segments.length) return '';
   const segs = returnJourney.segments;
   let html = '<div class="seg-wrap seg-wrap-return">';
-  html += '<div class="seg-hd seg-hd-return">Return · ' + (returnJourney.origin||'') + ' → ' + (returnJourney.destination||'') + '</div>';
+  html += '<div class="seg-hd seg-hd-return"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg> Return · ' + (returnJourney.origin||'') + ' → ' + (returnJourney.destination||'') + '</div>';
   segs.forEach((seg, si) => {
     if (si > 0) {
       const prevSeg = segs[si-1];
@@ -3491,7 +3873,7 @@ function injectUnknownRoutePanel(orig, dest) {
 </script>
 
 <!-- ══ WHATSAPP FLOATING BUBBLE ══ -->
-<a class="wa-bubble" id="waBubble" href="#" target="_blank" rel="noopener" title="WhatsApp BWT">
+<a class="wa-bubble" style="display:none" id="waBubble" href="#" target="_blank" rel="noopener" title="WhatsApp BWT">
   <div class="wa-bubble-label">
     WhatsApp us your route
     <span>We respond within the hour · any time</span>
