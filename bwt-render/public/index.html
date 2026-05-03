@@ -7,680 +7,277 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 :root{
-  --navy:   #0A1628;
-  --navy2:  #0D1F3C;
-  --navy3:  #1A2D5A;
-  --gold:   #C9A84C;
-  --gold2:  #F0C040;
-  --white:  #FFFFFF;
-  --off:    #F7F8FA;
-  --border: #E8EDF5;
-  --text:   #0A1628;
-  --muted:  #5A6E8F;
-  --green:  #1A8F5A;
+  --navy:#0A1628;--navy2:#0D1F3C;--gold:#C9A84C;--gold2:#F0C040;
+  --white:#fff;--off:#F7F8FA;--border:#E8EDF5;--muted:#5A6E8F;--green:#1A8F5A;
 }
-body{font-family:'DM Sans',sans-serif;color:var(--text);background:#fff;overflow-x:hidden}
-
-/* ── TYPOGRAPHY ── */
-.t-eyebrow{
-  font-family:'Syne',sans-serif;font-weight:600;
-  font-size:11px;letter-spacing:.22em;text-transform:uppercase;
-  color:var(--gold);margin-bottom:14px;display:block;
-  text-align:center;width:100%;
-}
-.section-head{
-  text-align:center;
-  margin-bottom:52px;
-  width:100%;
-}
-.section-head .t-eyebrow{
-  text-align:center;
-  display:block;width:100%;
-}
-.section-head .t-h2{
-  width:100%;max-width:100%;
-  text-align:center;
-}
-.section-head .t-body{
-  margin:14px auto 0;
-  max-width:600px;
-  text-align:center;
-}
-.t-h1{
-  font-family:'Syne',sans-serif;font-weight:700;
-  font-size:clamp(36px,5.5vw,64px);line-height:1.1;
-  letter-spacing:-.02em;color:#fff;
-  margin-bottom:16px;
-  text-align:center;width:100%;
-}
-.t-h1 .accent{
-  font-family:'Instrument Serif',Georgia,serif;
-  font-style:italic;font-weight:400;
-  color:var(--gold);display:block;
-  font-size:clamp(38px,5.8vw,68px);
-  letter-spacing:-.01em;
-}
-.t-h2{
-  font-family:'Syne',sans-serif;font-weight:700;
-  font-size:clamp(28px,4vw,48px);line-height:1.12;
-  letter-spacing:-.02em;color:var(--navy);
-  margin-bottom:12px;
-}
-.t-h2 .accent{color:var(--gold)}
-.t-h3{
-  font-family:'Syne',sans-serif;font-weight:600;
-  font-size:clamp(20px,2.5vw,26px);line-height:1.2;
-  letter-spacing:-.01em;color:var(--navy);
-  margin-bottom:8px;
-}
-.t-body{
-  font-size:16px;line-height:1.75;
-  color:var(--muted);font-weight:400;
-}
-.t-body-dark{
-  font-size:15px;line-height:1.75;
-  color:var(--navy);font-weight:400;
-}
-.t-lead{
-  font-size:17px;line-height:1.75;
-  color:rgba(255,255,255,.68);font-weight:400;
-  max-width:620px;text-align:center;margin:0 auto;
-}
+body{font-family:'DM Sans',sans-serif;color:var(--navy);background:#fff;overflow-x:hidden}
 
 /* ── NAV ── */
 nav{
-  background:var(--navy);
-  position:sticky;top:0;z-index:100;
+  background:var(--navy);position:sticky;top:0;z-index:100;
   border-bottom:1px solid rgba(255,255,255,.07);
   padding:0 clamp(20px,5vw,80px);
-  display:flex;align-items:center;justify-content:space-between;
-  height:68px;
+  display:flex;align-items:center;justify-content:space-between;height:64px;
 }
-.nav-logo{display:flex;align-items:center;gap:11px;text-decoration:none}
-.nav-gem{
-  width:36px;height:36px;
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  border-radius:9px;display:flex;align-items:center;justify-content:center;
-  font-size:17px;box-shadow:0 2px 14px rgba(201,168,76,.35);
-}
-.nav-brand strong{
-  display:block;font-family:'Syne',sans-serif;
-  font-size:14px;font-weight:700;color:#fff;letter-spacing:-.01em;
-}
-.nav-brand span{
-  display:block;font-size:9px;font-weight:600;
-  color:var(--gold);letter-spacing:.18em;text-transform:uppercase;
-  margin-top:1px;
-}
-.nav-links{display:flex;align-items:center;gap:30px}
-.nav-links a{
-  font-family:'Syne',sans-serif;font-size:13px;font-weight:600;
-  color:rgba(255,255,255,.55);text-decoration:none;
-  transition:color .15s;letter-spacing:.01em;
-}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-gem{width:34px;height:34px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 2px 12px rgba(201,168,76,.35)}
+.nav-brand strong{display:block;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#fff}
+.nav-brand span{display:block;font-size:9px;font-weight:600;color:var(--gold);letter-spacing:.18em;text-transform:uppercase;margin-top:1px}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{font-family:'Syne',sans-serif;font-size:13px;font-weight:600;color:rgba(255,255,255,.55);text-decoration:none;transition:color .15s}
 .nav-links a:hover{color:#fff}
-.nav-cta{
-  font-family:'Syne',sans-serif;font-size:12px;font-weight:700;
-  background:var(--gold);color:var(--navy);
-  padding:9px 22px;border-radius:6px;text-decoration:none;
-  letter-spacing:.04em;transition:opacity .15s;
-}
+.nav-cta{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;background:var(--gold);color:var(--navy);padding:9px 20px;border-radius:6px;text-decoration:none;letter-spacing:.04em;transition:opacity .15s}
 .nav-cta:hover{opacity:.88}
 @media(max-width:680px){.nav-links{display:none}}
 
 /* ── HERO ── */
 .hero{
-  min-height:100vh;
-  display:flex;flex-direction:column;align-items:center;
-  justify-content:center;
-  padding:100px clamp(20px,5vw,80px) 80px;
-  position:relative;overflow:hidden;
-  text-align:center;
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  justify-content:flex-start;padding:90px clamp(20px,5vw,80px) 60px;
+  position:relative;overflow:hidden;text-align:center;
 }
-.hero-img{
-  position:absolute;inset:0;z-index:0;
-  background-image:url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1800&q=80&auto=format&fit=crop');
-  background-size:cover;background-position:center 40%;
-  filter:saturate(0.65) brightness(0.42);
-}
-.hero-bg{
-  position:absolute;inset:0;z-index:1;
-  background:
-    radial-gradient(ellipse 100% 70% at 50% 105%,rgba(4,6,14,.97) 0%,rgba(4,6,14,.72) 45%,transparent 70%),
-    radial-gradient(ellipse 100% 100% at 50% 0%,rgba(4,6,14,.78) 0%,rgba(4,6,14,.42) 50%,transparent 100%),
-    linear-gradient(180deg,rgba(4,6,14,.62) 0%,rgba(4,6,14,.28) 50%,rgba(4,6,14,.88) 100%);
-  pointer-events:none;
-}
-.hero-rule{
-  position:absolute;bottom:38%;left:0;right:0;height:1px;z-index:2;
-  background:linear-gradient(90deg,transparent,rgba(200,168,75,.16) 20%,rgba(200,168,75,.3) 50%,rgba(200,168,75,.16) 80%,transparent);
-}
-.hero-pill{
-  display:inline-flex;align-items:center;gap:14px;
-  font-family:'Syne',sans-serif;font-size:10px;font-weight:600;
-  letter-spacing:.38em;text-transform:uppercase;color:var(--gold);
-  margin-bottom:28px;
-}
-.hero-pill::before,.hero-pill::after{
-  content:'';width:44px;height:1px;
-  background:linear-gradient(90deg,transparent,var(--gold));
-}
+.hero-img{position:absolute;inset:0;z-index:0;background-image:url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1800&q=80&auto=format&fit=crop');background-size:cover;background-position:center 40%;filter:saturate(.6) brightness(.38)}
+.hero-bg{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(4,6,14,.65) 0%,rgba(4,6,14,.3) 40%,rgba(4,6,14,.85) 100%);pointer-events:none}
+.hero-rule{position:absolute;bottom:38%;left:0;right:0;height:1px;z-index:2;background:linear-gradient(90deg,transparent,rgba(200,168,75,.25) 50%,transparent)}
+.hero-inner{max-width:820px;width:100%;position:relative;z-index:3;display:flex;flex-direction:column;align-items:center}
+.hero-pill{display:inline-flex;align-items:center;gap:14px;font-family:'Syne',sans-serif;font-size:10px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:28px}
+.hero-pill::before,.hero-pill::after{content:'';width:40px;height:1px;background:linear-gradient(90deg,transparent,var(--gold))}
 .hero-pill::after{transform:scaleX(-1)}
-.hero-inner{
-  max-width:860px;margin:0 auto;
-  position:relative;z-index:1;
-  display:flex;flex-direction:column;align-items:center;
-}
-.hero-checks{
-  display:flex;gap:20px;flex-wrap:wrap;
-  margin:22px 0 32px;
-  justify-content:center;
-}
-.hero-check{
-  display:flex;align-items:center;gap:7px;
-  font-family:'Syne',sans-serif;font-size:12px;font-weight:600;
-  color:rgba(255,255,255,.7);letter-spacing:.02em;
-}
-.hck{
-  width:18px;height:18px;border-radius:50%;
-  background:rgba(201,168,76,.18);border:1px solid rgba(201,168,76,.4);
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
+.hero-h1{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(34px,5vw,60px);line-height:1.1;letter-spacing:-.02em;color:#fff;margin-bottom:14px}
+.hero-h1 em{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;color:var(--gold);display:block;font-size:1.1em}
+.hero-sub{font-size:16px;line-height:1.75;color:rgba(255,255,255,.6);max-width:580px;margin:0 auto 28px}
+.hero-checks{display:flex;gap:20px;flex-wrap:wrap;justify-content:center;margin-bottom:36px}
+.hero-check{display:flex;align-items:center;gap:7px;font-family:'Syne',sans-serif;font-size:12px;font-weight:600;color:rgba(255,255,255,.75)}
+.hck{width:18px;height:18px;border-radius:50%;background:rgba(201,168,76,.18);border:1px solid rgba(201,168,76,.4);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .hck svg{width:9px;height:9px;color:var(--gold)}
 
-/* Search card */
-.search-card{
-  background:#fff;
-  border-radius:12px;
-  padding:0;
-  width:100%;max-width:860px;
-  margin:0 auto;
-  box-shadow:0 8px 40px rgba(0,0,0,.25);
-  overflow:visible;
+/* ── SEARCH BOX ── */
+.search-wrap{
+  width:100%;max-width:880px;
+  background:rgba(6,12,30,.75);
+  border:1px solid rgba(200,168,75,.3);
+  border-radius:16px;
+  box-shadow:0 20px 80px rgba(0,0,0,.5);
+  overflow:visible;position:relative;z-index:10;
+  backdrop-filter:blur(20px);
 }
-.search-card-top{
-  display:flex;align-items:center;gap:0;
-  border-radius:12px;
-  overflow:visible;
-  position:relative;
-}
-.search-card-bottom{
-  padding:10px 16px 12px;
-  display:flex;align-items:center;justify-content:space-between;
-  border-top:1px solid #f0f3f8;
-}
-.stabs{display:flex;gap:2px;padding:10px 16px 0}
+.search-tabs{display:flex;gap:4px;padding:14px 20px 0}
 .stab{
   font-family:'Syne',sans-serif;font-size:12px;font-weight:600;
-  letter-spacing:.02em;padding:5px 12px;border-radius:20px;
-  border:none;cursor:pointer;background:transparent;
-  color:#8fa3be;transition:all .15s;
+  padding:6px 16px;border-radius:20px;border:none;
+  cursor:pointer;background:transparent;
+  color:rgba(255,255,255,.4);transition:all .15s;
 }
-.stab.on{background:#f0f3f8;color:#0a1628;font-weight:700}
-.sf-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
-.sf-row2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
-.sf-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px}
-.sf{
-  background:#fff;border:none;
-  padding:12px 16px;
-  display:flex;align-items:center;gap:9px;
-  cursor:pointer;position:relative;
-  flex:1;min-width:0;
-  border-right:1px solid #e8edf5;
+.stab.on{
+  background:rgba(200,168,75,.2);
+  color:var(--gold);
+  border:1px solid rgba(200,168,75,.35);
 }
-.sf:focus-within{background:#fafbff}
-.sf:last-of-type{border-right:none}
-.sf-ico{width:14px;height:14px;color:#c9a84c;flex-shrink:0}
-.sf-lbl{
-  font-size:9px;font-weight:700;letter-spacing:.1em;
-  text-transform:uppercase;color:#8fa3be;
-  display:block;margin-bottom:1px;
+.search-bar{
+  display:flex;align-items:stretch;
+  border-top:1px solid rgba(255,255,255,.08);
+  margin-top:10px;min-height:68px;
 }
-.sf-val{
-  font-family:'Syne',sans-serif;font-size:14px;
-  font-weight:600;color:#0a1628;display:block;
-}
-.sf input{
-  background:transparent;border:none;outline:none;
-  color:#0a1628;font-size:14px;font-weight:500;width:100%;
-  font-family:'DM Sans',sans-serif;
-}
-.sf input::placeholder{color:rgba(255,255,255,.28)}
-.sbtn{
-  background:#1a73e8;color:#fff;
-  border:none;border-radius:0 12px 12px 0;
-  padding:0 28px;height:100%;min-height:64px;
-  font-family:'Syne',sans-serif;font-size:14px;font-weight:700;
-  cursor:pointer;letter-spacing:.02em;flex-shrink:0;
+.sf-box{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:10px 20px;flex:1;min-width:0;position:relative;
+  border-right:1px solid rgba(255,255,255,.08);cursor:pointer;
   transition:background .15s;
-  display:flex;align-items:center;justify-content:center;gap:7px;
-  white-space:nowrap;
 }
-.sbtn:hover{background:#1557b0}
-.snote{font-size:10px;color:#8fa3be;letter-spacing:.02em}
-
-/* Hero stat pills */
-.hero-stats{
-  display:flex;gap:12px;margin-top:0;flex-wrap:wrap;
-  justify-content:center;margin-bottom:44px;
+.sf-box:hover{background:rgba(255,255,255,.05)}
+.sf-lbl{
+  font-size:9px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:rgba(200,168,75,.7);
+  margin-bottom:4px;white-space:nowrap;
 }
-.hstat{
+.sf-row-inner{display:flex;align-items:center;gap:8px}
+.sf-icon{width:13px;height:13px;color:var(--gold);flex-shrink:0;opacity:.7}
+.sf-input{
+  border:none;outline:none;background:transparent;
+  font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;
+  color:#fff;width:100%;
+}
+.sf-input::placeholder{color:rgba(255,255,255,.3);font-weight:400}
+.sf-val{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;color:#fff}
+.sf-val.empty{color:rgba(255,255,255,.3);font-weight:400}
+.search-btn{
+  background:var(--gold);color:var(--navy);
+  border:none;border-radius:0 0 15px 0;
+  padding:0 32px;
+  font-family:'Syne',sans-serif;font-size:14px;font-weight:800;
+  cursor:pointer;flex-shrink:0;transition:all .15s;
+  display:flex;align-items:center;gap:8px;white-space:nowrap;
+  letter-spacing:.04em;
+}
+.search-btn:hover{background:var(--gold2);transform:none}
+.search-note{
+  padding:10px 20px 14px;
+  font-size:10px;color:rgba(255,255,255,.25);
+  letter-spacing:.04em;
+}
+.multi-row{
+  border-top:1px solid rgba(255,255,255,.08);
+  padding:14px 20px 18px;display:none;
+}
+.multi-row.show{display:block}
+.multi-lbl{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(200,168,75,.7);margin-bottom:10px}
+.multi-fields{display:flex;gap:10px;flex-wrap:wrap}
+.mf{
+  flex:1;min-width:140px;
   background:rgba(255,255,255,.06);
   border:1px solid rgba(255,255,255,.1);
-  border-radius:50px;padding:8px 18px;
-  display:flex;align-items:center;gap:8px;
+  border-radius:10px;padding:10px 14px;position:relative;
 }
-.hstat-num{
-  font-family:'Syne',sans-serif;font-size:16px;
-  font-weight:700;color:var(--gold2);
-}
-.hstat-lbl{font-size:11px;color:rgba(255,255,255,.45)}
-
-@media(max-width:700px){
-  .search-card{padding:20px}
-  .sf-row,.sf-row2{grid-template-columns:1fr}
-  .hero-visual{max-width:100%}
-}
-
-
-/* ── HONEST TRUTH SECTION ── */
-.ht-h2{
-  font-family:'Syne',sans-serif;font-weight:700;
-  font-size:clamp(32px,4.5vw,54px);line-height:1.1;
-  letter-spacing:-.02em;color:var(--navy);
-  margin:0 auto 20px;text-align:center;
-  max-width:800px;
-}
-.ht-accent{color:var(--gold)}
-.ht-sub{
-  font-size:17px;line-height:1.75;
-  color:#3A4A6B;text-align:center;
-  max-width:660px;margin:0 auto;
-  font-weight:400;
-}
-.ht-sub strong{color:var(--navy);font-weight:700}
-
-/* Stats row */
-.ht-stats{
-  display:flex;align-items:center;justify-content:center;
-  gap:0;margin-bottom:56px;
-  background:var(--navy);border-radius:14px;
-  padding:28px 20px;flex-wrap:wrap;
-}
-.ht-stat{text-align:center;padding:0 32px;flex:1;min-width:140px}
-.ht-stat-num{
-  font-family:'Syne',sans-serif;font-weight:700;
-  font-size:clamp(22px,3vw,32px);color:var(--gold2);
-  line-height:1;margin-bottom:6px;
-}
-.ht-stat-lbl{font-size:12px;color:rgba(255,255,255,.5);line-height:1.4}
-.ht-stat-div{width:1px;height:48px;background:rgba(255,255,255,.1);flex-shrink:0}
-
-/* Grid */
-.ht-grid{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:40px;align-items:start;
-}
-
-/* Bullets */
-.ht-bullets{display:flex;flex-direction:column;gap:24px}
-.ht-bullet{display:flex;align-items:flex-start;gap:14px}
-.ht-bullet-icon{
-  width:36px;height:36px;border-radius:50%;flex-shrink:0;
-  background:rgba(201,168,76,.12);border:1.5px solid rgba(201,168,76,.3);
-  display:flex;align-items:center;justify-content:center;
-  color:var(--gold);margin-top:2px;
-}
-.ht-bullet-title{
-  font-family:'Syne',sans-serif;font-size:15px;
-  font-weight:700;color:var(--navy);margin-bottom:5px;
-}
-.ht-bullet-sub{font-size:13px;color:#3A4A6B;line-height:1.7}
-
-@media(max-width:800px){
-  .ht-grid{grid-template-columns:1fr}
-  .ht-stat-div{display:none}
-  .ht-stats{gap:20px}
-}
-
-/* ── TRUST BAR ── */
-.trust-bar{
-  background:#fff;border-bottom:1px solid var(--border);
-  padding:0 clamp(20px,5vw,80px);
-}
-.trust-bar-inner{
-  max-width:1160px;margin:0 auto;
-  display:flex;justify-content:space-between;flex-wrap:wrap;
-  padding:22px 0;gap:12px;
-}
-.tb-item{
-  display:flex;align-items:center;gap:9px;
-  font-family:'Syne',sans-serif;font-size:12px;
-  font-weight:600;color:var(--muted);
-}
-.tb-item strong{color:var(--navy)}
-.tb-dot{
-  width:7px;height:7px;border-radius:50%;
-  background:var(--gold);flex-shrink:0;
-}
-
-/* ── SECTIONS ── */
-.section{padding:88px clamp(20px,5vw,80px)}
-.section-inner{max-width:1160px;margin:0 auto}
-.section--off{background:var(--off)}
-.section--navy{background:var(--navy)}
-
-/* ── MESSAGE SECTION ── */
-.msg-grid{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:80px;align-items:center;
-}
-.msg-left .t-h2{margin-bottom:20px}
-.msg-left .t-body{margin-bottom:24px;max-width:460px}
-.msg-points{display:flex;flex-direction:column;gap:14px;margin-top:8px}
-.msg-pt{
-  display:flex;align-items:flex-start;gap:12px;
-  font-size:15px;color:var(--navy);line-height:1.6;
-}
-.msg-dot{
-  width:22px;height:22px;border-radius:50%;flex-shrink:0;
-  background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.3);
-  display:flex;align-items:center;justify-content:center;margin-top:1px;
-}
-.msg-dot svg{width:10px;height:10px;color:var(--gold)}
-
-/* Fare comparison card */
-.fare-cmp{
-  background:#fff;border-radius:16px;
-  box-shadow:0 6px 40px rgba(10,22,40,.1);overflow:hidden;
-}
-.fare-cmp-head{
-  background:var(--navy);padding:18px 24px;
-  font-family:'Syne',sans-serif;font-size:11px;font-weight:700;
-  letter-spacing:.12em;text-transform:uppercase;
-  color:rgba(255,255,255,.5);
-}
-.fare-cols{display:grid;grid-template-columns:1fr 1fr}
-.fare-col{padding:22px 24px;border-right:1px solid var(--border)}
-.fare-col:last-child{border-right:none}
-.fare-col-lbl{
-  font-size:9px;font-weight:700;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--muted);margin-bottom:8px;
-}
-.fare-col-route{
-  font-family:'Syne',sans-serif;font-size:13px;
-  font-weight:600;color:var(--navy);margin-bottom:3px;
-}
-.fare-col-sub{font-size:11px;color:var(--muted);margin-bottom:10px}
-.price-pub{
-  font-family:'Syne',sans-serif;font-size:40px;
-  font-weight:700;color:#C0392B;line-height:1;
-  letter-spacing:-.02em;
-}
-.price-pub sup{font-size:20px;vertical-align:super;font-weight:600}
-.price-bwt{
-  font-family:'Syne',sans-serif;font-size:40px;
-  font-weight:700;color:var(--green);line-height:1;
-  letter-spacing:-.02em;
-}
-.price-bwt sup{font-size:20px;vertical-align:super;font-weight:600}
-.fare-note{font-size:11px;color:var(--muted);margin-top:5px}
-.saving-pill{
-  display:inline-flex;align-items:center;gap:5px;
-  background:#E8F7F0;color:var(--green);
-  font-family:'Syne',sans-serif;font-size:11px;font-weight:700;
-  padding:4px 12px;border-radius:50px;margin-top:10px;
-}
-.fare-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px}
-.fare-tag{
-  font-size:10px;padding:3px 10px;border-radius:50px;
-  border:1px solid var(--border);color:var(--muted);
-  font-weight:500;
-}
-.fare-footer{
-  padding:14px 24px;border-top:1px solid var(--border);
-  font-size:11px;color:var(--muted);font-style:italic;
-  text-align:center;
-}
-@media(max-width:800px){.msg-grid{grid-template-columns:1fr}}
-
-/* ── WHO ── */
-.who-grid{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:16px;
-  margin-top:48px;
-}
-.who-card{
-  border:1.5px solid var(--border);border-radius:14px;
-  padding:26px 22px;transition:all .2s;
-}
-.who-card:hover{
-  border-color:var(--gold);
-  box-shadow:0 4px 28px rgba(201,168,76,.12);
-  transform:translateY(-2px);
-}
-.who-icon{font-size:30px;margin-bottom:16px;display:block}
-.who-title{
-  font-family:'Syne',sans-serif;font-size:15px;
-  font-weight:700;color:var(--navy);margin-bottom:8px;
-  line-height:1.3;
-}
-.who-sub{font-size:13px;color:var(--muted);line-height:1.65}
-.who-tag{
-  display:block;font-family:'Syne',sans-serif;
-  font-size:11px;font-weight:700;color:var(--gold);
-  margin-top:14px;letter-spacing:.02em;
-}
-.who-footer{
-  text-align:center;margin-top:40px;
-  font-family:'Syne',sans-serif;font-size:14px;
-  font-weight:600;color:var(--muted);font-style:italic;
-}
-@media(max-width:800px){.who-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:480px){.who-grid{grid-template-columns:1fr}}
-
-/* ── HOW ── */
-.how-steps{
-  display:grid;grid-template-columns:1fr 40px 1fr 40px 1fr;
-  gap:0;align-items:start;margin-top:56px;
-}
-.how-step{text-align:center;padding:0 16px}
-.how-num{
-  width:60px;height:60px;border-radius:50%;
-  background:var(--gold);color:var(--navy);
-  font-family:'Syne',sans-serif;font-size:24px;font-weight:700;
-  display:flex;align-items:center;justify-content:center;
-  margin:0 auto 20px;
-  box-shadow:0 4px 20px rgba(201,168,76,.35);
-}
-.how-title{
-  font-family:'Syne',sans-serif;font-size:17px;
-  font-weight:700;color:#fff;margin-bottom:10px;
-}
-.how-sub{font-size:13px;color:rgba(255,255,255,.5);line-height:1.7;max-width:180px;margin:0 auto}
-.how-arr{
-  display:flex;align-items:center;justify-content:center;
-  padding-top:18px;font-size:24px;color:rgba(201,168,76,.25);
-}
-.how-note-wrap{text-align:center;margin-top:44px}
-.how-note{
-  display:inline-flex;align-items:center;gap:10px;
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.1);
-  border-radius:50px;padding:11px 26px;
-  font-family:'Syne',sans-serif;font-size:13px;
-  font-weight:600;color:rgba(255,255,255,.55);
-  font-style:italic;
-}
-@media(max-width:700px){
-  .how-steps{grid-template-columns:1fr}
-  .how-arr{display:none}
-  .how-step{padding:0;margin-bottom:32px}
-}
-
-/* ── COMPARE TABLE ── */
-.compare-wrap{margin-top:48px;border-radius:14px;overflow:hidden;box-shadow:0 2px 24px rgba(10,22,40,.08)}
-table{width:100%;border-collapse:collapse}
-thead th{
-  padding:14px 22px;
-  font-family:'Syne',sans-serif;font-size:11px;
-  font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-}
-thead th:first-child{background:#F7F8FA;color:var(--muted);text-align:left}
-thead th.th-g{background:#F7F8FA;color:var(--muted);text-align:center}
-thead th.th-b{background:var(--navy);color:var(--gold);text-align:center}
-tbody td{
-  padding:13px 22px;border-bottom:1px solid var(--border);
-  font-size:14px;color:var(--muted);
-}
-tbody td:first-child{font-family:'Syne',sans-serif;font-weight:600;color:var(--navy)}
-tbody td:not(:first-child){text-align:center}
-tbody tr:last-child td{border-bottom:none}
-tbody tr:hover td{background:rgba(201,168,76,.03)}
-.ck-y{color:var(--green);font-size:16px;font-weight:700}
-.ck-n{color:#C0392B;font-size:16px}
-.ck-g{
-  font-family:'Syne',sans-serif;font-size:13px;
-  font-weight:700;color:var(--gold);
-}
-
-/* ── ROUTES ── */
-.routes-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:12px;margin-top:44px;
-}
-.route-card{
-  background:#fff;border:1.5px solid var(--border);
-  border-radius:12px;padding:18px 20px;
-  display:flex;align-items:center;justify-content:space-between;
-  text-decoration:none;transition:all .2s;
-}
-.route-card:hover{
-  border-color:var(--gold);
-  box-shadow:0 3px 20px rgba(201,168,76,.1);
-  transform:translateX(4px);
-}
-.route-cities{
-  font-family:'Syne',sans-serif;font-size:14px;
-  font-weight:700;color:var(--navy);margin-bottom:4px;
-}
-.route-from{font-size:11px;color:var(--gold);font-weight:600}
-.route-save{
-  font-family:'Syne',sans-serif;font-size:10px;font-weight:700;
-  color:var(--green);background:#E8F7F0;
-  padding:3px 9px;border-radius:50px;white-space:nowrap;
-  flex-shrink:0;margin-left:12px;
-}
-.routes-more{
-  text-align:center;margin-top:28px;
-  font-family:'Syne',sans-serif;font-size:13px;font-weight:700;
-}
-.routes-more a{
-  color:var(--navy);text-decoration:none;
-  border-bottom:2px solid var(--gold);padding-bottom:2px;
-}
-@media(max-width:720px){.routes-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:480px){.routes-grid{grid-template-columns:1fr}}
-
-/* ── FINAL CTA ── */
-.cta-section{
-  background:var(--navy);
-  padding:88px clamp(20px,5vw,80px);
-  text-align:center;position:relative;overflow:hidden;
-}
-.cta-section::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse at 50% 80%,rgba(201,168,76,.08) 0%,transparent 60%);
-  pointer-events:none;
-}
-.cta-inner{max-width:620px;margin:0 auto;position:relative}
-.cta-h{
-  font-family:'Syne',sans-serif;font-weight:700;
-  font-size:clamp(30px,4.5vw,52px);line-height:1.1;
-  letter-spacing:-.02em;color:#fff;margin-bottom:16px;
-}
-.cta-h .accent{color:var(--gold2)}
-.cta-sub{
-  font-size:16px;line-height:1.75;
-  color:rgba(255,255,255,.5);margin-bottom:36px;
-}
-.cta-btn{
-  display:inline-flex;align-items:center;gap:8px;
-  background:var(--gold2);color:var(--navy);
-  font-family:'Syne',sans-serif;font-size:15px;font-weight:700;
-  padding:16px 36px;border-radius:9px;text-decoration:none;
-  letter-spacing:.04em;transition:all .15s;
-  box-shadow:0 4px 24px rgba(240,192,64,.3);
-}
-.cta-btn:hover{background:#e6b830;transform:translateY(-2px)}
-.cta-trust{
-  display:flex;align-items:center;justify-content:center;
-  gap:28px;margin-top:36px;flex-wrap:wrap;
-}
-.cta-ti{
-  display:flex;align-items:center;gap:6px;
-  font-family:'Syne',sans-serif;font-size:11px;
-  font-weight:600;color:rgba(255,255,255,.35);letter-spacing:.03em;
-}
-.cta-ti svg{color:var(--gold);opacity:.6}
-
-/* ── FOOTER ── */
-footer{
-  background:#060E1E;
-  padding:24px clamp(20px,5vw,80px);
-  display:flex;align-items:center;justify-content:space-between;
-  flex-wrap:wrap;gap:12px;
-}
-footer span{font-size:11px;color:rgba(255,255,255,.22)}
-.footer-links{display:flex;gap:20px}
-.footer-links a{
-  font-size:11px;color:rgba(255,255,255,.22);
-  text-decoration:none;transition:color .15s;
-}
-.footer-links a:hover{color:rgba(255,255,255,.5)}
-
-/* ── ANIMATIONS ── */
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(20px)}
-  to{opacity:1;transform:none}
-}
-.hero-inner>*{animation:fadeUp .6s ease both}
-.hero-inner>*:nth-child(2){animation-delay:.12s}
-
-/* Airport autocomplete */
-.ac-sug{
-  position:absolute;top:calc(100% + 4px);left:0;
-  width:300px;background:#0d1b3e;
-  border:1px solid rgba(200,168,75,.25);border-radius:10px;
-  box-shadow:0 12px 40px rgba(0,0,0,.7);
-  overflow:hidden;z-index:99999;display:none;
-}
+/* ac dropdown */
+.ac-sug{position:absolute;top:calc(100% + 4px);left:0;width:300px;background:#0d1b3e;border:1px solid rgba(200,168,75,.25);border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,.7);overflow:hidden;z-index:99999;display:none}
 .ac-sug.open{display:block;animation:acIn .1s ease both}
 @keyframes acIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 .ac-row{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.05);transition:background .1s}
 .ac-row:last-child{border-bottom:none}
 .ac-row:hover,.ac-row.hl{background:rgba(200,168,75,.1)}
-.ac-flag{font-size:14px;width:20px;text-align:center;flex-shrink:0}
-.ac-inf{flex:1;min-width:0}
-.ac-city{font-size:13px;color:#fff;font-weight:600}
-.ac-name{font-size:10px;color:rgba(255,255,255,.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ac-code{font-size:11px;font-weight:700;color:var(--gold);flex-shrink:0}
-.sf-inp{background:transparent;border:none;outline:none;color:#fff;font-size:13px;font-weight:600;width:100%;font-family:'Syne',sans-serif}
-.sf-inp::placeholder{color:rgba(255,255,255,.28)}
-
-.flatpickr-calendar{background:#fff;border:1px solid #e8edf5;border-radius:12px;box-shadow:0 8px 40px rgba(10,22,40,.15);font-family:'DM Sans',sans-serif}
+.ac-city{font-size:13px;font-weight:600;color:#fff}
+.ac-name{font-size:10px;color:rgba(255,255,255,.4);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ac-code{font-size:11px;font-weight:700;color:rgba(200,168,75,.8);font-family:monospace}
+mark.m{background:rgba(200,168,75,.25);color:#f0c040;border-radius:2px}
+/* multi-city */
+.multi-row{padding:12px 20px 16px;border-top:1px solid #eef1f6;display:none}
+.multi-row.show{display:block}
+.multi-lbl{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8fa3be;margin-bottom:10px}
+.multi-fields{display:flex;gap:10px;flex-wrap:wrap}
+.mf{flex:1;min-width:140px;border:1px solid #eef1f6;border-radius:8px;padding:10px 14px;position:relative}
+/* flatpickr overrides */
+.flatpickr-calendar{font-family:'DM Sans',sans-serif;border-radius:12px;border:1px solid #e8edf5;box-shadow:0 8px 40px rgba(10,22,40,.15)}
 .flatpickr-day.selected,.flatpickr-day.selected:hover{background:#c9a84c;border-color:#c9a84c;color:#fff}
-.flatpickr-day:hover{background:#f0f3f8}
-.flatpickr-months .flatpickr-month{background:#0a1628;color:#fff;border-radius:12px 12px 0 0}
-.flatpickr-current-month,.flatpickr-current-month .numInputWrapper,.flatpickr-current-month input.cur-year{color:#fff}
-.flatpickr-months .flatpickr-prev-month,.flatpickr-months .flatpickr-next-month{color:#fff;fill:#fff}
-.flatpickr-weekday{color:#8fa3be;font-weight:600}
 .flatpickr-day.today{border-color:#c9a84c}
+.flatpickr-months .flatpickr-month{background:#0a1628;color:#fff;border-radius:12px 12px 0 0}
+.flatpickr-current-month,.flatpickr-current-month input.cur-year,.numInputWrapper span{color:#fff}
+.flatpickr-weekday{color:#8fa3be;font-weight:600}
 .flatpickr-day.inRange{background:#fdf6e3;border-color:#fdf6e3}
+
+/* ── TRUST BAR ── */
+.trust-bar{background:#fff;border-bottom:1px solid var(--border);padding:0 clamp(20px,5vw,80px)}
+.trust-bar-inner{max-width:1160px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;padding:20px 0;gap:12px}
+.tb-item{display:flex;align-items:center;gap:8px;font-family:'Syne',sans-serif;font-size:12px;font-weight:600;color:var(--muted)}
+.tb-item strong{color:var(--navy)}
+.tb-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0}
+
+/* ── SECTIONS ── */
+.section{padding:80px clamp(20px,5vw,80px)}
+.section--off{background:var(--off)}
+.section--navy{background:var(--navy)}
+.section-inner{max-width:1160px;margin:0 auto}
+.section-head{text-align:center;margin-bottom:52px}
+.eyebrow{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:block}
+.s-h2{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(26px,3.5vw,44px);line-height:1.12;letter-spacing:-.02em;color:var(--navy);margin-bottom:12px}
+.s-h2 em{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;color:var(--gold)}
+.s-h2.white{color:#fff}
+.s-sub{font-size:15px;line-height:1.75;color:var(--muted);max-width:580px;margin:12px auto 0}
+
+/* ── HONEST TRUTH ── */
+.ht-h2{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(28px,4vw,50px);line-height:1.1;letter-spacing:-.02em;color:var(--navy);text-align:center;margin:0 auto 16px;max-width:760px}
+.ht-accent{color:var(--gold)}
+.ht-sub{font-size:17px;line-height:1.75;color:#3a4a6b;text-align:center;max-width:640px;margin:0 auto 48px;font-weight:400}
+.ht-sub strong{color:var(--navy);font-weight:700}
+.ht-stats{display:flex;align-items:center;justify-content:center;background:var(--navy);border-radius:14px;padding:28px 20px;margin-bottom:56px;flex-wrap:wrap;gap:0}
+.ht-stat{text-align:center;padding:0 32px;flex:1;min-width:140px}
+.ht-stat-num{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(20px,3vw,30px);color:var(--gold2);line-height:1;margin-bottom:6px}
+.ht-stat-lbl{font-size:12px;color:rgba(255,255,255,.5);line-height:1.4}
+.ht-stat-div{width:1px;height:48px;background:rgba(255,255,255,.1);flex-shrink:0}
+.ht-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+.fare-cmp{background:#fff;border-radius:16px;box-shadow:0 6px 40px rgba(10,22,40,.1);overflow:hidden}
+.fare-cmp-head{background:var(--navy);padding:16px 24px;font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.fare-cols{display:grid;grid-template-columns:1fr 1fr}
+.fare-col{padding:20px 24px;border-right:1px solid var(--border)}
+.fare-col:last-child{border-right:none}
+.fare-col-lbl{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.fare-col-route{font-family:'Syne',sans-serif;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:2px}
+.fare-col-sub{font-size:11px;color:var(--muted);margin-bottom:10px}
+.price-pub{font-family:'Syne',sans-serif;font-size:38px;font-weight:700;color:#c0392b;line-height:1;letter-spacing:-.02em}
+.price-pub sup,.price-bwt sup{font-size:18px;vertical-align:super;font-weight:600}
+.price-bwt{font-family:'Syne',sans-serif;font-size:38px;font-weight:700;color:var(--green);line-height:1;letter-spacing:-.02em}
+.saving-pill{display:inline-flex;align-items:center;gap:5px;background:#e8f7f0;color:var(--green);font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:50px;margin-top:10px}
+.fare-tag{font-size:10px;padding:3px 10px;border-radius:50px;border:1px solid var(--border);color:var(--muted);margin-right:5px;margin-top:8px;display:inline-block}
+.fare-footer{padding:12px 24px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);font-style:italic;text-align:center}
+.ht-bullets{display:flex;flex-direction:column;gap:22px}
+.ht-bullet{display:flex;align-items:flex-start;gap:14px}
+.ht-bi{width:36px;height:36px;border-radius:50%;flex-shrink:0;background:rgba(201,168,76,.1);border:1.5px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;color:var(--gold);margin-top:2px}
+.ht-bi svg{width:16px;height:16px}
+.ht-bt{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--navy);margin-bottom:5px}
+.ht-bd{font-size:13px;color:#3a4a6b;line-height:1.7}
+@media(max-width:800px){.ht-grid{grid-template-columns:1fr}}
+
+/* ── WHO ── */
+.who-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:0}
+.who-card{border:1.5px solid var(--border);border-radius:14px;padding:24px 20px;transition:all .2s}
+.who-card:hover{border-color:var(--gold);box-shadow:0 4px 24px rgba(201,168,76,.1);transform:translateY(-2px)}
+.who-icon{font-size:28px;margin-bottom:14px;display:block}
+.who-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--navy);margin-bottom:7px;line-height:1.3}
+.who-sub{font-size:12px;color:var(--muted);line-height:1.65}
+.who-tag{display:block;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--gold);margin-top:14px}
+@media(max-width:800px){.who-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.who-grid{grid-template-columns:1fr}}
+
+/* ── HOW ── */
+.how-steps{display:grid;grid-template-columns:1fr 40px 1fr 40px 1fr;align-items:start;margin-top:0}
+.how-step{text-align:center;padding:0 16px}
+.how-num{width:56px;height:56px;border-radius:50%;background:var(--gold);color:var(--navy);font-family:'Syne',sans-serif;font-size:22px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;box-shadow:0 4px 20px rgba(201,168,76,.35)}
+.how-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:#fff;margin-bottom:8px}
+.how-sub{font-size:13px;color:rgba(255,255,255,.5);line-height:1.7;max-width:180px;margin:0 auto}
+.how-arr{display:flex;align-items:center;justify-content:center;padding-top:14px;color:rgba(201,168,76,.25);font-size:26px}
+.how-note-wrap{text-align:center;margin-top:40px}
+.how-note{display:inline-flex;align-items:center;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:50px;padding:11px 28px;font-family:'Syne',sans-serif;font-size:13px;font-weight:600;color:rgba(255,255,255,.6);font-style:italic}
+@media(max-width:700px){.how-steps{grid-template-columns:1fr}.how-arr{display:none}.how-step{margin-bottom:28px}}
+
+/* ── COMPARE TABLE ── */
+.compare-wrap{margin-top:0;border-radius:14px;overflow:hidden;box-shadow:0 2px 24px rgba(10,22,40,.08)}
+table{width:100%;border-collapse:collapse}
+thead th{padding:14px 20px;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+thead th:first-child{text-align:left;background:#f7f8fa;color:var(--muted)}
+thead th.th-g{background:#f7f8fa;color:var(--muted);text-align:center}
+thead th.th-b{background:var(--navy);color:var(--gold);text-align:center}
+tbody td{padding:12px 20px;border-bottom:1px solid var(--border);font-size:14px;color:var(--muted)}
+tbody td:first-child{font-family:'Syne',sans-serif;font-weight:600;color:var(--navy)}
+tbody td:not(:first-child){text-align:center}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:rgba(201,168,76,.03)}
+.ck-y{color:var(--green);font-size:16px}
+.ck-n{color:#c0392b;font-size:16px}
+.ck-g{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--gold)}
+
+/* ── ROUTES ── */
+.routes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:0}
+.route-card{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;text-decoration:none;transition:all .2s}
+.route-card:hover{border-color:var(--gold);box-shadow:0 3px 20px rgba(201,168,76,.1);transform:translateX(4px)}
+.route-cities{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--navy);margin-bottom:3px}
+.route-from{font-size:11px;color:var(--gold);font-weight:600}
+.route-save{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;color:var(--green);background:#e8f7f0;padding:3px 9px;border-radius:50px;white-space:nowrap;flex-shrink:0;margin-left:10px}
+@media(max-width:720px){.routes-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.routes-grid{grid-template-columns:1fr}}
+
+/* ── CTA ── */
+.cta-section{background:var(--navy);padding:80px clamp(20px,5vw,80px);text-align:center;position:relative;overflow:hidden}
+.cta-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 80%,rgba(201,168,76,.08) 0%,transparent 60%);pointer-events:none}
+.cta-inner{max-width:600px;margin:0 auto;position:relative}
+.cta-h{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(28px,4vw,48px);line-height:1.1;letter-spacing:-.02em;color:#fff;margin-bottom:14px}
+.cta-h em{font-family:'Instrument Serif',Georgia,serif;font-style:italic;color:var(--gold2)}
+.cta-sub{font-size:16px;line-height:1.75;color:rgba(255,255,255,.5);margin-bottom:32px}
+.cta-btn{display:inline-flex;align-items:center;gap:8px;background:var(--gold2);color:var(--navy);font-family:'Syne',sans-serif;font-size:15px;font-weight:700;padding:16px 36px;border-radius:9px;text-decoration:none;letter-spacing:.04em;transition:all .15s;box-shadow:0 4px 24px rgba(240,192,64,.3)}
+.cta-btn:hover{background:#e6b830;transform:translateY(-2px)}
+.cta-trust{display:flex;align-items:center;justify-content:center;gap:24px;margin-top:32px;flex-wrap:wrap}
+.cta-ti{display:flex;align-items:center;gap:6px;font-family:'Syne',sans-serif;font-size:11px;font-weight:600;color:rgba(255,255,255,.35)}
+.cta-ti svg{color:var(--gold);opacity:.6}
+
+/* ── FOOTER ── */
+footer{background:#060e1e;padding:22px clamp(20px,5vw,80px);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+footer span{font-size:11px;color:rgba(255,255,255,.22)}
+.footer-links{display:flex;gap:20px}
+.footer-links a{font-size:11px;color:rgba(255,255,255,.22);text-decoration:none}
+.footer-links a:hover{color:rgba(255,255,255,.5)}
 </style>
 </head>
 <body>
@@ -689,15 +286,12 @@ footer span{font-size:11px;color:rgba(255,255,255,.22)}
 <nav>
   <a class="nav-logo" href="#">
     <div class="nav-gem">✈</div>
-    <div class="nav-brand">
-      <strong>Business World Travel</strong>
-      <span>Business Class</span>
-    </div>
+    <div class="nav-brand"><strong>Business World Travel</strong><span>Business Class</span></div>
   </a>
   <div class="nav-links">
     <a href="#how">How It Works</a>
     <a href="#routes">Popular Routes</a>
-    <a href="#compare">Why BWT</a>
+    <a href="portal.html">Corporate Portal</a>
     <a href="tel:+12129130450">(212) 913-0450</a>
   </div>
   <a class="nav-cta" href="#search">Request a Quote</a>
@@ -708,81 +302,34 @@ footer span{font-size:11px;color:rgba(255,255,255,.22)}
   <div class="hero-img"></div>
   <div class="hero-bg"></div>
   <div class="hero-rule"></div>
-
   <div class="hero-inner">
     <div class="hero-pill">Specialist Business Class Travel · USA &amp; Canada to Europe</div>
-    <span class="t-eyebrow">Real Fares · Zero Fees · No Obligation</span>
-    <h1 class="t-h1">
-      Same Seat. Same Flight.<br>Same Airline.<br><span class="accent">You Could Pay 40% Less.</span>
+    <h1 class="hero-h1">
+      Same Seat. Same Flight. Same Airline.<br>
+      <em>You Could Pay 40% Less.</em>
     </h1>
-    <p class="t-lead">We check your selected fare against wholesale rates sourced through specialist partners. Clients save up to 70% — on the exact same seat, same airline, same flight.</p>
+    <p class="hero-sub">Stop paying the airline's published price. We source wholesale rates through specialist partners — on the exact same flight you were already going to book.</p>
     <div class="hero-checks">
-      <div class="hero-check">
-        <div class="hck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-        Same Airline
-      </div>
-      <div class="hero-check">
-        <div class="hck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-        Same Seat
-      </div>
-      <div class="hero-check">
-        <div class="hck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-        No Fees
-      </div>
-      <div class="hero-check">
-        <div class="hck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-        No Obligation
-      </div>
+      <div class="hero-check"><div class="hck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Same Airline</div>
+      <div class="hero-check"><div class="hck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Same Seat</div>
+      <div class="hero-check"><div class="hck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Zero Fees</div>
+      <div class="hero-check"><div class="hck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>No Obligation</div>
     </div>
 
-    <!-- Search card -->
-    <div class="search-card">
-      <div class="stabs">
+    <!-- SEARCH BOX -->
+    <div class="search-wrap">
+      <div class="search-tabs">
         <button class="stab on" onclick="setTripType('round',this)">Round Trip</button>
         <button class="stab" onclick="setTripType('one',this)">One Way</button>
         <button class="stab" onclick="setTripType('multi',this)">Multi-City</button>
       </div>
-      <div class="search-card-top">
-      <!-- Multi-city extra legs (hidden by default) -->
-      <div id="multi-legs" style="display:none">
-        <div class="sf-row" style="margin-top:8px">
-          <div class="sf" style="position:relative">
-            <svg class="sf-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
-            <div style="flex:1">
-              <span class="sf-lbl">Leg 2 From</span>
-              <input class="sf-inp" id="orig2-input" placeholder="City or airport" autocomplete="off"
-                oninput="acSuggest('orig2',this.value)" onfocus="acSuggest('orig2',this.value)"
-                onblur="setTimeout(()=>acCloseSug('orig2'),160)" onkeydown="acNavSug(event,'orig2')">
-              <input type="hidden" id="orig2-val">
-              <div class="ac-sug" id="orig2-sug"></div>
-            </div>
-          </div>
-          <div class="sf" style="position:relative">
-            <svg class="sf-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg>
-            <div style="flex:1">
-              <span class="sf-lbl">Leg 2 To</span>
-              <input class="sf-inp" id="dest2-input" placeholder="City or airport" autocomplete="off"
-                oninput="acSuggest('dest2',this.value)" onfocus="acSuggest('dest2',this.value)"
-                onblur="setTimeout(()=>acCloseSug('dest2'),160)" onkeydown="acNavSug(event,'dest2')">
-              <input type="hidden" id="dest2-val">
-              <div class="ac-sug" id="dest2-sug"></div>
-            </div>
-          </div>
-        </div>
-        <div id="dep2-field" class="sf" onclick="dep2Picker && dep2Picker.open()" style="cursor:pointer;margin-top:8px;max-width:220px">
-          <svg class="sf-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          <div style="flex:1">
-            <span class="sf-lbl">Leg 2 Date</span>
-            <span class="sf-val" id="dep2-display">Select date</span>
-          </div>
-          <input id="dep2-date" style="display:none">
-        </div>
-      </div>
-        <div class="sf" style="position:relative;flex:1.5">
-          <svg class="sf-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
-          <div style="flex:1;min-width:0">
-            <span class="sf-lbl">From</span>
-            <input class="sf-inp" id="orig-input" placeholder="City or airport" autocomplete="off"
+      <div class="search-bar">
+        <!-- From -->
+        <div class="sf-box" style="flex:1.8;position:relative">
+          <div class="sf-lbl">From</div>
+          <div class="sf-row-inner">
+            <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+            <input class="sf-input" id="orig-input" placeholder="City or airport" autocomplete="off"
               oninput="acSuggest('orig',this.value)"
               onfocus="acSuggest('orig',this.value)"
               onblur="setTimeout(()=>acCloseSug('orig'),160)"
@@ -791,11 +338,13 @@ footer span{font-size:11px;color:rgba(255,255,255,.22)}
           </div>
           <div class="ac-sug" id="orig-sug"></div>
         </div>
-        <div class="sf" style="position:relative;flex:1.5">
-          <svg class="sf-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4"/></svg>
-          <div style="flex:1;min-width:0">
-            <span class="sf-lbl">To</span>
-            <input class="sf-inp" id="dest-input" placeholder="City or airport" autocomplete="off"
+        <div style="width:1px;background:rgba(255,255,255,.08);margin:10px 0;flex-shrink:0"></div>
+        <!-- To -->
+        <div class="sf-box" style="flex:1.8;position:relative">
+          <div class="sf-lbl">To</div>
+          <div class="sf-row-inner">
+            <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4"/></svg>
+            <input class="sf-input" id="dest-input" placeholder="City or airport" autocomplete="off"
               oninput="acSuggest('dest',this.value)"
               onfocus="acSuggest('dest',this.value)"
               onblur="setTimeout(()=>acCloseSug('dest'),160)"
@@ -804,82 +353,96 @@ footer span{font-size:11px;color:rgba(255,255,255,.22)}
           </div>
           <div class="ac-sug" id="dest-sug"></div>
         </div>
-        <div class="sf" id="dep-field" onclick="depPicker && depPicker.open()" style="cursor:pointer;flex:1">
-          <svg class="sf-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          <div style="flex:1">
-            <span class="sf-lbl">Depart</span>
-            <span class="sf-val" id="dep-display" style="color:#0a1628">Select date</span>
+        <div style="width:1px;background:rgba(255,255,255,.08);margin:10px 0;flex-shrink:0"></div>
+        <!-- Depart -->
+        <div class="sf-box" id="dep-field" onclick="depPicker && depPicker.open()" style="flex:1.2;cursor:pointer">
+          <div class="sf-lbl">Depart</div>
+          <div class="sf-row-inner">
+            <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <span class="sf-val empty" id="dep-display">Add date</span>
           </div>
           <input id="dep-date" style="display:none">
         </div>
-        <div class="sf" id="ret-field" onclick="retPicker && retPicker.open()" style="cursor:pointer;flex:1">
-          <svg class="sf-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          <div style="flex:1">
-            <span class="sf-lbl">Return</span>
-            <span class="sf-val" id="ret-display" style="color:#8fa3be">Optional</span>
+        <div style="width:1px;background:rgba(255,255,255,.08);margin:10px 0;flex-shrink:0" id="ret-div"></div>
+        <!-- Return -->
+        <div class="sf-box" id="ret-field" onclick="retPicker && retPicker.open()" style="flex:1.2;cursor:pointer">
+          <div class="sf-lbl">Return</div>
+          <div class="sf-row-inner">
+            <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <span class="sf-val empty" id="ret-display">Add return</span>
           </div>
           <input id="ret-date" style="display:none">
         </div>
-      <button class="sbtn" onclick="doSearch()">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <!-- Search -->
+        <button class="search-btn" onclick="doSearch()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
           Search
         </button>
       </div>
-      <div class="search-card-bottom">
-        <p class="snote">🔒 No credit card · No fees · Business emails only</p>
+      <!-- Multi-city leg 2 -->
+      <div class="multi-row" id="multi-legs">
+        <div class="multi-lbl">Leg 2</div>
+        <div class="multi-fields">
+          <div class="mf" style="position:relative">
+            <div class="sf-lbl">From</div>
+            <input class="sf-input" id="orig2-input" placeholder="City or airport" autocomplete="off"
+              oninput="acSuggest('orig2',this.value)" onfocus="acSuggest('orig2',this.value)"
+              onblur="setTimeout(()=>acCloseSug('orig2'),160)" onkeydown="acNavSug(event,'orig2')">
+            <input type="hidden" id="orig2-val">
+            <div class="ac-sug" id="orig2-sug"></div>
+          </div>
+          <div class="mf" style="position:relative">
+            <div class="sf-lbl">To</div>
+            <input class="sf-input" id="dest2-input" placeholder="City or airport" autocomplete="off"
+              oninput="acSuggest('dest2',this.value)" onfocus="acSuggest('dest2',this.value)"
+              onblur="setTimeout(()=>acCloseSug('dest2'),160)" onkeydown="acNavSug(event,'dest2')">
+            <input type="hidden" id="dest2-val">
+            <div class="ac-sug" id="dest2-sug"></div>
+          </div>
+          <div class="mf" id="dep2-field" onclick="dep2Picker && dep2Picker.open()" style="cursor:pointer">
+            <div class="sf-lbl">Date</div>
+            <div class="sf-row-inner">
+              <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <span class="sf-val empty" id="dep2-display">Add date</span>
+            </div>
+            <input id="dep2-date" style="display:none">
+          </div>
+        </div>
       </div>
+      <div class="search-note">🔒 No credit card required · No fees · Business emails only</div>
     </div>
+  </div>
 </section>
 
 <!-- TRUST BAR -->
 <div class="trust-bar">
   <div class="trust-bar-inner">
-    <div class="tb-item"><div class="tb-dot"></div><div><strong>Same flight.</strong> Same seat. Same airline.</div></div>
-    <div class="tb-item"><div class="tb-dot"></div><div><strong>Zero fees.</strong> Not one.</div></div>
-    <div class="tb-item"><div class="tb-dot"></div><div><strong>No obligation</strong> until you say yes.</div></div>
-    <div class="tb-item"><div class="tb-dot"></div><div><strong>You see our rate</strong> before you commit.</div></div>
-    <div class="tb-item"><div class="tb-dot"></div><div><strong>Can't beat it?</strong> Book normally.</div></div>
+    <div class="tb-item"><div class="tb-dot"></div><strong>Same flight.</strong>&nbsp;Same seat. Same airline.</div>
+    <div class="tb-item"><div class="tb-dot"></div><strong>Zero fees.</strong>&nbsp;Not one.</div>
+    <div class="tb-item"><div class="tb-dot"></div><strong>No obligation</strong>&nbsp;until you say yes.</div>
+    <div class="tb-item"><div class="tb-dot"></div><strong>You see our rate</strong>&nbsp;before you commit.</div>
+    <div class="tb-item"><div class="tb-dot"></div><strong>Can't beat it?</strong>&nbsp;You book normally.</div>
   </div>
 </div>
 
-<!-- MESSAGE / FARE COMPARISON -->
-<section class="section" id="compare" style="background:#fff;padding:88px clamp(20px,5vw,80px)">
+<!-- HONEST TRUTH -->
+<section class="section" id="compare">
   <div class="section-inner">
-
-    <!-- Centered headline block -->
-    <div class="section-head" style="margin-bottom:56px">
-      <span class="t-eyebrow">The Honest Truth</span>
+    <div class="section-head">
+      <span class="eyebrow">The Honest Truth</span>
       <h2 class="ht-h2">Same seat. Same flight. Same airline.<br><span class="ht-accent">You could be paying 40% less.</span></h2>
       <p class="ht-sub">Stop paying the airline's published price. There's a lower one.<br>We source wholesale rates through specialist partners — on the exact same flight you were already going to book.</p>
     </div>
-
-    <!-- Big stat row -->
     <div class="ht-stats">
-      <div class="ht-stat">
-        <div class="ht-stat-num">Up to 70%</div>
-        <div class="ht-stat-lbl">below the published fare</div>
-      </div>
+      <div class="ht-stat"><div class="ht-stat-num">Up to 70%</div><div class="ht-stat-lbl">below published fare</div></div>
       <div class="ht-stat-div"></div>
-      <div class="ht-stat">
-        <div class="ht-stat-num">$0</div>
-        <div class="ht-stat-lbl">fees charged to you. Ever.</div>
-      </div>
+      <div class="ht-stat"><div class="ht-stat-num">$0</div><div class="ht-stat-lbl">fees charged to you. Ever.</div></div>
       <div class="ht-stat-div"></div>
-      <div class="ht-stat">
-        <div class="ht-stat-num">Zero risk</div>
-        <div class="ht-stat-lbl">you see our rate before you commit</div>
-      </div>
+      <div class="ht-stat"><div class="ht-stat-num">Zero risk</div><div class="ht-stat-lbl">see rate before committing</div></div>
       <div class="ht-stat-div"></div>
-      <div class="ht-stat">
-        <div class="ht-stat-num">30 sec</div>
-        <div class="ht-stat-lbl">to check your fare</div>
-      </div>
+      <div class="ht-stat"><div class="ht-stat-num">30 sec</div><div class="ht-stat-lbl">to check your fare</div></div>
     </div>
-
-    <!-- Fare card + bullets side by side -->
     <div class="ht-grid">
-
-      <!-- Fare comparison card -->
       <div class="fare-cmp">
         <div class="fare-cmp-head">Illustrative Example — JFK → LHR</div>
         <div class="fare-cols">
@@ -888,110 +451,44 @@ footer span{font-size:11px;color:rgba(255,255,255,.22)}
             <div class="fare-col-route">New York → London</div>
             <div class="fare-col-sub">Business Class · Round Trip</div>
             <div class="price-pub"><sup>$</sup>4,800</div>
-            <div class="fare-note">Airline website / Google Flights</div>
-            <div class="fare-tags">
-              <span class="fare-tag">BA Flight</span>
-              <span class="fare-tag">Same Seat</span>
-            </div>
+            <div class="fare-note" style="font-size:11px;color:var(--muted);margin-top:5px">Airline website / Google Flights</div>
+            <span class="fare-tag">BA Flight</span><span class="fare-tag">Same Seat</span>
           </div>
           <div class="fare-col">
             <div class="fare-col-lbl">BWT rate</div>
             <div class="fare-col-route">New York → London</div>
             <div class="fare-col-sub">Business Class · Round Trip</div>
             <div class="price-bwt"><sup>$</sup>2,950</div>
-            <div class="fare-note">Per person · via BWT</div>
-            <div class="saving-pill">
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-              $1,850 saved · 38% below published
-            </div>
-            <div class="fare-tags" style="margin-top:10px">
-              <span class="fare-tag">Same BA Flight</span>
-              <span class="fare-tag">Same Seat</span>
-            </div>
+            <div class="saving-pill"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>$1,850 saved · 38% below published</div>
+            <span class="fare-tag">Same BA Flight</span><span class="fare-tag">Same Seat</span>
           </div>
         </div>
         <div class="fare-footer">Illustrative only. Actual savings vary by route, dates and availability.</div>
       </div>
-
-      <!-- Bullet points -->
       <div class="ht-bullets">
-        <div class="ht-bullet">
-          <div class="ht-bullet-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><polyline points="20 6 9 17 4 12"/></svg>
-          </div>
-          <div>
-            <div class="ht-bullet-title">Wholesale rates you can't find publicly</div>
-            <div class="ht-bullet-sub">Sourced through specialist travel partners — not visible on any airline site, Google Flights, or standard booking tool.</div>
-          </div>
-        </div>
-        <div class="ht-bullet">
-          <div class="ht-bullet-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><polyline points="20 6 9 17 4 12"/></svg>
-          </div>
-          <div>
-            <div class="ht-bullet-title">Zero fees. Not a single one.</div>
-            <div class="ht-bullet-sub">No booking fee, no service charge, no consultation fee. We make our margin from the partner — not from you.</div>
-          </div>
-        </div>
-        <div class="ht-bullet">
-          <div class="ht-bullet-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><polyline points="20 6 9 17 4 12"/></svg>
-          </div>
-          <div>
-            <div class="ht-bullet-title">See our rate before you commit</div>
-            <div class="ht-bullet-sub">We come back with our number. You decide. If we can't beat the published fare, you book normally and pay nothing.</div>
-          </div>
-        </div>
-        <div class="ht-bullet">
-          <div class="ht-bullet-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><polyline points="20 6 9 17 4 12"/></svg>
-          </div>
-          <div>
-            <div class="ht-bullet-title">Nothing to lose. A lot to save.</div>
-            <div class="ht-bullet-sub">The only downside of checking is the 30 seconds it takes. The downside of not checking could be thousands of dollars — every trip.</div>
-          </div>
-        </div>
+        <div class="ht-bullet"><div class="ht-bi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="ht-bt">Wholesale rates you can't find publicly</div><div class="ht-bd">Sourced through specialist travel partners — not visible on any airline site, Google Flights, or standard booking tool.</div></div></div>
+        <div class="ht-bullet"><div class="ht-bi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="ht-bt">Zero fees. Not a single one.</div><div class="ht-bd">No booking fee, no service charge. We make our margin from the partner — not from you.</div></div></div>
+        <div class="ht-bullet"><div class="ht-bi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="ht-bt">See our rate before you commit</div><div class="ht-bd">We come back with our number. You decide. If we can't beat the published fare, you book normally.</div></div></div>
+        <div class="ht-bullet"><div class="ht-bi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="ht-bt">Nothing to lose. A lot to save.</div><div class="ht-bd">The only downside of checking is 30 seconds. The downside of not checking could be thousands per trip.</div></div></div>
       </div>
-
     </div>
   </div>
 </section>
 
-<!-- WHO IS IT FOR -->
+<!-- WHO IS THIS FOR -->
 <section class="section section--off">
   <div class="section-inner">
     <div class="section-head">
-      <span class="t-eyebrow">Who This Is For</span>
-      <h2 class="t-h2">If you're a CEO, Founder, Entrepreneur<br>or Executive who flies business class<br>to Europe — <span class="accent">this is for you.</span></h2>
-      <p class="t-body" style="margin-top:16px">You're already buying the seat. We just make sure you're not overpaying for it.</p>
+      <span class="eyebrow">Who This Is For</span>
+      <h2 class="s-h2">If you're a CEO, Founder, Entrepreneur or Executive<br>who flies business class to Europe — <em>this is for you.</em></h2>
+      <p class="s-sub">You're already buying the seat. We just make sure you're not overpaying for it.</p>
     </div>
     <div class="who-grid">
-      <div class="who-card">
-        <span class="who-icon">✈️</span>
-        <div class="who-title">You fly business class to Europe regularly</div>
-        <div class="who-sub">And you know the prices feel inflated for what the seat is actually worth.</div>
-        <span class="who-tag">This is for you →</span>
-      </div>
-      <div class="who-card">
-        <span class="who-icon">💼</span>
-        <div class="who-title">You book travel for executives or partners</div>
-        <div class="who-sub">And you need better rates without compromising on quality, airline or routing.</div>
-        <span class="who-tag">This is for you →</span>
-      </div>
-      <div class="who-card">
-        <span class="who-icon">🏢</span>
-        <div class="who-title">You run a company with frequent international travel</div>
-        <div class="who-sub">And want to cut travel costs without changing how your team flies.</div>
-        <span class="who-tag">This is for you →</span>
-      </div>
-      <div class="who-card">
-        <span class="who-icon">🔍</span>
-        <div class="who-title">You've looked at the fares and thought "there has to be a better way"</div>
-        <div class="who-sub">There is. You just found it.</div>
-        <span class="who-tag">This is for you →</span>
-      </div>
+      <div class="who-card"><span class="who-icon">✈️</span><div class="who-title">You fly business class to Europe regularly</div><div class="who-sub">And you know prices feel inflated for what the seat is actually worth.</div><span class="who-tag">This is for you →</span></div>
+      <div class="who-card"><span class="who-icon">💼</span><div class="who-title">You book travel for executives or partners</div><div class="who-sub">And need better rates without compromising on quality or routing.</div><span class="who-tag">This is for you →</span></div>
+      <div class="who-card"><span class="who-icon">🏢</span><div class="who-title">You run a company with frequent international travel</div><div class="who-sub">And want to cut travel costs without changing how your team flies.</div><span class="who-tag">This is for you →</span></div>
+      <div class="who-card"><span class="who-icon">🔍</span><div class="who-title">You've searched Google Flights and thought "there has to be a better way"</div><div class="who-sub">There is. You just found it.</div><span class="who-tag">This is for you →</span></div>
     </div>
-    <p class="who-footer">If this sounds like you — check your next fare before you book it.</p>
   </div>
 </section>
 
@@ -999,53 +496,35 @@ footer span{font-size:11px;color:rgba(255,255,255,.22)}
 <section class="section section--navy" id="how">
   <div class="section-inner">
     <div class="section-head">
-      <span class="t-eyebrow">How It Works</span>
-      <h2 class="t-h2" style="color:#fff">
-        3 steps. <span style="color:rgba(255,255,255,.35);font-weight:400;font-size:clamp(20px,2.8vw,36px)">Takes 30 seconds.</span>
-      </h2>
+      <span class="eyebrow">How It Works</span>
+      <h2 class="s-h2 white">3 Simple Steps — <span style="color:rgba(255,255,255,.4);font-weight:400">Takes 30 Seconds</span></h2>
     </div>
     <div class="how-steps">
-      <div class="how-step">
-        <div class="how-num">1</div>
-        <div class="how-title">Search your flight</div>
-        <div class="how-sub">See live published fares from all major airlines on your route.</div>
-      </div>
+      <div class="how-step"><div class="how-num">1</div><div class="how-title">Search your flight</div><div class="how-sub">See live published fares from all major airlines.</div></div>
       <div class="how-arr">→</div>
-      <div class="how-step">
-        <div class="how-num">2</div>
-        <div class="how-title">Select the one you want</div>
-        <div class="how-sub">Choose the flight and price you were going to book.</div>
-      </div>
+      <div class="how-step"><div class="how-num">2</div><div class="how-title">Find your fare</div><div class="how-sub">Select the flight and price that works for you.</div></div>
       <div class="how-arr">→</div>
-      <div class="how-step">
-        <div class="how-num">3</div>
-        <div class="how-title">We come back with our rate</div>
-        <div class="how-sub">We check against wholesale partner rates and respond. Often lower. Always free.</div>
-      </div>
+      <div class="how-step"><div class="how-num">3</div><div class="how-title">Request our rate</div><div class="how-sub">We come back with our best price — often 40% below published. No fees. No obligation.</div></div>
     </div>
-    <div class="how-note-wrap">
-      <div class="how-note">If we can't beat it — you book normally. You've lost nothing.</div>
-    </div>
+    <div class="how-note-wrap"><div class="how-note">If we can't beat it — you book normally. You've lost nothing.</div></div>
   </div>
 </section>
 
-<!-- WHY NOT GOOGLE / COMPARE TABLE -->
-<section class="section" id="why">
+<!-- COMPARE TABLE -->
+<section class="section">
   <div class="section-inner">
     <div class="section-head">
-      <span class="t-eyebrow">Why Not Just Use Google Flights?</span>
-      <h2 class="t-h2">Google Flights shows <span class="accent">the most expensive<br>price</span> for that seat.</h2>
-      <p class="t-body" style="margin-top:14px">Google, Expedia, Kayak — they all show the same publicly filed fares. Every airline makes these available to everyone. Below them are wholesale rates that only move through specialist partners. That's where we operate — and why we can beat what you find online.</p>
+      <span class="eyebrow">Why Not Just Use Google Flights?</span>
+      <h2 class="s-h2">Google Flights shows the <em>most expensive price</em> for that seat. We work below it.</h2>
+      <p class="s-sub">Google, Expedia, Kayak — all show the same publicly filed fares. Wholesale rates sit outside that system. That's where we operate.</p>
     </div>
     <div class="compare-wrap">
       <table>
-        <thead>
-          <tr>
-            <th style="text-align:left;background:#F7F8FA;color:var(--muted);padding:14px 22px;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase">Feature</th>
-            <th class="th-g" style="background:#F7F8FA;color:var(--muted);text-align:center;padding:14px 22px;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase">Google Flights</th>
-            <th class="th-b" style="background:var(--navy);color:var(--gold);text-align:center;padding:14px 22px;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase">BWT</th>
-          </tr>
-        </thead>
+        <thead><tr>
+          <th style="text-align:left;background:#f7f8fa;color:var(--muted);padding:14px 20px;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase">Feature</th>
+          <th class="th-g" style="background:#f7f8fa;color:var(--muted);text-align:center;padding:14px 20px;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase">Google Flights</th>
+          <th class="th-b" style="background:var(--navy);color:var(--gold);text-align:center;padding:14px 20px;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase">BWT</th>
+        </tr></thead>
         <tbody>
           <tr><td>Published fares</td><td><span class="ck-y">✓</span></td><td><span class="ck-y">✓</span></td></tr>
           <tr><td>Wholesale partner rates</td><td><span class="ck-n">✗</span></td><td><span class="ck-y">✓</span></td></tr>
@@ -1064,79 +543,38 @@ footer span{font-size:11px;color:rgba(255,255,255,.22)}
 <section class="section section--off" id="routes">
   <div class="section-inner">
     <div class="section-head">
-      <span class="t-eyebrow">Popular Routes</span>
-      <h2 class="t-h2">Flying one of these routes?<br><span class="accent">We can probably beat your fare.</span></h2>
-      <p class="t-body" style="margin-top:14px">Search your route, select the flight you were going to book, and let us come back with our rate. No fees. No obligation. If we can't beat it — you book normally.</p>
+      <span class="eyebrow">Popular Routes</span>
+      <h2 class="s-h2">Flying one of these routes?<br><em>We can probably beat your fare.</em></h2>
+      <p class="s-sub">Search your route, select the flight, and let us come back with our rate. No fees. No obligation.</p>
     </div>
     <div class="routes-grid">
-      <a class="route-card" href="#">
-        <div><div class="route-cities">New York → London</div><div class="route-from">From $1,900 · Business Class</div></div>
-        <span class="route-save">Save up to 41%</span>
-      </a>
-      <a class="route-card" href="#">
-        <div><div class="route-cities">Chicago → London</div><div class="route-from">From $2,000 · Business Class</div></div>
-        <span class="route-save">Save up to 41%</span>
-      </a>
-      <a class="route-card" href="#">
-        <div><div class="route-cities">New York → Paris</div><div class="route-from">From $1,950 · Business Class</div></div>
-        <span class="route-save">Save up to 41%</span>
-      </a>
-      <a class="route-card" href="#">
-        <div><div class="route-cities">San Francisco → London</div><div class="route-from">From $2,300 · Business Class</div></div>
-        <span class="route-save">Save up to 38%</span>
-      </a>
-      <a class="route-card" href="#">
-        <div><div class="route-cities">New York → Frankfurt</div><div class="route-from">From $1,950 · Business Class</div></div>
-        <span class="route-save">Save up to 40%</span>
-      </a>
-      <a class="route-card" href="#">
-        <div><div class="route-cities">Toronto → London</div><div class="route-from">From $1,750 · Business Class</div></div>
-        <span class="route-save">Save up to 41%</span>
-      </a>
-      <a class="route-card" href="#">
-        <div><div class="route-cities">Boston → London</div><div class="route-from">From $1,900 · Business Class</div></div>
-        <span class="route-save">Save up to 41%</span>
-      </a>
-      <a class="route-card" href="#">
-        <div><div class="route-cities">Los Angeles → London</div><div class="route-from">From $2,200 · Business Class</div></div>
-        <span class="route-save">Save up to 39%</span>
-      </a>
-      <a class="route-card" href="#">
-        <div><div class="route-cities">Miami → Amsterdam</div><div class="route-from">From $2,100 · Business Class</div></div>
-        <span class="route-save">Save up to 38%</span>
-      </a>
+      <a class="route-card" href="#search"><div><div class="route-cities">New York → London</div><div class="route-from">From $1,900 · Business Class</div></div><span class="route-save">Save up to 41%</span></a>
+      <a class="route-card" href="#search"><div><div class="route-cities">Chicago → London</div><div class="route-from">From $2,000 · Business Class</div></div><span class="route-save">Save up to 41%</span></a>
+      <a class="route-card" href="#search"><div><div class="route-cities">New York → Paris</div><div class="route-from">From $1,950 · Business Class</div></div><span class="route-save">Save up to 41%</span></a>
+      <a class="route-card" href="#search"><div><div class="route-cities">San Francisco → London</div><div class="route-from">From $2,300 · Business Class</div></div><span class="route-save">Save up to 38%</span></a>
+      <a class="route-card" href="#search"><div><div class="route-cities">New York → Frankfurt</div><div class="route-from">From $1,950 · Business Class</div></div><span class="route-save">Save up to 40%</span></a>
+      <a class="route-card" href="#search"><div><div class="route-cities">Toronto → London</div><div class="route-from">From $1,750 · Business Class</div></div><span class="route-save">Save up to 41%</span></a>
+      <a class="route-card" href="#search"><div><div class="route-cities">Boston → London</div><div class="route-from">From $1,900 · Business Class</div></div><span class="route-save">Save up to 41%</span></a>
+      <a class="route-card" href="#search"><div><div class="route-cities">Los Angeles → London</div><div class="route-from">From $2,200 · Business Class</div></div><span class="route-save">Save up to 39%</span></a>
+      <a class="route-card" href="#search"><div><div class="route-cities">Miami → Amsterdam</div><div class="route-from">From $2,100 · Business Class</div></div><span class="route-save">Save up to 38%</span></a>
     </div>
-    <div class="routes-more"><a href="#">View all routes →</a></div>
   </div>
 </section>
 
-<!-- FINAL CTA -->
+<!-- CTA -->
 <section class="cta-section">
   <div class="cta-inner">
-    <span class="t-eyebrow" style="display:block;text-align:center">Nothing to lose. A lot to save.</span>
-    <h2 class="cta-h">Check your fare<br>before you <span class="accent">book it.</span></h2>
-    <p class="cta-sub">30 seconds. No fees. No obligation. No credit card. If we can't beat the published fare — you book normally and pay nothing. If we can — you save.</p>
+    <span class="eyebrow" style="text-align:center;display:block">Nothing to lose. A lot to save.</span>
+    <h2 class="cta-h">Check your fare before you <em>book it.</em></h2>
+    <p class="cta-sub">30 seconds. No fees. No obligation. No credit card. If we can't beat the published fare — you book normally.</p>
     <a class="cta-btn" href="#search">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
       Search Your Route Now →
     </a>
     <div class="cta-trust">
-      <div class="cta-ti">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-        Zero fees. Ever.
-      </div>
-      <div class="cta-ti">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-        No obligation to book.
-      </div>
-      <div class="cta-ti">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-        Up to 70% below published.
-      </div>
-      <div class="cta-ti">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-        Same airline. Same seat.
-      </div>
+      <div class="cta-ti"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Zero fees. Ever.</div>
+      <div class="cta-ti"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>No obligation to book.</div>
+      <div class="cta-ti"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Same airline. Same seat.</div>
     </div>
   </div>
 </section>
@@ -1144,14 +582,11 @@ footer span{font-size:11px;color:rgba(255,255,255,.22)}
 <!-- FOOTER -->
 <footer>
   <span>© 2026 Business World Travel. All rights reserved.</span>
-  <div class="footer-links">
-    <a href="#">Privacy Policy</a>
-    <a href="#">Terms</a>
-    <a href="#">Contact</a>
-  </div>
+  <div class="footer-links"><a href="portal.html">Corporate Portal</a><a href="privacy-policy.html">Privacy</a><a href="terms-of-use.html">Terms</a></div>
 </footer>
 
 <script>
+
 // ── Trip type ──
 let tripType = 'round';
 let dep2Picker;
@@ -1160,10 +595,13 @@ function setTripType(type, btn) {
   document.querySelectorAll('.stab').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
   const retField = document.getElementById('ret-field');
+  const retDiv = document.getElementById('ret-div');
   const multiLegs = document.getElementById('multi-legs');
-  retField.style.opacity = (type==='one'||type==='multi') ? '.35' : '1';
-  retField.style.pointerEvents = (type==='one'||type==='multi') ? 'none' : '';
-  multiLegs.style.display = type==='multi' ? 'block' : 'none';
+  const hideRet = type==='one'||type==='multi';
+  retField.style.opacity = hideRet ? '.35' : '1';
+  retField.style.pointerEvents = hideRet ? 'none' : '';
+  if (retDiv) retDiv.style.opacity = hideRet ? '.35' : '1';
+  if (multiLegs) multiLegs.classList.toggle('show', type==='multi');
   if (type==='multi' && !dep2Picker) {
     const fmt = {weekday:'short',month:'short',day:'numeric'};
     dep2Picker = flatpickr('#dep2-date', {
@@ -1200,9 +638,11 @@ document.addEventListener('DOMContentLoaded', () => {
     disableMobile: true,
     onChange(sel, ds) {
       const el = document.getElementById('dep-display');
-      el.textContent = sel[0] ? sel[0].toLocaleDateString('en-US', fmt) : 'Select date';
-      el.style.color = sel[0] ? '' : '';
-      if (sel[0]) retPicker.set('minDate', ds);
+      if (el) {
+        el.textContent = sel[0] ? sel[0].toLocaleDateString('en-US', fmt) : 'Add date';
+        el.classList.toggle('empty', !sel[0]);
+      }
+      if (sel[0] && retPicker) retPicker.set('minDate', ds);
     }
   });
 
@@ -1211,7 +651,10 @@ document.addEventListener('DOMContentLoaded', () => {
     disableMobile: true,
     onChange(sel, ds) {
       const el = document.getElementById('ret-display');
-      el.textContent = sel[0] ? sel[0].toLocaleDateString('en-US', fmt) : 'Select date';
+      if (el) {
+        el.textContent = sel[0] ? sel[0].toLocaleDateString('en-US', fmt) : 'Add return';
+        el.classList.toggle('empty', !sel[0]);
+      }
     }
   });
 });
@@ -1222,8 +665,8 @@ function doSearch() {
   const dest = document.getElementById('dest-val').value;
   const dep  = depPicker?.selectedDates[0] ? depPicker.selectedDates[0].toISOString().slice(0,10) : '';
   const ret  = retPicker?.selectedDates[0] ? retPicker.selectedDates[0].toISOString().slice(0,10) : '';
-  const origN = document.getElementById('orig-input').value.replace(/\s*\([^)]*\)/, '').trim();
-  const destN = document.getElementById('dest-input').value.replace(/\s*\([^)]*\)/, '').trim();
+  const origN = document.getElementById('orig-input').value.replace(/\s*\([^)]*\)/,'').trim();
+  const destN = document.getElementById('dest-input').value.replace(/\s*\([^)]*\)/,'').trim();
 
   if (!orig || !dest) { alert('Please enter origin and destination'); return; }
   if (!dep)           { alert('Please select a departure date'); return; }
@@ -1561,6 +1004,7 @@ function acPick(field, a) {
 document.addEventListener('mousedown', e => {
   if (!e.target.closest('.sf')) { acCloseSug('orig'); acCloseSug('dest'); }
 });
+
 </script>
 </body>
 </html>

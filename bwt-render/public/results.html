@@ -526,7 +526,7 @@ a{color:inherit;text-decoration:none}
 .pbadge.nonstop{background:rgba(167,139,250,.09);color:#a78bfa;border-color:rgba(167,139,250,.25)}
 .pr-amt{}
 .pr-pub-label{font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:4px;text-align:right}
-.pr-big{font-family:'Syne',sans-serif;font-size:26px;font-weight:700;color:#0a1628;line-height:1;letter-spacing:-.02em;text-align:right}
+.pr-big{font-family:'Syne',sans-serif;font-size:30px;font-weight:800;color:#0a1628;line-height:1;letter-spacing:-.02em;text-align:right}
 .pr-big sup{font-size:14px;letter-spacing:0;vertical-align:super;font-weight:600;color:#0a1628}
 .pr-note{font-size:11px;color:#8fa3be;text-align:right;font-weight:400}
 .pr-cta{
@@ -541,7 +541,7 @@ a{color:inherit;text-decoration:none}
 }
 .pr-cta:hover{background:#1557b0;transform:translateY(-1px)}
 .pr-cta:active{transform:none}
-.pr-sub{font-size:10px;color:#8fa3be;text-align:right;margin-top:4px;line-height:1.5}
+.pr-sub{font-size:11px;color:#3a4a6b;text-align:center;margin-top:6px;line-height:1.5;font-weight:500}
 
 /* ─ Expand toggle ─ */
 .fc-tog{
@@ -1244,9 +1244,122 @@ mark.m{background:rgba(201,168,76,.18);border-radius:2px;padding:0 1px;color:inh
   .rh2-summary{flex-direction:column;align-items:flex-start}
   .rh2-specialty{padding:12px 16px}
 }
+
+
+.loader-dots::after{
+  content:'';
+  animation:dots 1.5s steps(4,end) infinite;
+}
+@keyframes dots{
+  0%{content:''}
+  25%{content:'.'}
+  50%{content:'..'}
+  75%{content:'...'}
+  100%{content:''}
+}
+/* ── LOADER PAGE ── */
+#bwt-loader{
+  position:fixed;inset:0;z-index:999999;
+  background:#0a1628;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:32px;text-align:center;
+  transition:opacity .5s ease;
+}
+#bwt-loader.fade-out{opacity:0;pointer-events:none}
+.loader-plane{
+  font-size:48px;margin-bottom:24px;
+  animation:planeFly 2s ease-in-out infinite;
+}
+@keyframes planeFly{
+  0%{transform:translateY(0px) rotate(-3deg)}
+  25%{transform:translateY(-10px) rotate(2deg)}
+  50%{transform:translateY(-16px) rotate(5deg)}
+  75%{transform:translateY(-8px) rotate(1deg)}
+  100%{transform:translateY(0px) rotate(-3deg)}
+}
+.loader-title{
+  font-family:'Syne',sans-serif;font-weight:700;
+  font-size:clamp(22px,4vw,34px);color:#fff;
+  line-height:1.2;margin-bottom:12px;
+  max-width:600px;
+}
+.loader-title span{color:#f0c040}
+.loader-sub{
+  font-size:15px;color:rgba(255,255,255,.55);
+  max-width:480px;line-height:1.7;margin-bottom:36px;
+}
+.loader-steps-row{
+  display:flex;align-items:center;gap:8px;
+  flex-wrap:wrap;justify-content:center;
+  margin-bottom:40px;
+}
+.loader-step-box{
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;padding:14px 20px;
+  max-width:200px;
+}
+.loader-step-n{
+  font-family:'Syne',sans-serif;font-size:11px;font-weight:700;
+  color:#f0c040;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;
+}
+.loader-step-t{
+  font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#fff;margin-bottom:4px;
+}
+.loader-step-d{font-size:11px;color:rgba(255,255,255,.45);line-height:1.5}
+.loader-arr{font-size:20px;color:rgba(240,192,64,.3)}
+.loader-bar-wrap{width:280px;height:3px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden}
+.loader-bar{
+  height:100%;background:linear-gradient(90deg,#c9a84c,#f0c040);
+  border-radius:3px;width:0%;
+  animation:loadBar 3s ease-in-out forwards;
+}
+@keyframes loadBar{
+  0%{width:0%}
+  30%{width:40%}
+  60%{width:72%}
+  85%{width:88%}
+  100%{width:95%}
+}
+.loader-note{font-size:11px;color:rgba(255,255,255,.3);margin-top:14px}
 </style>
 </head>
 <body>
+
+<!-- ══ BWT LOADER PAGE ══ --><script>window._loaderShown = Date.now();</script>
+<div id="bwt-loader">
+  <div class="loader-plane">✈</div>
+  <div class="loader-title">
+    We're finding live fares for your route.<br>
+    <span>We'll check if we can beat every one.</span>
+  </div>
+  <div class="loader-sub">
+    The fares below are what airlines charge publicly — the published price.<br>
+    We source wholesale rates through specialist partners that can be significantly lower<br>for the exact same seat, same flight, same airline.
+  </div>
+  <div class="loader-steps-row">
+    <div class="loader-step-box">
+      <div class="loader-step-n">Step 1</div>
+      <div class="loader-step-t">See published fares</div>
+      <div class="loader-step-d">Live prices direct from the airlines</div>
+    </div>
+    <div class="loader-arr">→</div>
+    <div class="loader-step-box">
+      <div class="loader-step-n">Step 2</div>
+      <div class="loader-step-t">Find your fare</div>
+      <div class="loader-step-d">Pick the flight and price you like</div>
+    </div>
+    <div class="loader-arr">→</div>
+    <div class="loader-step-box">
+      <div class="loader-step-n">Step 3</div>
+      <div class="loader-step-t">Request our rate</div>
+      <div class="loader-step-d">We come back with our price — often 40% lower. No fees. No obligation.</div>
+    </div>
+  </div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+  <div class="loader-note" id="loader-note">Loading fares<span class="loader-dots"></span></div>
+</div>
+
 
 <!-- ══ BUSINESS EMAIL GATE ══ -->
 <div id="bwt-gate">
@@ -2318,6 +2431,12 @@ async function doSearch() {
     }
     allOffers = res.ok ? (data.offers||[]) : makeDemoOffers(orig, dest, dep);
     if (res.ok && data.priceInsights) window._priceInsights = data.priceInsights;
+    // Ensure minimum loader display time
+    await new Promise(r => {
+      const shown = window._loaderShown || Date.now();
+      const wait = Math.max(0, 3500 - (Date.now() - shown));
+      setTimeout(r, wait);
+    });
 
     filteredOffers = [...allOffers];
     if (allOffers.length) setBadge('live','Published fares');
@@ -2326,6 +2445,17 @@ async function doSearch() {
     buildAirlineFilter(allOffers);
     buildHistogram(allOffers);
     renderCards(filteredOffers);
+    // Hide loader after minimum display time for user to read the message
+    const ldr = document.getElementById('bwt-loader');
+    if (ldr) {
+      const shown = window._loaderShown || Date.now();
+      const elapsed = Date.now() - shown;
+      const minTime = 3000; // 3 seconds minimum
+      setTimeout(() => {
+        ldr.classList.add('fade-out');
+        setTimeout(() => { ldr.style.display = 'none'; }, 600);
+      }, Math.max(0, minTime - elapsed));
+    }
     // buildSpecialistFinds removed — fake estimates
     // Route range injection
     setTimeout(() => {
@@ -2336,6 +2466,11 @@ async function doSearch() {
     console.error('[doSearch error]', e);
     allOffers = makeDemoOffers(orig, dest, dep);
     filteredOffers = [...allOffers];
+    await new Promise(r => {
+      const shown = window._loaderShown || Date.now();
+      const wait = Math.max(0, 3500 - (Date.now() - shown));
+      setTimeout(r, wait);
+    });
     setBadge('live','Published fares');
     setRhCount(`${allOffers.length} results`);
     buildAirlineFilter(allOffers);
