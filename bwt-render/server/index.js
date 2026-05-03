@@ -277,6 +277,45 @@ app.get('/api/airports', (req, res) => {
   res.json(results);
 });
 
+
+// ── Demo offer generator (used when SEARCHAPI_KEY not set) ──────────────────
+function generateDemoOffers(orig, dest, dep) {
+  const airlines = [
+    { name:'British Airways', iata:'BA', price:4210 },
+    { name:'Lufthansa',       iata:'LH', price:3890 },
+    { name:'Air France',      iata:'AF', price:4050 },
+    { name:'United Airlines', iata:'UA', price:3650 },
+    { name:'American Airlines',iata:'AA', price:3820 },
+  ];
+  return airlines.map((a, i) => ({
+    id: `demo-${i}`,
+    validatingCarrier: a.iata,
+    groupName: a.name,
+    totalPrice: a.price + Math.round((Math.random()-0.5)*200),
+    currency: 'USD',
+    cabin: 'BUSINESS',
+    isRoundTrip: false,
+    outboundDuration: `${7+i}h ${10+i*5}m`,
+    totalStops: i === 0 ? 0 : 1,
+    _sortScore: i,
+    journeys: [{
+      origin: orig, destination: dest,
+      segments: [{
+        airline: { name: a.name, iata: a.iata },
+        departure: { airport: orig, city: orig, datetime: dep + 'T10:00:00' },
+        arrival:   { airport: dest, city: dest, datetime: dep + 'T22:00:00' },
+        duration: `${7+i}h ${10+i*5}m`,
+        flightNumber: a.iata + (100+i*11),
+        aircraft: 'Boeing 777',
+        cabin: 'Business',
+        baggageAllowance: '2 bags',
+      }]
+    }],
+    badges: ['business'],
+    source: 'demo',
+  }));
+}
+
 // ── POST /api/search ───────────────────────────────────────────────────────────
 app.post('/api/search', async (req, res) => {
   const ip     = getIP(req);
@@ -338,9 +377,10 @@ app.post('/api/search', async (req, res) => {
   // 2. Live SearchAPI.io call
   const apiKey = process.env.SEARCHAPI_KEY;
   if (!apiKey) {
-    log('error', 'search', 'SEARCHAPI_KEY not set');
-    if (cached?.status === 'stale') return serveStale(res, cached, sort);
-    return res.status(503).json({ error: 'Search service not configured.' });
+    log('warn', 'search', 'SEARCHAPI_KEY not set — returning demo data');
+    // Return demo offers so the UI still works
+    const demoOffers = generateDemoOffers(orig, dest, departureDate);
+    return res.json({ offers: demoOffers, source: 'demo', message: 'Live search unavailable — showing sample fares' });
   }
 
   try {
