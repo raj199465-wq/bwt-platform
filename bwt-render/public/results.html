@@ -1566,6 +1566,16 @@ mark.m{background:rgba(201,168,76,.18);border-radius:2px;padding:0 1px;color:inh
 
     <!-- Skeletons -->
     <div id="skels" style="display:none">
+    <div class="loader-msg">
+      <div class="loader-msg-title">Finding live fares for your route — <span>we'll check if we can beat the price</span></div>
+      <div class="loader-msg-steps">
+        <div class="loader-step"><div class="loader-step-num">1</div> See the published fare</div>
+        <div class="loader-arr">→</div>
+        <div class="loader-step"><div class="loader-step-num">2</div> Select the flight you want</div>
+        <div class="loader-arr">→</div>
+        <div class="loader-step"><div class="loader-step-num">3</div> Hit Request Quote — we beat it or you walk</div>
+      </div>
+    </div>
       <div class="skel-card"><div class="sk-col"><div class="sk" style="width:46px;height:46px;border-radius:9px;align-self:center"></div></div><div class="sk-col"><div class="sk" style="width:66%;height:25px"></div><div class="sk" style="width:46%;height:11px"></div><div class="sk" style="width:34%;height:11px"></div></div><div class="sk-col" style="align-items:flex-end"><div class="sk" style="width:76px;height:28px"></div><div class="sk" style="width:116px;height:36px;border-radius:9px;margin-top:7px"></div></div></div>
       <div class="skel-card"><div class="sk-col"><div class="sk" style="width:46px;height:46px;border-radius:9px;align-self:center"></div></div><div class="sk-col"><div class="sk" style="width:72%;height:25px"></div><div class="sk" style="width:50%;height:11px"></div><div class="sk" style="width:38%;height:11px"></div></div><div class="sk-col" style="align-items:flex-end"><div class="sk" style="width:76px;height:28px"></div><div class="sk" style="width:116px;height:36px;border-radius:9px;margin-top:7px"></div></div></div>
       <div class="skel-card"><div class="sk-col"><div class="sk" style="width:46px;height:46px;border-radius:9px;align-self:center"></div></div><div class="sk-col"><div class="sk" style="width:60%;height:25px"></div><div class="sk" style="width:44%;height:11px"></div><div class="sk" style="width:52%;height:11px"></div></div><div class="sk-col" style="align-items:flex-end"><div class="sk" style="width:76px;height:28px"></div><div class="sk" style="width:116px;height:36px;border-radius:9px;margin-top:7px"></div></div></div>
@@ -2626,7 +2636,11 @@ function buildCard(offer, idx, gated=false, starPriority=false) {
 
 // ── Return journey segment HTML builder ──────────────────────────────────────
 function buildReturnSegHTML(returnJourney) {
-  if (!returnJourney || !returnJourney.segments || !returnJourney.segments.length) return '';
+  if (!returnJourney) return '';
+  const segsToUse = returnJourney.segments || returnJourney.legs || [];
+  if (!segsToUse.length) return '<div class="seg-wrap seg-wrap-return"><div class="seg-hd seg-hd-return">↩ Return journey details not available</div></div>';
+  returnJourney.segments = segsToUse;
+  if (!returnJourney.segments || !returnJourney.segments.length) return '';
   const segs = returnJourney.segments;
   let html = '<div class="seg-wrap seg-wrap-return">';
   html += '<div class="seg-hd seg-hd-return"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg> Return · ' + (returnJourney.origin||'') + ' → ' + (returnJourney.destination||'') + '</div>';

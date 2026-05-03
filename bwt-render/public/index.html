@@ -3,1841 +3,1564 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Business World Travel — Business Class International</title>
-<meta name="description" content="Search and request quotes for business class flights. Specialists in transatlantic routes — USA & Canada to Europe.">
+<title>Business World Travel — Beat the Published Fare</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════════════
-   DESIGN TOKENS
-═══════════════════════════════════════════════ */
-:root {
-  /* Deep dark (original palette) */
-  --n0:#04060e; --n1:#070c18; --n2:#0c1220; --n3:#111929;
-  --n4:#172133; --n5:#1f2d44; --n6:#273755;
-  /* Light palette (search box, results panels) */
-  --l0:#ffffff; --l1:#f7f8fc; --l2:#eef0f6; --l3:#e4e7f0;
-  --l-border:#d4d8e8; --l-border2:#b8bdd4;
-  --l-text:#1a2340; --l-muted:#5a6480; --l-dim:#8a91a8;
-  /* Gold — used sparingly as accent, never as solid background fill for text */
-  --gold:#c8a84b; --gold2:#e6c86a; --gold3:rgba(200,168,75,0.13);
-  --goldb:rgba(200,168,75,0.28);
-  /* Aliases */
-  --gold-light:#e6c86a; --gold-dim:rgba(200,168,75,.13);
-  --navy:var(--n2); --navy-dark:var(--n0);
-  --ink:#1a2340; --muted:#5a6480; --border:#d4d8e8;
-  --bg:#f7f8fc; --white:#ffffff;
-  --success:#1a9e6f; --warn:#d97706; --danger:#dc2626;
-  --radius:12px; --shadow:0 32px 80px rgba(0,0,0,.7);
-  --shadow-lg:0 12px 48px rgba(0,0,0,.14);
-  /* Text on dark */
-  --text:#dde5f2; --dim:#445572; --cream:#f0e8d8;
-  --borderl:rgba(200,168,75,.38); --borderb:rgba(200,168,75,.16);
-}
-
-/* ═══ RESET ═══ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{font-family:'DM Sans',sans-serif;font-weight:300;color:var(--text);background:var(--n0);line-height:1.6;min-height:100vh}
-/* Film grain overlay — signature premium texture */
-body::after{content:'';position:fixed;inset:0;z-index:9000;pointer-events:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");opacity:.45}
-::-webkit-scrollbar{width:5px}
-::-webkit-scrollbar-track{background:var(--n1)}
-::-webkit-scrollbar-thumb{background:var(--n5);border-radius:3px}
-::-webkit-scrollbar-thumb:hover{background:var(--gold)}
-a{color:inherit;text-decoration:none}
-button{cursor:pointer;border:none;background:none;font-family:inherit}
-input,select,textarea{font-family:inherit}
-img{max-width:100%;display:block}
-
-/* ═══ UTILITIES ═══ */
-.serif{font-family:'Playfair Display',Georgia,serif}
-.mono{font-family:'DM Mono',monospace}
-.gold{color:var(--gold)}
-.hidden{display:none!important}
-.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
-
-/* ═══ NAV ═══ */
-.nav{
-  position:fixed;top:0;left:0;right:0;z-index:400;
-  height:68px;display:flex;align-items:center;justify-content:space-between;
-  padding:0 48px;gap:24px;
-  background:linear-gradient(180deg,rgba(4,6,14,.97) 0%,rgba(4,6,14,.75) 100%);
-  backdrop-filter:blur(14px);
-  border-bottom:1px solid rgba(200,168,75,.16);
+:root{
+  --navy:   #0A1628;
+  --navy2:  #0D1F3C;
+  --navy3:  #1A2D5A;
+  --gold:   #C9A84C;
+  --gold2:  #F0C040;
+  --white:  #FFFFFF;
+  --off:    #F7F8FA;
+  --border: #E8EDF5;
+  --text:   #0A1628;
+  --muted:  #5A6E8F;
+  --green:  #1A8F5A;
 }
-.nav-logo{display:flex;flex-direction:column;line-height:1.1;flex-shrink:0;text-decoration:none}
-.nav-wordmark{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;letter-spacing:.28em;color:var(--cream)}
-.nav-wordmark b{color:var(--gold);font-weight:500}
-.nav-wordmark span{display:block;font-size:8px;letter-spacing:.3em;text-transform:uppercase;color:var(--text);opacity:.5;margin-top:2px}
-.nav-links{display:flex;align-items:center;gap:36px;margin-left:auto}
-.nav-link{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--text);opacity:.55;
-  text-decoration:none;transition:all .25s;position:relative;padding-bottom:3px}
-.nav-link::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--gold);transition:width .3s}
-.nav-link:hover{opacity:1;color:var(--gold2)}
-.nav-link:hover::after{width:100%}
-.nav-link.nav-cta{
-  font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
-  padding:10px 26px;border:1px solid var(--goldb);opacity:1;
-  background:transparent;color:var(--gold)!important;transition:all .25s}
-.nav-link.nav-cta::after{display:none}
-.nav-link.nav-cta:hover{background:var(--gold);color:var(--n0)!important}
-.nav-cta{background:var(--gold);color:var(--navy)!important;font-weight:700!important;padding:8px 18px!important;border-radius:6px!important}
-.nav-cta:hover{background:var(--gold-light)!important}
+body{font-family:'DM Sans',sans-serif;color:var(--text);background:#fff;overflow-x:hidden}
 
-/* ═══ HERO ═══ */
+/* ── TYPOGRAPHY ── */
+.t-eyebrow{
+  font-family:'Syne',sans-serif;font-weight:600;
+  font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:14px;display:block;
+  text-align:center;width:100%;
+}
+.section-head{
+  text-align:center;
+  margin-bottom:52px;
+  width:100%;
+}
+.section-head .t-eyebrow{
+  text-align:center;
+  display:block;width:100%;
+}
+.section-head .t-h2{
+  width:100%;max-width:100%;
+  text-align:center;
+}
+.section-head .t-body{
+  margin:14px auto 0;
+  max-width:600px;
+  text-align:center;
+}
+.t-h1{
+  font-family:'Syne',sans-serif;font-weight:700;
+  font-size:clamp(36px,5.5vw,64px);line-height:1.1;
+  letter-spacing:-.02em;color:#fff;
+  margin-bottom:16px;
+  text-align:center;width:100%;
+}
+.t-h1 .accent{
+  font-family:'Instrument Serif',Georgia,serif;
+  font-style:italic;font-weight:400;
+  color:var(--gold);display:block;
+  font-size:clamp(38px,5.8vw,68px);
+  letter-spacing:-.01em;
+}
+.t-h2{
+  font-family:'Syne',sans-serif;font-weight:700;
+  font-size:clamp(28px,4vw,48px);line-height:1.12;
+  letter-spacing:-.02em;color:var(--navy);
+  margin-bottom:12px;
+}
+.t-h2 .accent{color:var(--gold)}
+.t-h3{
+  font-family:'Syne',sans-serif;font-weight:600;
+  font-size:clamp(20px,2.5vw,26px);line-height:1.2;
+  letter-spacing:-.01em;color:var(--navy);
+  margin-bottom:8px;
+}
+.t-body{
+  font-size:16px;line-height:1.75;
+  color:var(--muted);font-weight:400;
+}
+.t-body-dark{
+  font-size:15px;line-height:1.75;
+  color:var(--navy);font-weight:400;
+}
+.t-lead{
+  font-size:17px;line-height:1.75;
+  color:rgba(255,255,255,.68);font-weight:400;
+  max-width:620px;text-align:center;margin:0 auto;
+}
+
+/* ── NAV ── */
+nav{
+  background:var(--navy);
+  position:sticky;top:0;z-index:100;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  padding:0 clamp(20px,5vw,80px);
+  display:flex;align-items:center;justify-content:space-between;
+  height:68px;
+}
+.nav-logo{display:flex;align-items:center;gap:11px;text-decoration:none}
+.nav-gem{
+  width:36px;height:36px;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  border-radius:9px;display:flex;align-items:center;justify-content:center;
+  font-size:17px;box-shadow:0 2px 14px rgba(201,168,76,.35);
+}
+.nav-brand strong{
+  display:block;font-family:'Syne',sans-serif;
+  font-size:14px;font-weight:700;color:#fff;letter-spacing:-.01em;
+}
+.nav-brand span{
+  display:block;font-size:9px;font-weight:600;
+  color:var(--gold);letter-spacing:.18em;text-transform:uppercase;
+  margin-top:1px;
+}
+.nav-links{display:flex;align-items:center;gap:30px}
+.nav-links a{
+  font-family:'Syne',sans-serif;font-size:13px;font-weight:600;
+  color:rgba(255,255,255,.55);text-decoration:none;
+  transition:color .15s;letter-spacing:.01em;
+}
+.nav-links a:hover{color:#fff}
+.nav-cta{
+  font-family:'Syne',sans-serif;font-size:12px;font-weight:700;
+  background:var(--gold);color:var(--navy);
+  padding:9px 22px;border-radius:6px;text-decoration:none;
+  letter-spacing:.04em;transition:opacity .15s;
+}
+.nav-cta:hover{opacity:.88}
+@media(max-width:680px){.nav-links{display:none}}
+
+/* ── HERO ── */
 .hero{
   min-height:100vh;
   display:flex;flex-direction:column;align-items:center;
-  justify-content:center;padding:90px 20px 56px;
+  justify-content:center;
+  padding:100px clamp(20px,5vw,80px) 80px;
   position:relative;overflow:hidden;
+  text-align:center;
 }
-/* Plane photo background */
 .hero-img{
   position:absolute;inset:0;z-index:0;
   background-image:url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1800&q=80&auto=format&fit=crop');
   background-size:cover;background-position:center 40%;
-  filter:saturate(0.65) brightness(0.45);
+  filter:saturate(0.65) brightness(0.42);
 }
-/* Dark overlay layers — original multi-layer radial gradient */
 .hero-bg{
   position:absolute;inset:0;z-index:1;
   background:
     radial-gradient(ellipse 100% 70% at 50% 105%,rgba(4,6,14,.97) 0%,rgba(4,6,14,.72) 45%,transparent 70%),
     radial-gradient(ellipse 100% 100% at 50% 0%,rgba(4,6,14,.78) 0%,rgba(4,6,14,.42) 50%,transparent 100%),
-    radial-gradient(ellipse 55% 38% at 78% 12%,rgba(200,168,75,.055) 0%,transparent 52%),
     linear-gradient(180deg,rgba(4,6,14,.62) 0%,rgba(4,6,14,.28) 50%,rgba(4,6,14,.88) 100%);
   pointer-events:none;
 }
-/* Gold horizon rule */
-.hero-rule{position:absolute;bottom:32%;left:0;right:0;height:1px;z-index:2;
-  background:linear-gradient(90deg,transparent,rgba(200,168,75,.16) 20%,rgba(200,168,75,.28) 50%,rgba(200,168,75,.16) 80%,transparent)}
-.hero-inner{
-  max-width:1060px;width:100%;
-  position:relative;z-index:3;
-  text-align:center;
-  animation:riseIn 1.3s cubic-bezier(.22,1,.36,1) both;
+.hero-rule{
+  position:absolute;bottom:38%;left:0;right:0;height:1px;z-index:2;
+  background:linear-gradient(90deg,transparent,rgba(200,168,75,.16) 20%,rgba(200,168,75,.3) 50%,rgba(200,168,75,.16) 80%,transparent);
 }
-@keyframes riseIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
 .hero-pill{
   display:inline-flex;align-items:center;gap:14px;
-  font-size:10px;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);
-  margin-bottom:36px;
+  font-family:'Syne',sans-serif;font-size:10px;font-weight:600;
+  letter-spacing:.38em;text-transform:uppercase;color:var(--gold);
+  margin-bottom:28px;
 }
-.hero-pill::before,.hero-pill::after{content:'';width:44px;height:1px;
-  background:linear-gradient(90deg,transparent,var(--gold))}
+.hero-pill::before,.hero-pill::after{
+  content:'';width:44px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold));
+}
 .hero-pill::after{transform:scaleX(-1)}
-.hero-h1{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(46px,8vw,88px);
-  font-weight:300;line-height:1.04;
-  color:var(--cream);letter-spacing:-.01em;
-  margin-bottom:20px;
+.hero-inner{
+  max-width:860px;margin:0 auto;
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;align-items:center;
 }
-.hero-h1 em{font-style:italic;color:var(--gold);display:block}
-.hero-sub{
-  font-size:13.5px;line-height:1.9;letter-spacing:.04em;
-  color:var(--text);opacity:.75;
-  max-width:490px;margin:0 auto 28px;
+.hero-checks{
+  display:flex;gap:20px;flex-wrap:wrap;
+  margin:22px 0 32px;
+  justify-content:center;
 }
-.hero-how{
-  display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;
-  margin-top:20px;margin-bottom:0;max-width:680px;
+.hero-check{
+  display:flex;align-items:center;gap:7px;
+  font-family:'Syne',sans-serif;font-size:12px;font-weight:600;
+  color:rgba(255,255,255,.7);letter-spacing:.02em;
 }
-.hero-how-step{display:flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.1em;color:rgba(255,255,255,.55)}
-.hero-how-n{
+.hck{
   width:18px;height:18px;border-radius:50%;
-  background:rgba(200,168,75,.15);color:var(--gold);
-  border:1px solid rgba(200,168,75,.4);
-  font-size:10px;font-weight:600;
+  background:rgba(201,168,76,.18);border:1px solid rgba(201,168,76,.4);
   display:flex;align-items:center;justify-content:center;flex-shrink:0;
 }
-.hero-how-arrow{font-size:14px;color:rgba(255,255,255,.25);flex-shrink:0}
-@media(max-width:600px){.hero-how-arrow{display:none}.hero-how{flex-direction:column;align-items:flex-start}}
+.hck svg{width:9px;height:9px;color:var(--gold)}
 
-/* ═══ SEARCH BOX ═══ */
-.search-box{
-  background:#ffffff;
-  border:1px solid var(--l-border);
-  border-top:3px solid var(--gold);
-  border-radius:0;
-  padding:32px 36px 28px;
-  box-shadow:0 0 0 1px rgba(200,168,75,.06),0 32px 80px rgba(0,0,0,.5),inset 0 1px 0 rgba(200,168,75,.07);
-  max-width:1020px;
-  width:100%;
-  animation:riseIn 1.5s cubic-bezier(.22,1,.36,1) .12s both;
-}
-.search-tabs{
-  display:flex;border-bottom:1px solid var(--l-border);margin-bottom:28px;
-}
-.search-tab{
-  font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:.2em;
-  text-transform:uppercase;padding:12px 30px;background:transparent;
-  color:var(--l-muted);cursor:pointer;position:relative;transition:color .22s;
-  flex:none;
-}
-.search-tab.active{color:var(--l-text)}
-.search-tab.active::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:var(--gold)}
-.search-tab:hover:not(.active){color:var(--l-text)}
-.search-row{display:grid;gap:10px;align-items:end}
-.search-row.two{grid-template-columns:1fr 1fr}
-.search-row.four{grid-template-columns:1fr 1fr 1fr 1fr auto}
-
-/* Field */
-.sf{position:relative}
-.sf-label{font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:7px;font-weight:500;display:block}
-.sf-inner{
-  background:var(--l1);
-  border:1px solid var(--l-border);
-  border-radius:0;height:52px;
-  display:flex;align-items:center;gap:8px;
-  padding:0 14px;
-  transition:border-color .22s,background .22s;
-}
-.sf-inner:focus-within{border-color:var(--borderl);background:var(--n4);color:var(--text)}
-.sf-icon{color:var(--l-dim);flex-shrink:0;width:16px;height:16px}
-.sf-input{
-  flex:1;background:none;border:none;outline:none;
-  color:var(--l-text);font-size:13.5px;font-weight:300;
-  min-width:0;font-family:'DM Sans',sans-serif;
-}
-.sf-inner:focus-within .sf-input{color:var(--text)}
-.sf-input::placeholder{color:var(--l-dim);font-size:13px}
-.sf-clear{
-  background:none;border:none;color:rgba(255,255,255,.4);
-  font-size:16px;cursor:pointer;padding:2px 4px;
-  display:none;line-height:1;
-}
-.sf-clear:hover{color:#fff}
-.sf-code{
-  font-family:'DM Mono',monospace;font-size:12px;
-  font-weight:600;color:var(--gold);
-  background:rgba(200,168,75,.1);
-  border:1px solid rgba(200,168,75,.2);
-  border-radius:3px;padding:2px 7px;
-  flex-shrink:0;pointer-events:none;
-  display:none;
-}
-.sf-swap{
-  position:absolute;left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:30px;height:30px;border-radius:50%;
-  background:var(--l0);border:1px solid var(--l-border2);
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;z-index:2;
-  transition:all .2s;
-  box-shadow:0 2px 6px rgba(0,0,0,.1);
-}
-.sf-swap:hover{border-color:var(--goldb);background:var(--gold3)}
-.sf-swap svg{width:13px;height:13px;color:var(--l-muted)}
-
-/* Date input */
-.sf-date{
-  flex:1;background:transparent;border:none;outline:none;
-  color:var(--l-text);font-size:13.5px;font-weight:300;
-  font-family:'DM Sans',sans-serif;min-width:0;
-}
-.sf-date::-webkit-calendar-picker-indicator{cursor:pointer;opacity:.5;filter:none}
-.sf-date-display{
-  flex:1;font-size:13.5px;font-weight:300;color:var(--l-text);cursor:pointer;font-family:'DM Sans',sans-serif;
-}
-.sf-date-display.unset{color:var(--l-dim)}
-
-/* Select */
-.sf-select{
-  flex:1;background:none;border:none;outline:none;
-  color:var(--l-text);font-size:13.5px;font-weight:300;
-  appearance:none;cursor:pointer;font-family:'DM Sans',sans-serif;
-}
-.sf-select option{background:var(--n2);color:var(--text)}
-
-/* Search button */
-.search-btn{
-  height:52px;padding:0 28px;
-  background:var(--gold);color:var(--n0);
-  border-radius:0;font-size:11px;font-weight:500;
-  font-family:'DM Sans',sans-serif;letter-spacing:.3em;text-transform:uppercase;
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  transition:background .25s,transform .15s;white-space:nowrap;
-  position:relative;overflow:hidden;
-  align-self:end; /* aligns to bottom of grid row with labeled fields */
-}
-.search-btn::before{content:'';position:absolute;inset:0;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent);
-  transform:translateX(-100%);transition:transform .55s}
-.search-btn:hover{background:var(--gold2)}
-.search-btn:hover::before{transform:translateX(100%)}
-.search-btn:active{transform:scale(.996)}
-.search-btn svg{width:16px;height:16px;flex-shrink:0}
-.search-btn .spin{
-  width:16px;height:16px;border-radius:50%;
-  border:2px solid rgba(12,18,32,.3);
-  border-top-color:var(--navy);
-  animation:spin .7s linear infinite;
-  flex-shrink:0;
-}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* ═══ HERO STEPS (above search) ═══ */
-.hero-steps{
-  display:flex;align-items:center;justify-content:center;
-  gap:6px;flex-wrap:wrap;
-  margin-bottom:24px;
-}
-.hero-step{
-  display:flex;align-items:center;gap:10px;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.1);
-  border-radius:10px;padding:10px 16px;
-}
-.hero-step-n{
-  width:24px;height:24px;border-radius:50%;flex-shrink:0;
-  background:var(--gold);color:#04060e;
-  font-size:11px;font-weight:700;
-  display:flex;align-items:center;justify-content:center;
-}
-.hero-step-text{display:flex;flex-direction:column;gap:1px}
-.hero-step-text strong{font-size:12px;font-weight:600;color:#fff;letter-spacing:.02em}
-.hero-step-text span{font-size:11px;color:rgba(255,255,255,.5)}
-.hero-step-arrow{font-size:16px;color:rgba(200,168,75,.4);flex-shrink:0}
-@media(max-width:700px){.hero-step-arrow{display:none}.hero-steps{gap:8px}}
-
-/* ═══ TRUST STRIP (below hero) ═══ */
-.trust-strip{
-  background:#f8f5ee;
-  border-top:3px solid var(--gold);
-  border-bottom:1px solid #e0d4b8;
-  padding:18px clamp(16px,4vw,48px);
-}
-.trust-strip-inner{
-  max-width:1120px;margin:0 auto;
-  display:flex;align-items:center;justify-content:center;
-  flex-wrap:wrap;gap:0;
-}
-.trust-item{
-  display:flex;align-items:center;gap:9px;
-  font-size:12.5px;font-weight:500;color:#3a3020;
-  padding:8px 28px;letter-spacing:.02em;
-}
-.trust-item svg{width:15px;height:15px;color:var(--gold);flex-shrink:0;stroke-width:2}
-.trust-sep{width:1px;height:20px;background:#d0c8b0}
-@media(max-width:700px){.trust-sep{display:none}.trust-item{padding:6px 14px}}
-
-/* ═══ FLOATING AIRPORT DROPDOWN ═══ */
-.ac-float{
-  position:fixed;
+/* Search card */
+.search-card{
   background:#fff;
-  border-radius:14px;
-  border:1px solid rgba(200,168,75,.25);
-  border-top:3px solid var(--gold);
-  box-shadow:0 16px 56px rgba(0,0,0,.22),0 2px 8px rgba(0,0,0,.1);
-  z-index:99999;
-  overflow-y:auto;
-  display:none;
+  border-radius:12px;
+  padding:0;
+  width:100%;max-width:860px;
+  margin:0 auto;
+  box-shadow:0 8px 40px rgba(0,0,0,.25);
+  overflow:visible;
 }
-.ac-float.open{display:block;animation:acIn .13s cubic-bezier(.22,1,.36,1) both}
-@keyframes acIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
-.ac-hdr{
-  padding:10px 16px 8px;
-  font-size:9px;font-weight:800;letter-spacing:.25em;text-transform:uppercase;
-  color:rgba(200,168,75,.7);
-  border-bottom:1px solid rgba(200,168,75,.1);
-  background:#fffdf8;
-  border-radius:11px 11px 0 0;
+.search-card-top{
+  display:flex;align-items:center;gap:0;
+  border-radius:12px;
+  overflow:visible;
+  position:relative;
 }
-.ac-item{
-  display:flex;align-items:center;gap:12px;
-  padding:11px 16px;cursor:pointer;
-  border-bottom:1px solid #f2f4f7;
-  transition:background .1s;
+.search-card-bottom{
+  padding:10px 16px 12px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-top:1px solid #f0f3f8;
 }
-.ac-item:last-child{border-bottom:none}
-.ac-item:hover,.ac-item.hl{background:#fffbf0}
-.ac-flag{font-size:18px;width:26px;text-align:center;flex-shrink:0}
-.ac-info{flex:1;min-width:0}
-.ac-city{font-size:14px;color:#0c1220;font-weight:600;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ac-name{font-size:11.5px;color:#8090a0;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ac-code{font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:var(--gold);flex-shrink:0}
-mark.ac-hl{background:rgba(200,168,75,.2);border-radius:2px;padding:0 1px;color:inherit;font-weight:700}
-.ac-empty{padding:20px 16px;text-align:center;color:#8090a0;font-size:13px}
-.ac-loading{padding:16px;text-align:center;color:#8090a0;font-size:13px}
-
-/* ═══ LOADING ═══ */
-.loading-wrap{
-  display:none;padding:60px 24px 80px;text-align:center;
-  background:linear-gradient(180deg,#fff 0%,#f4f7fb 100%);
+.stabs{display:flex;gap:2px;padding:10px 16px 0}
+.stab{
+  font-family:'Syne',sans-serif;font-size:12px;font-weight:600;
+  letter-spacing:.02em;padding:5px 12px;border-radius:20px;
+  border:none;cursor:pointer;background:transparent;
+  color:#8fa3be;transition:all .15s;
 }
-.loading-wrap.on{display:block}
-.loader-inner{max-width:540px;margin:0 auto}
-.loader-plane{width:80px;height:80px;margin:0 auto 28px}
-.loader-ring{animation:ring-fill 3s ease-in-out forwards}
-@keyframes ring-fill{to{stroke-dashoffset:0}}
-.loader-gem{animation:gem-pulse 1.8s ease-in-out infinite}
-@keyframes gem-pulse{0%,100%{opacity:.7;transform:scale(.9)}50%{opacity:1;transform:scale(1.1)}}
-
-.loader-phase{min-height:58px;margin-bottom:24px}
-.lp-step{display:none;animation:fade-up .4s ease both}
-.lp-step.active{display:block}
-@keyframes fade-up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.lp-title{font-size:18px;font-weight:700;color:var(--ink);margin-bottom:5px;font-family:'Playfair Display',serif}
-.lp-sub{font-size:13px;color:var(--muted);line-height:1.5}
-
-.loader-expect{
-  display:flex;align-items:flex-start;gap:13px;
-  background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);
-  border-radius:12px;padding:16px 18px;margin-bottom:24px;text-align:left;
+.stab.on{background:#f0f3f8;color:#0a1628;font-weight:700}
+.sf-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.sf-row2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.sf-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px}
+.sf{
+  background:#fff;border:none;
+  padding:12px 16px;
+  display:flex;align-items:center;gap:9px;
+  cursor:pointer;position:relative;
+  flex:1;min-width:0;
+  border-right:1px solid #e8edf5;
 }
-.loader-expect-icon{font-size:20px;flex-shrink:0;margin-top:1px}
-.loader-expect-txt{font-size:12.5px;color:var(--muted);line-height:1.65}
-.loader-expect-txt strong{color:var(--ink);font-weight:700}
-.loader-expect-txt em{color:var(--gold);font-style:normal;font-weight:600}
-
-.loader-steps{display:flex;justify-content:center;gap:7px}
-.lst{width:28px;height:4px;border-radius:2px;background:var(--border);transition:background .3s}
-.lst.active{background:var(--gold)}
-
-/* ═══ RESULTS ═══ */
-.results-wrap{display:none;padding:40px clamp(16px,4vw,48px)}
-.results-wrap.on{display:block}
-.results-header{
-  max-width:1120px;margin:0 auto 24px;
-  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+.sf:focus-within{background:#fafbff}
+.sf:last-of-type{border-right:none}
+.sf-ico{width:14px;height:14px;color:#c9a84c;flex-shrink:0}
+.sf-lbl{
+  font-size:9px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:#8fa3be;
+  display:block;margin-bottom:1px;
 }
-.results-title{font-size:22px;font-weight:700;color:var(--ink)}
-.results-title em{color:var(--gold);font-style:normal}
-.results-meta{font-size:13px;color:var(--muted);margin-top:2px}
-.results-sort{display:flex;gap:6px;flex-wrap:wrap}
-.sort-btn{
-  padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;
-  border:1px solid var(--border);color:var(--muted);background:#fff;
-  transition:all .2s;
+.sf-val{
+  font-family:'Syne',sans-serif;font-size:14px;
+  font-weight:600;color:#0a1628;display:block;
 }
-.sort-btn.active,.sort-btn:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-dim)}
-
-.cards{max-width:1120px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
-
-/* Flight card */
-.fcard{
-  background:#fff;border-radius:var(--radius);border:1px solid var(--border);
-  overflow:hidden;transition:box-shadow .2s,border-color .2s;
+.sf input{
+  background:transparent;border:none;outline:none;
+  color:#0a1628;font-size:14px;font-weight:500;width:100%;
+  font-family:'DM Sans',sans-serif;
 }
-.fcard:hover{box-shadow:var(--shadow);border-color:rgba(200,168,75,.3)}
-.fcard.selected{border-color:var(--gold);box-shadow:0 0 0 3px rgba(200,168,75,.15)}
-.fcard-main{
-  display:grid;align-items:center;gap:16px;padding:20px 24px;
-  grid-template-columns:auto 1fr auto auto;
-}
-.fcard-airline{display:flex;flex-direction:column;align-items:center;min-width:72px}
-.fcard-airline-logo{
-  width:44px;height:44px;border-radius:8px;
-  background:var(--bg);border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:700;color:var(--muted);font-family:'DM Mono',monospace;
-  margin-bottom:4px;overflow:hidden;
-}
-.fcard-airline-logo img{width:100%;height:100%;object-fit:contain}
-.fcard-airline-name{font-size:11px;color:var(--muted);text-align:center;max-width:80px;line-height:1.3}
-.fcard-route{flex:1}
-.fcard-times{
-  display:flex;align-items:center;gap:16px;margin-bottom:6px;
-}
-.fcard-time{
-  font-size:22px;font-weight:700;color:var(--ink);font-family:'Playfair Display',serif;
-  line-height:1;
-}
-.fcard-time span{display:block;font-family:'Inter',sans-serif;font-size:11px;font-weight:500;color:var(--muted);margin-top:3px}
-.fcard-line{
-  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
-}
-.fcard-duration{font-size:11px;font-weight:600;color:var(--muted)}
-.fcard-bar{
-  width:100%;display:flex;align-items:center;gap:3px;
-}
-.fcard-bar-line{flex:1;height:1px;background:var(--border)}
-.fcard-stops-dot{
-  width:6px;height:6px;border-radius:50%;
-  background:var(--border);flex-shrink:0;
-}
-.fcard-stops-badge{
-  font-size:10px;font-weight:700;
-  padding:2px 8px;border-radius:100px;
-}
-.fcard-stops-badge.direct{background:rgba(26,158,111,.1);color:var(--success)}
-.fcard-stops-badge.stops{background:rgba(217,119,6,.08);color:var(--warn)}
-.fcard-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.fcard-tag{
-  font-size:10px;font-weight:700;letter-spacing:.04em;
-  padding:2px 9px;border-radius:100px;border:1px solid;
-}
-.fcard-tag.baggage{border-color:var(--border);color:var(--muted);background:#f8f9fa}
-.fcard-tag.cabin{border-color:rgba(200,168,75,.3);color:var(--gold);background:var(--gold-dim)}
-.fcard-badge-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:8px;min-width:140px}
-.fcard-badge{
-  font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
-  padding:3px 10px;border-radius:100px;
-}
-.fcard-badge.best{background:rgba(200,168,75,.12);color:var(--gold);border:1px solid rgba(200,168,75,.3)}
-.fcard-badge.lowest{background:rgba(26,158,111,.08);color:var(--success);border:1px solid rgba(26,158,111,.2)}
-.fcard-badge.nonstop{background:rgba(59,130,246,.08);color:#3b82f6;border:1px solid rgba(59,130,246,.2)}
-.fcard-badge.fastest{background:rgba(139,92,246,.08);color:#8b5cf6;border:1px solid rgba(139,92,246,.2)}
-.fcard-price-wrap{
-  display:flex;flex-direction:column;align-items:flex-end;gap:10px;min-width:150px;
-}
-.fcard-price{font-size:26px;font-weight:700;color:var(--ink);line-height:1;font-family:'Playfair Display',serif}
-.fcard-price sub{font-size:14px;font-family:'Inter',sans-serif;font-weight:500;vertical-align:baseline;color:var(--muted)}
-.fcard-pax{font-size:11px;color:var(--muted);text-align:right;margin-top:2px}
-.fcard-btn{
-  display:block;width:100%;
-  background:var(--gold);color:var(--navy);
-  padding:11px 20px;border-radius:8px;
-  font-size:13px;font-weight:700;text-align:center;
-  transition:all .2s;border:none;cursor:pointer;
+.sf input::placeholder{color:rgba(255,255,255,.28)}
+.sbtn{
+  background:#1a73e8;color:#fff;
+  border:none;border-radius:0 12px 12px 0;
+  padding:0 28px;height:100%;min-height:64px;
+  font-family:'Syne',sans-serif;font-size:14px;font-weight:700;
+  cursor:pointer;letter-spacing:.02em;flex-shrink:0;
+  transition:background .15s;
+  display:flex;align-items:center;justify-content:center;gap:7px;
   white-space:nowrap;
 }
-.fcard-btn:hover{background:var(--gold-light)}
+.sbtn:hover{background:#1557b0}
+.snote{font-size:10px;color:#8fa3be;letter-spacing:.02em}
 
-/* Guest blur overlay */
-.fcard.blurred{position:relative}
-.fcard.blurred .fcard-main{filter:blur(5px);user-select:none;pointer-events:none}
-.fcard-lock{
-  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  background:rgba(247,248,250,.6);backdrop-filter:blur(2px);
-  border-radius:var(--radius);
-  z-index:1;
+/* Hero stat pills */
+.hero-stats{
+  display:flex;gap:12px;margin-top:0;flex-wrap:wrap;
+  justify-content:center;margin-bottom:44px;
 }
-.fcard-lock-inner{text-align:center}
-.fcard-lock-icon{font-size:24px;margin-bottom:6px}
-.fcard-lock-txt{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
-.fcard-lock-sub{font-size:11px;color:var(--muted)}
+.hstat{
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:50px;padding:8px 18px;
+  display:flex;align-items:center;gap:8px;
+}
+.hstat-num{
+  font-family:'Syne',sans-serif;font-size:16px;
+  font-weight:700;color:var(--gold2);
+}
+.hstat-lbl{font-size:11px;color:rgba(255,255,255,.45)}
 
-/* Interstitial CTA */
-.icta{
-  background:var(--navy);border-radius:var(--radius);
-  padding:28px 32px;text-align:center;
-  border:1px solid rgba(200,168,75,.2);
-}
-.icta h3{font-size:18px;color:#fff;margin-bottom:8px;font-family:'Playfair Display',serif}
-.icta p{font-size:14px;color:rgba(255,255,255,.6);margin-bottom:20px}
-.icta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.icta-btn{
-  padding:12px 24px;border-radius:8px;font-size:14px;font-weight:700;
-  transition:all .2s;
-}
-.icta-btn.primary{background:var(--gold);color:var(--navy)}
-.icta-btn.primary:hover{background:var(--gold-light)}
-.icta-btn.secondary{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.15)}
-.icta-btn.secondary:hover{background:rgba(255,255,255,.15)}
-
-/* ═══ QUOTE MODAL ═══ */
-.modal-overlay{
-  display:none;position:fixed;inset:0;
-  background:rgba(0,0,0,.7);backdrop-filter:blur(4px);
-  z-index:1000;align-items:center;justify-content:center;padding:16px;
-}
-.modal-overlay.open{display:flex}
-.modal{
-  background:#fff;border-radius:16px;width:100%;max-width:560px;
-  max-height:90vh;overflow-y:auto;
-  box-shadow:0 24px 80px rgba(0,0,0,.3);
-}
-.modal-header{
-  background:var(--navy);padding:24px 28px;border-radius:16px 16px 0 0;
-  display:flex;align-items:flex-start;justify-content:space-between;gap:16px;
-  position:sticky;top:0;z-index:1;
-}
-.modal-header h2{font-size:18px;color:#fff;font-family:'Playfair Display',serif;line-height:1.3}
-.modal-header p{font-size:12px;color:rgba(255,255,255,.5);margin-top:3px}
-.modal-close{
-  background:rgba(255,255,255,.1);border:none;color:#fff;
-  width:32px;height:32px;border-radius:50%;font-size:18px;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;flex-shrink:0;transition:background .2s;
-}
-.modal-close:hover{background:rgba(255,255,255,.2)}
-.modal-body{padding:28px}
-.modal-flight-preview{
-  background:#fffbf0;border:1px solid rgba(200,168,75,.25);
-  border-radius:10px;padding:16px;margin-bottom:24px;
-}
-.mfp-route{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:4px}
-.mfp-details{font-size:12px;color:var(--muted)}
-.mfp-price{font-size:18px;font-weight:700;color:var(--gold);margin-top:4px}
-.form-row{margin-bottom:16px}
-.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
-.form-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;display:block}
-.form-input{
-  width:100%;padding:11px 14px;border-radius:8px;
-  border:1px solid var(--border);font-size:14px;color:var(--ink);
-  background:#fff;transition:border-color .2s;outline:none;
-}
-.form-input:focus{border-color:var(--gold)}
-.form-input::placeholder{color:#b0bac6}
-.form-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236b7a8d'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
-.form-textarea{min-height:80px;resize:vertical}
-.form-submit{
-  width:100%;padding:14px;background:var(--gold);color:var(--navy);
-  border-radius:8px;font-size:15px;font-weight:700;
-  transition:all .2s;border:none;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;gap:8px;
-}
-.form-submit:hover{background:var(--gold-light)}
-.form-submit:disabled{opacity:.6;cursor:wait}
-.form-note{font-size:11px;color:var(--muted);text-align:center;margin-top:10px}
-.form-error{font-size:12px;color:var(--danger);margin-top:4px;display:none}
-.form-error.show{display:block}
-
-/* Quote success */
-.quote-success{
-  text-align:center;padding:48px 28px;display:none;
-}
-.quote-success.show{display:block}
-.qs-icon{font-size:48px;margin-bottom:16px}
-.qs-ref{
-  display:inline-block;background:var(--gold-dim);
-  border:1px solid rgba(200,168,75,.3);border-radius:8px;
-  padding:10px 24px;font-family:'DM Mono',monospace;
-  font-size:20px;font-weight:700;color:var(--gold);
-  letter-spacing:.1em;margin:12px 0 16px;
-}
-.qs-h{font-size:20px;font-weight:700;color:var(--ink);margin-bottom:8px;font-family:'Playfair Display',serif}
-.qs-p{font-size:14px;color:var(--muted);max-width:360px;margin:0 auto}
-
-/* ═══ TRUST STRIP ═══ */
-.trust{
-  background:var(--navy);padding:20px clamp(16px,4vw,48px);
-  display:flex;align-items:center;justify-content:center;
-  flex-wrap:wrap;gap:32px;
-}
-.trust-item{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.6);font-size:13px}
-.trust-item svg{width:16px;height:16px;color:var(--gold);flex-shrink:0}
-
-/* ═══ HOW IT WORKS ═══ */
-.how{padding:80px clamp(16px,4vw,48px);background:#f0ede6;border-top:1px solid #e0d9cc}
-.how-inner{max-width:1000px;margin:0 auto}
-.section-eyebrow{
-  font-size:10px;font-weight:500;letter-spacing:.38em;text-transform:uppercase;
-  color:var(--gold);margin-bottom:12px;opacity:.85;
-}
-.section-h2{font-size:clamp(28px,4vw,42px);font-weight:300;color:#1a1a1a;margin-bottom:16px;font-family:'Cormorant Garamond',serif;line-height:1.15;font-style:italic}
-.section-sub{font-size:14px;color:#5a5a5a;max-width:560px;line-height:1.75;margin-bottom:48px}
-.how-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
-.how-step{text-align:center}
-.how-num{
-  width:52px;height:52px;border-radius:50%;margin:0 auto 16px;
-  background:rgba(200,168,75,.12);border:1px solid rgba(200,168,75,.3);
-  display:flex;align-items:center;justify-content:center;
-  font-size:18px;font-weight:600;color:var(--gold);font-family:'Cormorant Garamond',serif;
-}
-.how-step h3{font-size:14px;font-weight:600;margin-bottom:8px;color:#1a1a1a;letter-spacing:.04em}
-.how-step p{font-size:13px;color:#6b6b6b;line-height:1.7}
-
-/* ═══ ROUTES ═══ */
-.routes{padding:80px clamp(16px,4vw,48px);background:#ffffff;border-top:1px solid #e0d9cc}
-.routes-inner{max-width:1120px;margin:0 auto}
-.routes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:40px}
-.route-card{
-  background:#f8f5ee;border-radius:0;padding:18px 20px;
-  border:1px solid #e0d9cc;cursor:pointer;
-  transition:all .2s;display:flex;align-items:center;justify-content:space-between;
-}
-.route-card:hover{border-color:var(--goldb);background:var(--n3);transform:translateY(-2px)}
-.route-card-route{font-size:13.5px;font-weight:500;color:#1a1a1a;letter-spacing:.03em}
-.route-card-price{font-size:12px;color:var(--gold);font-weight:400;letter-spacing:.08em}
-.route-card-arrow{color:#aaa;font-size:14px}
-
-/* ═══ FOOTER ═══ */
-footer{background:var(--n0);border-top:1px solid var(--borderb);padding:48px clamp(16px,4vw,48px) 24px}
-.footer-grid{
-  max-width:1120px;margin:0 auto;
-  display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;
-  padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.08);
-  margin-bottom:24px;
-}
-.footer-brand p{font-size:13px;color:rgba(255,255,255,.4);line-height:1.7;margin-top:12px;max-width:280px}
-.footer-h{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
-.footer-links{list-style:none;display:flex;flex-direction:column;gap:8px}
-.footer-links a{font-size:13px;color:rgba(255,255,255,.5);transition:color .2s}
-.footer-links a:hover{color:#fff}
-.footer-bottom{max-width:1120px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:12px;color:rgba(255,255,255,.3)}
-
-/* ═══ TOAST ═══ */
-.toast{
-  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);
-  background:var(--ink);color:#fff;padding:12px 24px;border-radius:8px;
-  font-size:14px;font-weight:500;z-index:9999;
-  transition:transform .3s cubic-bezier(.22,1,.36,1);
-  max-width:90vw;text-align:center;
-}
-.toast.show{transform:translateX(-50%) translateY(0)}
-.toast.gold{background:var(--gold);color:var(--navy)}
-.toast.error{background:var(--danger)}
-
-/* ═══ RESPONSIVE ═══ */
-@media(max-width:768px){
-  .nav-links{display:none}
-  .search-row.four{grid-template-columns:1fr 1fr 1fr}
-  .search-row.four .search-btn{grid-column:1/-1}
-  .how-steps{grid-template-columns:1fr}
-  .fcard-main{grid-template-columns:1fr auto}
-  .fcard-airline{display:none}
-  .footer-grid{grid-template-columns:1fr;gap:32px}
-  .form-row-2{grid-template-columns:1fr}
-}
-@media(max-width:480px){
-  .search-row.two{grid-template-columns:1fr}
-  .fcard-price{font-size:20px}
-  .fcard-time{font-size:18px}
+@media(max-width:700px){
+  .search-card{padding:20px}
+  .sf-row,.sf-row2{grid-template-columns:1fr}
+  .hero-visual{max-width:100%}
 }
 
-/* ════════════════════════
-   WHO THIS IS FOR
-════════════════════════ */
-.for-section{padding:80px clamp(16px,4vw,48px);background:#fff;border-top:1px solid #e8e4dc}
-.for-inner{max-width:1100px;margin:0 auto}
-.for-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:40px}
-@media(max-width:700px){.for-grid{grid-template-columns:1fr}}
-.for-card{
-  background:#f8f6f0;border:1px solid #e8e0cc;border-radius:14px;
-  padding:28px 26px;transition:box-shadow .2s,transform .2s;
-}
-.for-card:hover{box-shadow:0 8px 32px rgba(0,0,0,.07);transform:translateY(-2px)}
-.for-icon{font-size:28px;margin-bottom:14px}
-.for-title{font-size:15px;font-weight:700;color:#1a1a2e;margin-bottom:10px;line-height:1.4}
-.for-body{font-size:13px;color:#5a5a70;line-height:1.75}
 
-/* ════════════════════════
-   HOW IT WORKS (enhanced)
-════════════════════════ */
-.how-note{
-  margin-top:40px;background:#fffbf0;border:1px solid rgba(200,168,75,.3);
-  border-left:4px solid var(--gold);border-radius:0 12px 12px 0;
-  padding:20px 24px;display:flex;gap:14px;align-items:flex-start;
+/* ── HONEST TRUTH SECTION ── */
+.ht-h2{
+  font-family:'Syne',sans-serif;font-weight:700;
+  font-size:clamp(32px,4.5vw,54px);line-height:1.1;
+  letter-spacing:-.02em;color:var(--navy);
+  margin:0 auto 20px;text-align:center;
+  max-width:800px;
 }
-.how-note-icon{font-size:20px;flex-shrink:0;margin-top:1px}
-.how-note strong{color:#1a1a2e;font-weight:700}
-.how-note div{font-size:13px;color:#5a5a70;line-height:1.75}
-
-/* ════════════════════════
-   WHY NOT GOOGLE FLIGHTS
-════════════════════════ */
-.why-section{
-  background:var(--n1);border-top:1px solid rgba(200,168,75,.1);
-  padding:80px clamp(16px,4vw,48px);
-}
-.why-inner{
-  max-width:1100px;margin:0 auto;
-  display:grid;grid-template-columns:1fr 420px;gap:60px;align-items:center;
-}
-@media(max-width:900px){.why-inner{grid-template-columns:1fr}}
-.why-compare{
-  background:rgba(255,255,255,.04);border:1px solid rgba(200,168,75,.12);
-  border-radius:14px;overflow:hidden;
-}
-.why-compare-row{
-  display:grid;grid-template-columns:1fr 90px 110px;
-  border-bottom:1px solid rgba(255,255,255,.06);
-}
-.why-compare-row:last-child{border-bottom:none}
-.why-compare-hdr{background:rgba(255,255,255,.04)}
-.why-col-hdr{
-  padding:12px 16px;font-size:10px;font-weight:700;letter-spacing:.1em;
-  text-transform:uppercase;color:rgba(200,210,230,.4);text-align:center;
-}
-.why-col-hdr--bwt{color:var(--gold)}
-.why-row-lbl{padding:14px 18px;font-size:12.5px;color:rgba(200,210,230,.6)}
-.why-cell{padding:14px 8px;text-align:center;font-size:13px;font-weight:700}
-.why-cell--yes{color:#3da870}
-.why-cell--no{color:rgba(200,100,100,.7)}
-.why-cell--neutral{color:rgba(200,210,230,.4);font-size:11px;font-weight:400}
-.why-cell--bwt{background:rgba(200,168,75,.04)}
-
-/* ════════════════════════
-   FARE EXAMPLE
-════════════════════════ */
-.fare-example-section{
-  padding:80px clamp(16px,4vw,48px);
-  background:#f4f1eb;border-top:1px solid #e0d8c8;
-}
-.fare-example-inner{max-width:1000px;margin:0 auto}
-.fare-compare{
-  display:flex;align-items:center;gap:0;margin-top:48px;flex-wrap:wrap;
-}
-.fare-col{
-  flex:1;min-width:260px;padding:36px;border-radius:16px;
-}
-.fare-col--them{
-  background:#fff;border:1px solid #e0d8c8;
-}
-.fare-col--bwt{
-  background:var(--n2);border:1px solid rgba(200,168,75,.2);
-}
-.fare-col-label{
-  font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
-  margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid currentColor;
-  opacity:.4;
-}
-.fare-col--them .fare-col-label{color:#1a1a2e}
-.fare-col--bwt .fare-col-label{color:#fff}
-.fare-route{font-size:18px;font-weight:700;margin-bottom:4px}
-.fare-col--them .fare-route{color:#1a1a2e}
-.fare-col--bwt .fare-route{color:#fff}
-.fare-cabin{font-size:12px;margin-bottom:20px}
-.fare-col--them .fare-cabin{color:#6a6a7a}
-.fare-col--bwt .fare-cabin{color:rgba(200,210,230,.5)}
-.fare-price{font-family:'Cormorant Garamond',serif;font-size:58px;font-weight:300;line-height:1;margin-bottom:12px}
-.fare-price--was{color:#b0a898;text-decoration:line-through;text-decoration-color:rgba(180,100,100,.5)}
-.fare-price--now{color:var(--gold)}
-.fare-note{font-size:11.5px;line-height:1.6;margin-bottom:16px}
-.fare-col--them .fare-note{color:#8a8a9a}
-.fare-col--bwt .fare-note{color:rgba(200,210,230,.4)}
-.fare-tags{display:flex;gap:6px;flex-wrap:wrap}
-.fare-tag{font-size:10px;padding:3px 10px;border-radius:20px;background:#f0ece4;color:#5a5a6a;font-weight:600}
-.fare-saving{display:flex;flex-direction:column;gap:4px;margin-top:4px}
-.fare-saving-amt{font-size:18px;font-weight:700;color:#3da870}
-.fare-saving-pct{font-size:12px;color:rgba(200,210,230,.5);letter-spacing:.04em}
-.fare-vs{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:0 20px;gap:8px;flex-shrink:0;
-}
-.fare-vs-circle{
-  width:48px;height:48px;border-radius:50%;
-  background:#f0ece4;border:1px solid #e0d8c8;
-  display:flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:700;color:#8a8a9a;
-}
-.fare-vs-arrow{font-size:22px;color:#c8b890}
-.fare-disclaimer{
-  margin-top:24px;text-align:center;font-size:11px;color:#9a9a9a;
-  line-height:1.6;max-width:600px;margin-left:auto;margin-right:auto;
-}
-.fare-cta-btn{
-  display:inline-block;padding:14px 36px;
-  background:var(--gold);color:var(--n0);
-  font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
-  border-radius:0;transition:background .2s;
-}
-.fare-cta-btn:hover{background:var(--gold2)}
-
-/* ════════════════════════
-   DIRECT QUOTE CTA
-════════════════════════ */
-.direct-cta-section{
-  background:var(--n0);border-top:1px solid rgba(200,168,75,.12);
-  padding:72px clamp(16px,4vw,48px);
-}
-.direct-cta-inner{
-  max-width:1100px;margin:0 auto;
-  display:grid;grid-template-columns:1fr 380px;gap:60px;align-items:center;
-}
-@media(max-width:860px){.direct-cta-inner{grid-template-columns:1fr}}
-.dcta-right{display:flex;flex-direction:column;gap:14px}
-.dcta-btn{
-  display:flex;align-items:center;gap:16px;
-  padding:20px 24px;border-radius:12px;
-  transition:all .2s;text-decoration:none;
-}
-.dcta-btn--phone{background:rgba(200,168,75,.1);border:1px solid rgba(200,168,75,.3)}
-.dcta-btn--phone:hover{background:rgba(200,168,75,.18);border-color:rgba(200,168,75,.5)}
-.dcta-btn--wa{background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.3)}
-.dcta-btn--wa:hover{background:rgba(37,211,102,.2)}
-.dcta-btn--wa .dcta-btn-num{color:#25d366}
-.dcta-btn--email{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1)}
-.dcta-btn--email:hover{background:rgba(255,255,255,.08)}
-.dcta-btn-icon{font-size:22px;flex-shrink:0}
-.dcta-btn span{display:flex;flex-direction:column;gap:2px}
-.dcta-btn-lbl{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(200,210,230,.45)}
-.dcta-btn-num{font-size:15px;font-weight:700;color:#fff;letter-spacing:.02em}
-.dcta-btn--phone .dcta-btn-num{color:var(--gold)}
-.dcta-hours{font-size:11px;color:rgba(200,210,230,.25);text-align:center;letter-spacing:.06em;padding-top:4px}
-
-/* ════════════════════════
-   HOW IT WORKS — FOMO BAND
-════════════════════════ */
-.how-fomo{
-  margin-top:52px;
-  background:var(--n2);
-  border:1px solid rgba(200,168,75,.18);
-  border-left:4px solid var(--gold);
-  border-radius:0 16px 16px 0;
-  padding:36px 40px;
-  display:grid;
-  grid-template-columns:1fr auto;
-  gap:48px;
-  align-items:center;
-}
-@media(max-width:760px){.how-fomo{grid-template-columns:1fr;gap:28px;padding:28px 24px}}
-.how-fomo-headline{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(20px,2.2vw,26px);
+.ht-accent{color:var(--gold)}
+.ht-sub{
+  font-size:17px;line-height:1.75;
+  color:#3A4A6B;text-align:center;
+  max-width:660px;margin:0 auto;
   font-weight:400;
-  color:#fff;
-  line-height:1.35;
-  margin-bottom:14px;
 }
-.how-fomo-sub{
-  font-size:13px;color:rgba(200,210,230,.5);line-height:1.8;
-}
-.how-fomo-right{
-  display:flex;flex-direction:column;gap:20px;align-items:flex-end;flex-shrink:0;
-}
-@media(max-width:760px){.how-fomo-right{align-items:flex-start;flex-direction:row;flex-wrap:wrap;gap:16px}}
-.how-fomo-stat{text-align:right}
-@media(max-width:760px){.how-fomo-stat{text-align:left}}
-.how-fomo-n{
-  font-family:'Cormorant Garamond',serif;
-  font-size:38px;font-weight:300;color:var(--gold);line-height:1;
-}
-.how-fomo-n span{font-size:20px;color:rgba(200,168,75,.6)}
-.how-fomo-l{font-size:11px;color:rgba(200,210,230,.4);line-height:1.5;margin-top:4px}
-.how-fomo-l span{display:block;color:rgba(200,210,230,.25);font-size:10px;margin-top:1px}
-.how-fomo-btn{
-  display:inline-block;
-  padding:14px 28px;
-  background:var(--gold);color:var(--n0);
-  font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  border-radius:0;white-space:nowrap;
-  transition:background .2s;
-}
-.how-fomo-btn:hover{background:var(--gold2)}
+.ht-sub strong{color:var(--navy);font-weight:700}
 
-/* ════════════════════════
-   WHATSAPP — HOMEPAGE
-════════════════════════ */
-.wa-bubble{
-  position:fixed;bottom:28px;right:28px;z-index:8000;
-  display:flex;align-items:center;gap:0;
-  filter:drop-shadow(0 6px 20px rgba(37,211,102,.35));
-  cursor:pointer;text-decoration:none;
-}
-.wa-bubble-btn{
-  width:58px;height:58px;border-radius:50%;background:#25d366;
+/* Stats row */
+.ht-stats{
   display:flex;align-items:center;justify-content:center;
-  transition:transform .2s,background .2s;position:relative;
+  gap:0;margin-bottom:56px;
+  background:var(--navy);border-radius:14px;
+  padding:28px 20px;flex-wrap:wrap;
 }
-.wa-bubble-btn::before{
-  content:'';position:absolute;inset:0;border-radius:50%;
-  background:#25d366;animation:waPulse 2.5s ease-out infinite;
+.ht-stat{text-align:center;padding:0 32px;flex:1;min-width:140px}
+.ht-stat-num{
+  font-family:'Syne',sans-serif;font-weight:700;
+  font-size:clamp(22px,3vw,32px);color:var(--gold2);
+  line-height:1;margin-bottom:6px;
 }
-@keyframes waPulse{0%{transform:scale(1);opacity:.6}70%{transform:scale(1.5);opacity:0}100%{transform:scale(1.5);opacity:0}}
-.wa-bubble-btn svg{position:relative;z-index:1;width:28px;height:28px;fill:#fff}
-.wa-bubble:hover .wa-bubble-btn{background:#20c35a;transform:scale(1.08)}
-.wa-bubble-label{
-  background:#fff;border-radius:8px;padding:8px 14px;margin-right:10px;
-  font-size:12px;font-weight:700;color:#1a1a2e;white-space:nowrap;
-  box-shadow:0 4px 16px rgba(0,0,0,.12);
-  opacity:0;transform:translateX(10px);
-  transition:all .25s cubic-bezier(.22,1,.36,1);pointer-events:none;
-}
-.wa-bubble-label span{display:block;font-size:10px;font-weight:400;color:#6a6a7a;margin-top:1px}
-.wa-bubble:hover .wa-bubble-label{opacity:1;transform:translateX(0)}
+.ht-stat-lbl{font-size:12px;color:rgba(255,255,255,.5);line-height:1.4}
+.ht-stat-div{width:1px;height:48px;background:rgba(255,255,255,.1);flex-shrink:0}
 
-/* Hero WhatsApp CTA button */
-.ph-btn-wa{
+/* Grid */
+.ht-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:40px;align-items:start;
+}
+
+/* Bullets */
+.ht-bullets{display:flex;flex-direction:column;gap:24px}
+.ht-bullet{display:flex;align-items:flex-start;gap:14px}
+.ht-bullet-icon{
+  width:36px;height:36px;border-radius:50%;flex-shrink:0;
+  background:rgba(201,168,76,.12);border:1.5px solid rgba(201,168,76,.3);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--gold);margin-top:2px;
+}
+.ht-bullet-title{
+  font-family:'Syne',sans-serif;font-size:15px;
+  font-weight:700;color:var(--navy);margin-bottom:5px;
+}
+.ht-bullet-sub{font-size:13px;color:#3A4A6B;line-height:1.7}
+
+@media(max-width:800px){
+  .ht-grid{grid-template-columns:1fr}
+  .ht-stat-div{display:none}
+  .ht-stats{gap:20px}
+}
+
+/* ── TRUST BAR ── */
+.trust-bar{
+  background:#fff;border-bottom:1px solid var(--border);
+  padding:0 clamp(20px,5vw,80px);
+}
+.trust-bar-inner{
+  max-width:1160px;margin:0 auto;
+  display:flex;justify-content:space-between;flex-wrap:wrap;
+  padding:22px 0;gap:12px;
+}
+.tb-item{
+  display:flex;align-items:center;gap:9px;
+  font-family:'Syne',sans-serif;font-size:12px;
+  font-weight:600;color:var(--muted);
+}
+.tb-item strong{color:var(--navy)}
+.tb-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--gold);flex-shrink:0;
+}
+
+/* ── SECTIONS ── */
+.section{padding:88px clamp(20px,5vw,80px)}
+.section-inner{max-width:1160px;margin:0 auto}
+.section--off{background:var(--off)}
+.section--navy{background:var(--navy)}
+
+/* ── MESSAGE SECTION ── */
+.msg-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:80px;align-items:center;
+}
+.msg-left .t-h2{margin-bottom:20px}
+.msg-left .t-body{margin-bottom:24px;max-width:460px}
+.msg-points{display:flex;flex-direction:column;gap:14px;margin-top:8px}
+.msg-pt{
+  display:flex;align-items:flex-start;gap:12px;
+  font-size:15px;color:var(--navy);line-height:1.6;
+}
+.msg-dot{
+  width:22px;height:22px;border-radius:50%;flex-shrink:0;
+  background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.3);
+  display:flex;align-items:center;justify-content:center;margin-top:1px;
+}
+.msg-dot svg{width:10px;height:10px;color:var(--gold)}
+
+/* Fare comparison card */
+.fare-cmp{
+  background:#fff;border-radius:16px;
+  box-shadow:0 6px 40px rgba(10,22,40,.1);overflow:hidden;
+}
+.fare-cmp-head{
+  background:var(--navy);padding:18px 24px;
+  font-family:'Syne',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.5);
+}
+.fare-cols{display:grid;grid-template-columns:1fr 1fr}
+.fare-col{padding:22px 24px;border-right:1px solid var(--border)}
+.fare-col:last-child{border-right:none}
+.fare-col-lbl{
+  font-size:9px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:8px;
+}
+.fare-col-route{
+  font-family:'Syne',sans-serif;font-size:13px;
+  font-weight:600;color:var(--navy);margin-bottom:3px;
+}
+.fare-col-sub{font-size:11px;color:var(--muted);margin-bottom:10px}
+.price-pub{
+  font-family:'Syne',sans-serif;font-size:40px;
+  font-weight:700;color:#C0392B;line-height:1;
+  letter-spacing:-.02em;
+}
+.price-pub sup{font-size:20px;vertical-align:super;font-weight:600}
+.price-bwt{
+  font-family:'Syne',sans-serif;font-size:40px;
+  font-weight:700;color:var(--green);line-height:1;
+  letter-spacing:-.02em;
+}
+.price-bwt sup{font-size:20px;vertical-align:super;font-weight:600}
+.fare-note{font-size:11px;color:var(--muted);margin-top:5px}
+.saving-pill{
+  display:inline-flex;align-items:center;gap:5px;
+  background:#E8F7F0;color:var(--green);
+  font-family:'Syne',sans-serif;font-size:11px;font-weight:700;
+  padding:4px 12px;border-radius:50px;margin-top:10px;
+}
+.fare-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px}
+.fare-tag{
+  font-size:10px;padding:3px 10px;border-radius:50px;
+  border:1px solid var(--border);color:var(--muted);
+  font-weight:500;
+}
+.fare-footer{
+  padding:14px 24px;border-top:1px solid var(--border);
+  font-size:11px;color:var(--muted);font-style:italic;
+  text-align:center;
+}
+@media(max-width:800px){.msg-grid{grid-template-columns:1fr}}
+
+/* ── WHO ── */
+.who-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:16px;
+  margin-top:48px;
+}
+.who-card{
+  border:1.5px solid var(--border);border-radius:14px;
+  padding:26px 22px;transition:all .2s;
+}
+.who-card:hover{
+  border-color:var(--gold);
+  box-shadow:0 4px 28px rgba(201,168,76,.12);
+  transform:translateY(-2px);
+}
+.who-icon{font-size:30px;margin-bottom:16px;display:block}
+.who-title{
+  font-family:'Syne',sans-serif;font-size:15px;
+  font-weight:700;color:var(--navy);margin-bottom:8px;
+  line-height:1.3;
+}
+.who-sub{font-size:13px;color:var(--muted);line-height:1.65}
+.who-tag{
+  display:block;font-family:'Syne',sans-serif;
+  font-size:11px;font-weight:700;color:var(--gold);
+  margin-top:14px;letter-spacing:.02em;
+}
+.who-footer{
+  text-align:center;margin-top:40px;
+  font-family:'Syne',sans-serif;font-size:14px;
+  font-weight:600;color:var(--muted);font-style:italic;
+}
+@media(max-width:800px){.who-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.who-grid{grid-template-columns:1fr}}
+
+/* ── HOW ── */
+.how-steps{
+  display:grid;grid-template-columns:1fr 40px 1fr 40px 1fr;
+  gap:0;align-items:start;margin-top:56px;
+}
+.how-step{text-align:center;padding:0 16px}
+.how-num{
+  width:60px;height:60px;border-radius:50%;
+  background:var(--gold);color:var(--navy);
+  font-family:'Syne',sans-serif;font-size:24px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 20px;
+  box-shadow:0 4px 20px rgba(201,168,76,.35);
+}
+.how-title{
+  font-family:'Syne',sans-serif;font-size:17px;
+  font-weight:700;color:#fff;margin-bottom:10px;
+}
+.how-sub{font-size:13px;color:rgba(255,255,255,.5);line-height:1.7;max-width:180px;margin:0 auto}
+.how-arr{
+  display:flex;align-items:center;justify-content:center;
+  padding-top:18px;font-size:24px;color:rgba(201,168,76,.25);
+}
+.how-note-wrap{text-align:center;margin-top:44px}
+.how-note{
   display:inline-flex;align-items:center;gap:10px;
-  background:#25d366;color:#fff;
-  padding:14px 28px;border-radius:0;
-  font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
-  font-family:'DM Sans',sans-serif;text-decoration:none;
-  transition:background .2s;white-space:nowrap;
-  border:none;cursor:pointer;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:50px;padding:11px 26px;
+  font-family:'Syne',sans-serif;font-size:13px;
+  font-weight:600;color:rgba(255,255,255,.55);
+  font-style:italic;
 }
-.ph-btn-wa svg{width:18px;height:18px;fill:#fff;flex-shrink:0}
-.ph-btn-wa:hover{background:#20c35a}
+@media(max-width:700px){
+  .how-steps{grid-template-columns:1fr}
+  .how-arr{display:none}
+  .how-step{padding:0;margin-bottom:32px}
+}
 
-/* Trust strip WhatsApp item */
-.trust-item-wa svg{fill:#25d366;stroke:none !important}
+/* ── COMPARE TABLE ── */
+.compare-wrap{margin-top:48px;border-radius:14px;overflow:hidden;box-shadow:0 2px 24px rgba(10,22,40,.08)}
+table{width:100%;border-collapse:collapse}
+thead th{
+  padding:14px 22px;
+  font-family:'Syne',sans-serif;font-size:11px;
+  font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+}
+thead th:first-child{background:#F7F8FA;color:var(--muted);text-align:left}
+thead th.th-g{background:#F7F8FA;color:var(--muted);text-align:center}
+thead th.th-b{background:var(--navy);color:var(--gold);text-align:center}
+tbody td{
+  padding:13px 22px;border-bottom:1px solid var(--border);
+  font-size:14px;color:var(--muted);
+}
+tbody td:first-child{font-family:'Syne',sans-serif;font-weight:600;color:var(--navy)}
+tbody td:not(:first-child){text-align:center}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:rgba(201,168,76,.03)}
+.ck-y{color:var(--green);font-size:16px;font-weight:700}
+.ck-n{color:#C0392B;font-size:16px}
+.ck-g{
+  font-family:'Syne',sans-serif;font-size:13px;
+  font-weight:700;color:var(--gold);
+}
+
+/* ── ROUTES ── */
+.routes-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:12px;margin-top:44px;
+}
+.route-card{
+  background:#fff;border:1.5px solid var(--border);
+  border-radius:12px;padding:18px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  text-decoration:none;transition:all .2s;
+}
+.route-card:hover{
+  border-color:var(--gold);
+  box-shadow:0 3px 20px rgba(201,168,76,.1);
+  transform:translateX(4px);
+}
+.route-cities{
+  font-family:'Syne',sans-serif;font-size:14px;
+  font-weight:700;color:var(--navy);margin-bottom:4px;
+}
+.route-from{font-size:11px;color:var(--gold);font-weight:600}
+.route-save{
+  font-family:'Syne',sans-serif;font-size:10px;font-weight:700;
+  color:var(--green);background:#E8F7F0;
+  padding:3px 9px;border-radius:50px;white-space:nowrap;
+  flex-shrink:0;margin-left:12px;
+}
+.routes-more{
+  text-align:center;margin-top:28px;
+  font-family:'Syne',sans-serif;font-size:13px;font-weight:700;
+}
+.routes-more a{
+  color:var(--navy);text-decoration:none;
+  border-bottom:2px solid var(--gold);padding-bottom:2px;
+}
+@media(max-width:720px){.routes-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.routes-grid{grid-template-columns:1fr}}
+
+/* ── FINAL CTA ── */
+.cta-section{
+  background:var(--navy);
+  padding:88px clamp(20px,5vw,80px);
+  text-align:center;position:relative;overflow:hidden;
+}
+.cta-section::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 80%,rgba(201,168,76,.08) 0%,transparent 60%);
+  pointer-events:none;
+}
+.cta-inner{max-width:620px;margin:0 auto;position:relative}
+.cta-h{
+  font-family:'Syne',sans-serif;font-weight:700;
+  font-size:clamp(30px,4.5vw,52px);line-height:1.1;
+  letter-spacing:-.02em;color:#fff;margin-bottom:16px;
+}
+.cta-h .accent{color:var(--gold2)}
+.cta-sub{
+  font-size:16px;line-height:1.75;
+  color:rgba(255,255,255,.5);margin-bottom:36px;
+}
+.cta-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--gold2);color:var(--navy);
+  font-family:'Syne',sans-serif;font-size:15px;font-weight:700;
+  padding:16px 36px;border-radius:9px;text-decoration:none;
+  letter-spacing:.04em;transition:all .15s;
+  box-shadow:0 4px 24px rgba(240,192,64,.3);
+}
+.cta-btn:hover{background:#e6b830;transform:translateY(-2px)}
+.cta-trust{
+  display:flex;align-items:center;justify-content:center;
+  gap:28px;margin-top:36px;flex-wrap:wrap;
+}
+.cta-ti{
+  display:flex;align-items:center;gap:6px;
+  font-family:'Syne',sans-serif;font-size:11px;
+  font-weight:600;color:rgba(255,255,255,.35);letter-spacing:.03em;
+}
+.cta-ti svg{color:var(--gold);opacity:.6}
+
+/* ── FOOTER ── */
+footer{
+  background:#060E1E;
+  padding:24px clamp(20px,5vw,80px);
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:12px;
+}
+footer span{font-size:11px;color:rgba(255,255,255,.22)}
+.footer-links{display:flex;gap:20px}
+.footer-links a{
+  font-size:11px;color:rgba(255,255,255,.22);
+  text-decoration:none;transition:color .15s;
+}
+.footer-links a:hover{color:rgba(255,255,255,.5)}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:none}
+}
+.hero-inner>*{animation:fadeUp .6s ease both}
+.hero-inner>*:nth-child(2){animation-delay:.12s}
+
+/* Airport autocomplete */
+.ac-sug{
+  position:absolute;top:calc(100% + 4px);left:0;
+  width:300px;background:#0d1b3e;
+  border:1px solid rgba(200,168,75,.25);border-radius:10px;
+  box-shadow:0 12px 40px rgba(0,0,0,.7);
+  overflow:hidden;z-index:99999;display:none;
+}
+.ac-sug.open{display:block;animation:acIn .1s ease both}
+@keyframes acIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.ac-row{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.05);transition:background .1s}
+.ac-row:last-child{border-bottom:none}
+.ac-row:hover,.ac-row.hl{background:rgba(200,168,75,.1)}
+.ac-flag{font-size:14px;width:20px;text-align:center;flex-shrink:0}
+.ac-inf{flex:1;min-width:0}
+.ac-city{font-size:13px;color:#fff;font-weight:600}
+.ac-name{font-size:10px;color:rgba(255,255,255,.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ac-code{font-size:11px;font-weight:700;color:var(--gold);flex-shrink:0}
+.sf-inp{background:transparent;border:none;outline:none;color:#fff;font-size:13px;font-weight:600;width:100%;font-family:'Syne',sans-serif}
+.sf-inp::placeholder{color:rgba(255,255,255,.28)}
+
+.flatpickr-calendar{background:#fff;border:1px solid #e8edf5;border-radius:12px;box-shadow:0 8px 40px rgba(10,22,40,.15);font-family:'DM Sans',sans-serif}
+.flatpickr-day.selected,.flatpickr-day.selected:hover{background:#c9a84c;border-color:#c9a84c;color:#fff}
+.flatpickr-day:hover{background:#f0f3f8}
+.flatpickr-months .flatpickr-month{background:#0a1628;color:#fff;border-radius:12px 12px 0 0}
+.flatpickr-current-month,.flatpickr-current-month .numInputWrapper,.flatpickr-current-month input.cur-year{color:#fff}
+.flatpickr-months .flatpickr-prev-month,.flatpickr-months .flatpickr-next-month{color:#fff;fill:#fff}
+.flatpickr-weekday{color:#8fa3be;font-weight:600}
+.flatpickr-day.today{border-color:#c9a84c}
+.flatpickr-day.inRange{background:#fdf6e3;border-color:#fdf6e3}
 </style>
 </head>
-
 <body>
 
 <!-- NAV -->
-<nav class="nav">
-  <a href="/" class="nav-logo">
-    <div class="nav-wordmark">
-      <b>BWT</b> · Business World Travel
-      <span>Business Class International</span>
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="nav-gem">✈</div>
+    <div class="nav-brand">
+      <strong>Business World Travel</strong>
+      <span>Business Class</span>
     </div>
   </a>
   <div class="nav-links">
-    <a href="#how" class="nav-link">How It Works</a>
-    <a href="#routes" class="nav-link">Popular Routes</a>
-    <a href="portal.html" class="nav-link">Corporate</a>
-    <a href="tel:+12129130450" class="nav-link" style="opacity:.75;letter-spacing:.06em;font-size:12px">☎ (212) 913-0450</a>
-    <a href="#quote-direct" class="nav-link nav-cta">Request a Quote</a>
+    <a href="#how">How It Works</a>
+    <a href="#routes">Popular Routes</a>
+    <a href="#compare">Why BWT</a>
+    <a href="tel:+12129130450">(212) 913-0450</a>
   </div>
+  <a class="nav-cta" href="#search">Request a Quote</a>
 </nav>
 
 <!-- HERO -->
-<section class="hero" id="top">
+<section class="hero" id="search">
   <div class="hero-img"></div>
   <div class="hero-bg"></div>
   <div class="hero-rule"></div>
+
   <div class="hero-inner">
-    <div class="hero-pill">
-      Specialist Business Class Travel · USA &amp; Canada to Europe
-    </div>
-    <h1 class="hero-h1">
-      Business Class to Europe.<br>
-      <em>Not at the Price They're Charging.</em>
+    <div class="hero-pill">Specialist Business Class Travel · USA &amp; Canada to Europe</div>
+    <span class="t-eyebrow">Real Fares · Zero Fees · No Obligation</span>
+    <h1 class="t-h1">
+      Same Seat. Same Flight.<br>Same Airline.<br><span class="accent">You Could Pay 40% Less.</span>
     </h1>
-    <p class="hero-sub">
-      If you fly transatlantic business class more than once a year, you're almost certainly paying more than you need to. Our specialists access private contracted fares most travelers never see — on the same airlines, the same seats, the same flights.
-    </p>
-
-    <!-- 3-STEP MINI PROCESS -->
-    <div class="hero-ctas-wrap" style="display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-start;margin-bottom:28px;margin-top:8px">
-      <a href="https://wa.me/YOUR_WA_NUMBER?text=Hi%20BWT%2C%20I%27m%20looking%20for%20a%20business%20class%20quote%20to%20Europe.%20Can%20you%20help%3F" target="_blank" rel="noopener" class="ph-btn-wa">
-        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
-        WhatsApp Us Now
-      </a>
-      <div style="display:flex;align-items:center;font-size:10px;color:rgba(255,255,255,.35);letter-spacing:.08em">WE RESPOND WITHIN THE HOUR · ANY TIME</div>
-    </div>
-    <div class="hero-steps">
-      <div class="hero-step">
-        <span class="hero-step-n">1</span>
-        <div class="hero-step-text">
-          <strong>Search</strong>
-          <span>See published fares</span>
-        </div>
+    <p class="t-lead">We check your selected fare against wholesale rates sourced through specialist partners. Clients save up to 70% — on the exact same seat, same airline, same flight.</p>
+    <div class="hero-checks">
+      <div class="hero-check">
+        <div class="hck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        Same Airline
       </div>
-      <div class="hero-step-arrow">→</div>
-      <div class="hero-step">
-        <span class="hero-step-n">2</span>
-        <div class="hero-step-text">
-          <strong>Pick your flight</strong>
-          <span>Route &amp; timing</span>
-        </div>
+      <div class="hero-check">
+        <div class="hck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        Same Seat
       </div>
-      <div class="hero-step-arrow">→</div>
-      <div class="hero-step">
-        <span class="hero-step-n">3</span>
-        <div class="hero-step-text">
-          <strong>Request a quote</strong>
-          <span>We may be able to beat it</span>
-        </div>
+      <div class="hero-check">
+        <div class="hck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        No Fees
+      </div>
+      <div class="hero-check">
+        <div class="hck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        No Obligation
       </div>
     </div>
 
-    <!-- SEARCH BOX -->
-    <div class="search-shell">
-    <div class="search-box" id="searchBox">
-      <!-- Trip type tabs -->
-      <div class="search-tabs">
-        <button class="search-tab active" onclick="setTrip('round',this)">Round Trip</button>
-        <button class="search-tab" onclick="setTrip('oneway',this)">One Way</button>
-        <button class="search-tab" onclick="setTrip('multi',this)">Multi-City</button>
+    <!-- Search card -->
+    <div class="search-card">
+      <div class="stabs">
+        <button class="stab on" onclick="setTripType('round',this)">Round Trip</button>
+        <button class="stab" onclick="setTripType('one',this)">One Way</button>
+        <button class="stab" onclick="setTripType('multi',this)">Multi-City</button>
       </div>
-
-      <!-- Origin / Destination -->
-      <div class="search-row two" style="position:relative;margin-bottom:10px">
-        <!-- Origin -->
-        <div class="sf" id="sf-orig">
-          <div class="sf-label">From</div>
-          <div class="sf-inner">
-            <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-            <input class="sf-input" id="orig-input" placeholder="City or airport" autocomplete="off" spellcheck="false"
-              oninput="acType('orig')" onfocus="acFocus('orig')" onkeydown="acKey(event,'orig')">
-            <span class="sf-code" id="orig-code"></span>
-            <button class="sf-clear" id="orig-clear" onclick="acClear('orig')" tabindex="-1">×</button>
+      <div class="search-card-top">
+      <!-- Multi-city extra legs (hidden by default) -->
+      <div id="multi-legs" style="display:none">
+        <div class="sf-row" style="margin-top:8px">
+          <div class="sf" style="position:relative">
+            <svg class="sf-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+            <div style="flex:1">
+              <span class="sf-lbl">Leg 2 From</span>
+              <input class="sf-inp" id="orig2-input" placeholder="City or airport" autocomplete="off"
+                oninput="acSuggest('orig2',this.value)" onfocus="acSuggest('orig2',this.value)"
+                onblur="setTimeout(()=>acCloseSug('orig2'),160)" onkeydown="acNavSug(event,'orig2')">
+              <input type="hidden" id="orig2-val">
+              <div class="ac-sug" id="orig2-sug"></div>
+            </div>
+          </div>
+          <div class="sf" style="position:relative">
+            <svg class="sf-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg>
+            <div style="flex:1">
+              <span class="sf-lbl">Leg 2 To</span>
+              <input class="sf-inp" id="dest2-input" placeholder="City or airport" autocomplete="off"
+                oninput="acSuggest('dest2',this.value)" onfocus="acSuggest('dest2',this.value)"
+                onblur="setTimeout(()=>acCloseSug('dest2'),160)" onkeydown="acNavSug(event,'dest2')">
+              <input type="hidden" id="dest2-val">
+              <div class="ac-sug" id="dest2-sug"></div>
+            </div>
+          </div>
+        </div>
+        <div id="dep2-field" class="sf" onclick="dep2Picker && dep2Picker.open()" style="cursor:pointer;margin-top:8px;max-width:220px">
+          <svg class="sf-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <div style="flex:1">
+            <span class="sf-lbl">Leg 2 Date</span>
+            <span class="sf-val" id="dep2-display">Select date</span>
+          </div>
+          <input id="dep2-date" style="display:none">
+        </div>
+      </div>
+        <div class="sf" style="position:relative;flex:1.5">
+          <svg class="sf-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+          <div style="flex:1;min-width:0">
+            <span class="sf-lbl">From</span>
+            <input class="sf-inp" id="orig-input" placeholder="City or airport" autocomplete="off"
+              oninput="acSuggest('orig',this.value)"
+              onfocus="acSuggest('orig',this.value)"
+              onblur="setTimeout(()=>acCloseSug('orig'),160)"
+              onkeydown="acNavSug(event,'orig')">
             <input type="hidden" id="orig-val">
           </div>
+          <div class="ac-sug" id="orig-sug"></div>
         </div>
-        <!-- Swap -->
-        <button class="sf-swap" onclick="swapAirports()" title="Swap">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
-        </button>
-        <!-- Destination -->
-        <div class="sf" id="sf-dest">
-          <div class="sf-label">To</div>
-          <div class="sf-inner">
-            <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            <input class="sf-input" id="dest-input" placeholder="City or airport" autocomplete="off" spellcheck="false"
-              oninput="acType('dest')" onfocus="acFocus('dest')" onkeydown="acKey(event,'dest')">
-            <span class="sf-code" id="dest-code"></span>
-            <button class="sf-clear" id="dest-clear" onclick="acClear('dest')" tabindex="-1">×</button>
+        <div class="sf" style="position:relative;flex:1.5">
+          <svg class="sf-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4"/></svg>
+          <div style="flex:1;min-width:0">
+            <span class="sf-lbl">To</span>
+            <input class="sf-inp" id="dest-input" placeholder="City or airport" autocomplete="off"
+              oninput="acSuggest('dest',this.value)"
+              onfocus="acSuggest('dest',this.value)"
+              onblur="setTimeout(()=>acCloseSug('dest'),160)"
+              onkeydown="acNavSug(event,'dest')">
             <input type="hidden" id="dest-val">
           </div>
+          <div class="ac-sug" id="dest-sug"></div>
         </div>
-      </div>
-
-      <!-- Dates / Pax / Cabin / Search -->
-      <div class="search-row four">
-        <!-- Depart -->
-        <div class="sf">
-          <div class="sf-label">Depart</div>
-          <div class="sf-inner">
-            <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            <input type="date" class="sf-date" id="dep-date" min="" onchange="onDepChange()">
+        <div class="sf" id="dep-field" onclick="depPicker && depPicker.open()" style="cursor:pointer;flex:1">
+          <svg class="sf-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <div style="flex:1">
+            <span class="sf-lbl">Depart</span>
+            <span class="sf-val" id="dep-display" style="color:#0a1628">Select date</span>
           </div>
+          <input id="dep-date" style="display:none">
         </div>
-        <!-- Return -->
-        <div class="sf" id="sf-return">
-          <div class="sf-label">Return</div>
-          <div class="sf-inner">
-            <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            <input type="date" class="sf-date" id="ret-date" min="">
+        <div class="sf" id="ret-field" onclick="retPicker && retPicker.open()" style="cursor:pointer;flex:1">
+          <svg class="sf-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <div style="flex:1">
+            <span class="sf-lbl">Return</span>
+            <span class="sf-val" id="ret-display" style="color:#8fa3be">Optional</span>
           </div>
+          <input id="ret-date" style="display:none">
         </div>
-        <!-- Passengers -->
-        <div class="sf">
-          <div class="sf-label">Passengers</div>
-          <div class="sf-inner">
-            <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-            <select class="sf-select" id="pax-sel">
-              <option value="1">1 Adult</option>
-              <option value="2">2 Adults</option>
-              <option value="3">3 Adults</option>
-              <option value="4">4 Adults</option>
-            </select>
-          </div>
-        </div>
-        <!-- Cabin -->
-        <div class="sf">
-          <div class="sf-label">Cabin</div>
-          <div class="sf-inner">
-            <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-            <select class="sf-select" id="cabin-sel">
-              <option value="BUSINESS" selected>Business Class</option>
-              <option value="FIRST">First Class</option>
-            </select>
-          </div>
-        </div>
-        <!-- Search btn -->
-        <button class="search-btn" id="searchBtn" onclick="doSearch()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <button class="sbtn" onclick="doSearch()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
           Search
         </button>
       </div>
+      <div class="search-card-bottom">
+        <p class="snote">🔒 No credit card · No fees · Business emails only</p>
+      </div>
     </div>
-    </div><!-- /search-shell -->
-    <!-- /search box -->
-
-
-  </div>
 </section>
 
-
-
-<!-- TRUST STRIP -->
-<div class="trust-strip">
-  <div class="trust-strip-inner">
-    <div class="trust-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-      No booking fees — ever
-    </div>
-    <div class="trust-sep"></div>
-    <div class="trust-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-      Quote back within 30 minutes
-    </div>
-    <div class="trust-sep"></div>
-    <div class="trust-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-      Human specialists, not algorithms
-    </div>
-    <div class="trust-sep"></div>
-    <div class="trust-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      Same airline. Same seat. Same flight.
-    </div>
-    <div class="trust-sep"></div>
-    <div class="trust-item trust-item-wa">
-      <svg viewBox="0 0 24 24" width="15" height="15" style="flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z" fill="#25d366"/></svg>
-      WhatsApp: reply within the hour
-    </div>
-    <div class="trust-sep"></div>
-    <div class="trust-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.7A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
-      Call us: (212) 913-0450
-    </div>
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-bar-inner">
+    <div class="tb-item"><div class="tb-dot"></div><div><strong>Same flight.</strong> Same seat. Same airline.</div></div>
+    <div class="tb-item"><div class="tb-dot"></div><div><strong>Zero fees.</strong> Not one.</div></div>
+    <div class="tb-item"><div class="tb-dot"></div><div><strong>No obligation</strong> until you say yes.</div></div>
+    <div class="tb-item"><div class="tb-dot"></div><div><strong>You see our rate</strong> before you commit.</div></div>
+    <div class="tb-item"><div class="tb-dot"></div><div><strong>Can't beat it?</strong> Book normally.</div></div>
   </div>
 </div>
 
-<!-- WHO THIS IS FOR -->
-<section class="for-section" id="who">
-  <div class="for-inner">
-    <div class="section-eyebrow">Who This Is For</div>
-    <h2 class="section-h2">Not for everyone. Specifically for you<em> — if any of these are true.</em></h2>
-    <div class="for-grid">
-      <div class="for-card">
-        <div class="for-icon">✈️</div>
-        <div class="for-title">You fly transatlantic business class at least once a year</div>
-        <div class="for-body">You're paying $4,000–$8,000 per ticket at retail. Even one trip using our fares can save you more than a month of mortgage payments.</div>
+<!-- MESSAGE / FARE COMPARISON -->
+<section class="section" id="compare" style="background:#fff;padding:88px clamp(20px,5vw,80px)">
+  <div class="section-inner">
+
+    <!-- Centered headline block -->
+    <div class="section-head" style="margin-bottom:56px">
+      <span class="t-eyebrow">The Honest Truth</span>
+      <h2 class="ht-h2">Same seat. Same flight. Same airline.<br><span class="ht-accent">You could be paying 40% less.</span></h2>
+      <p class="ht-sub">Stop paying the airline's published price. There's a lower one.<br>We source wholesale rates through specialist partners — on the exact same flight you were already going to book.</p>
+    </div>
+
+    <!-- Big stat row -->
+    <div class="ht-stats">
+      <div class="ht-stat">
+        <div class="ht-stat-num">Up to 70%</div>
+        <div class="ht-stat-lbl">below the published fare</div>
       </div>
-      <div class="for-card">
-        <div class="for-icon">💼</div>
-        <div class="for-title">You book business travel for executives or partners</div>
-        <div class="for-body">Whether you're an EA, office manager, or travel coordinator — you're responsible for real money. We give you access to fares that make you look good.</div>
+      <div class="ht-stat-div"></div>
+      <div class="ht-stat">
+        <div class="ht-stat-num">$0</div>
+        <div class="ht-stat-lbl">fees charged to you. Ever.</div>
       </div>
-      <div class="for-card">
-        <div class="for-icon">🏢</div>
-        <div class="for-title">You run a company with people who fly internationally</div>
-        <div class="for-body">If your team flies to Europe more than a handful of times a year, the cumulative savings through our corporate portal are substantial. <a href="portal.html" style="color:var(--gold);text-decoration:underline;text-underline-offset:3px">See our corporate program →</a></div>
+      <div class="ht-stat-div"></div>
+      <div class="ht-stat">
+        <div class="ht-stat-num">Zero risk</div>
+        <div class="ht-stat-lbl">you see our rate before you commit</div>
       </div>
-      <div class="for-card">
-        <div class="for-icon">🔍</div>
-        <div class="for-title">You've searched Google Flights and found it expensive</div>
-        <div class="for-body">Google Flights shows only what airlines publish. It cannot access private contracted fares, consolidator rates, or the channels travel specialists use. We can.</div>
+      <div class="ht-stat-div"></div>
+      <div class="ht-stat">
+        <div class="ht-stat-num">30 sec</div>
+        <div class="ht-stat-lbl">to check your fare</div>
       </div>
     </div>
+
+    <!-- Fare card + bullets side by side -->
+    <div class="ht-grid">
+
+      <!-- Fare comparison card -->
+      <div class="fare-cmp">
+        <div class="fare-cmp-head">Illustrative Example — JFK → LHR</div>
+        <div class="fare-cols">
+          <div class="fare-col">
+            <div class="fare-col-lbl">Published fare</div>
+            <div class="fare-col-route">New York → London</div>
+            <div class="fare-col-sub">Business Class · Round Trip</div>
+            <div class="price-pub"><sup>$</sup>4,800</div>
+            <div class="fare-note">Airline website / Google Flights</div>
+            <div class="fare-tags">
+              <span class="fare-tag">BA Flight</span>
+              <span class="fare-tag">Same Seat</span>
+            </div>
+          </div>
+          <div class="fare-col">
+            <div class="fare-col-lbl">BWT rate</div>
+            <div class="fare-col-route">New York → London</div>
+            <div class="fare-col-sub">Business Class · Round Trip</div>
+            <div class="price-bwt"><sup>$</sup>2,950</div>
+            <div class="fare-note">Per person · via BWT</div>
+            <div class="saving-pill">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              $1,850 saved · 38% below published
+            </div>
+            <div class="fare-tags" style="margin-top:10px">
+              <span class="fare-tag">Same BA Flight</span>
+              <span class="fare-tag">Same Seat</span>
+            </div>
+          </div>
+        </div>
+        <div class="fare-footer">Illustrative only. Actual savings vary by route, dates and availability.</div>
+      </div>
+
+      <!-- Bullet points -->
+      <div class="ht-bullets">
+        <div class="ht-bullet">
+          <div class="ht-bullet-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div>
+            <div class="ht-bullet-title">Wholesale rates you can't find publicly</div>
+            <div class="ht-bullet-sub">Sourced through specialist travel partners — not visible on any airline site, Google Flights, or standard booking tool.</div>
+          </div>
+        </div>
+        <div class="ht-bullet">
+          <div class="ht-bullet-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div>
+            <div class="ht-bullet-title">Zero fees. Not a single one.</div>
+            <div class="ht-bullet-sub">No booking fee, no service charge, no consultation fee. We make our margin from the partner — not from you.</div>
+          </div>
+        </div>
+        <div class="ht-bullet">
+          <div class="ht-bullet-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div>
+            <div class="ht-bullet-title">See our rate before you commit</div>
+            <div class="ht-bullet-sub">We come back with our number. You decide. If we can't beat the published fare, you book normally and pay nothing.</div>
+          </div>
+        </div>
+        <div class="ht-bullet">
+          <div class="ht-bullet-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div>
+            <div class="ht-bullet-title">Nothing to lose. A lot to save.</div>
+            <div class="ht-bullet-sub">The only downside of checking is the 30 seconds it takes. The downside of not checking could be thousands of dollars — every trip.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- WHO IS IT FOR -->
+<section class="section section--off">
+  <div class="section-inner">
+    <div class="section-head">
+      <span class="t-eyebrow">Who This Is For</span>
+      <h2 class="t-h2">If you're a CEO, Founder, Entrepreneur<br>or Executive who flies business class<br>to Europe — <span class="accent">this is for you.</span></h2>
+      <p class="t-body" style="margin-top:16px">You're already buying the seat. We just make sure you're not overpaying for it.</p>
+    </div>
+    <div class="who-grid">
+      <div class="who-card">
+        <span class="who-icon">✈️</span>
+        <div class="who-title">You fly business class to Europe regularly</div>
+        <div class="who-sub">And you know the prices feel inflated for what the seat is actually worth.</div>
+        <span class="who-tag">This is for you →</span>
+      </div>
+      <div class="who-card">
+        <span class="who-icon">💼</span>
+        <div class="who-title">You book travel for executives or partners</div>
+        <div class="who-sub">And you need better rates without compromising on quality, airline or routing.</div>
+        <span class="who-tag">This is for you →</span>
+      </div>
+      <div class="who-card">
+        <span class="who-icon">🏢</span>
+        <div class="who-title">You run a company with frequent international travel</div>
+        <div class="who-sub">And want to cut travel costs without changing how your team flies.</div>
+        <span class="who-tag">This is for you →</span>
+      </div>
+      <div class="who-card">
+        <span class="who-icon">🔍</span>
+        <div class="who-title">You've looked at the fares and thought "there has to be a better way"</div>
+        <div class="who-sub">There is. You just found it.</div>
+        <span class="who-tag">This is for you →</span>
+      </div>
+    </div>
+    <p class="who-footer">If this sounds like you — check your next fare before you book it.</p>
   </div>
 </section>
 
 <!-- HOW IT WORKS -->
-<section class="how" id="how">
-  <div class="how-inner">
-    <div class="section-eyebrow">How It Works</div>
-    <h2 class="section-h2">You see the published fare.<br><em>We find you a better one.</em></h2>
-    <p class="section-sub">The same fares every other site shows — plus a private channel they don't have access to.</p>
+<section class="section section--navy" id="how">
+  <div class="section-inner">
+    <div class="section-head">
+      <span class="t-eyebrow">How It Works</span>
+      <h2 class="t-h2" style="color:#fff">
+        3 steps. <span style="color:rgba(255,255,255,.35);font-weight:400;font-size:clamp(20px,2.8vw,36px)">Takes 30 seconds.</span>
+      </h2>
+    </div>
     <div class="how-steps">
       <div class="how-step">
-        <div class="how-num">01</div>
-        <h3>Search Real Published Fares</h3>
-        <p>Our search shows you the exact same live fares published on airline websites and every major booking platform. No markups. No tricks. This is your baseline.</p>
+        <div class="how-num">1</div>
+        <div class="how-title">Search your flight</div>
+        <div class="how-sub">See live published fares from all major airlines on your route.</div>
       </div>
+      <div class="how-arr">→</div>
       <div class="how-step">
-        <div class="how-num">02</div>
-        <h3>Request a Quote — We Beat It</h3>
-        <p>Submit your route and dates. Within the hour, a specialist checks our private fare channels against what you just saw. If we can do better, we tell you exactly how much better.</p>
+        <div class="how-num">2</div>
+        <div class="how-title">Select the one you want</div>
+        <div class="how-sub">Choose the flight and price you were going to book.</div>
       </div>
+      <div class="how-arr">→</div>
       <div class="how-step">
-        <div class="how-num">03</div>
-        <h3>Confirm &amp; Fly</h3>
-        <p>You only pay if you like the price. We handle the booking, seat selection, and e-ticket. No booking fee. No obligation until you say yes.</p>
+        <div class="how-num">3</div>
+        <div class="how-title">We come back with our rate</div>
+        <div class="how-sub">We check against wholesale partner rates and respond. Often lower. Always free.</div>
       </div>
     </div>
-    <div class="how-fomo">
-      <div class="how-fomo-left">
-        <div class="how-fomo-headline">Every time you book direct,<br>you might be leaving money on the table.</div>
-        <div class="how-fomo-sub">Most transatlantic business class travellers book with the airline or a search engine — because they don't know there's another option. There is. It takes 60 seconds to find out if you qualify for a better fare on your next trip.</div>
-      </div>
-      <div class="how-fomo-right">
-        <div class="how-fomo-stat">
-          <div class="how-fomo-n">$1,000<span>+</span></div>
-          <div class="how-fomo-l">typical saving per ticket<br><span>on popular transatlantic routes</span></div>
-        </div>
-        <div class="how-fomo-stat">
-          <div class="how-fomo-n">60<span>min</span></div>
-          <div class="how-fomo-l">from request to quote<br><span>during business hours</span></div>
-        </div>
-        <a href="#top" class="how-fomo-btn" onclick="window.scrollTo({top:0,behavior:'smooth'});return false">
-          Search Your Route Now →
-        </a>
-      </div>
+    <div class="how-note-wrap">
+      <div class="how-note">If we can't beat it — you book normally. You've lost nothing.</div>
     </div>
   </div>
 </section>
 
-<!-- WHY NOT GOOGLE FLIGHTS -->
-<section class="why-section">
-  <div class="why-inner">
-    <div class="why-left">
-      <div class="section-eyebrow">The Honest Explanation</div>
-      <h2 class="section-h2" style="color:#fff">Why can't Google Flights find these fares?</h2>
-      <p style="font-size:14px;color:rgba(220,230,248,.55);line-height:1.85;margin-bottom:24px">
-        This is the most common question we get, and it deserves a straight answer.
-      </p>
-      <p style="font-size:14px;color:rgba(220,230,248,.55);line-height:1.85;margin-bottom:24px">
-        Airlines distribute fares through multiple channels. What you see on their website — and what Google Flights, Expedia, and Kayak show — is the publicly filed tariff. These are the fares anyone can book.
-      </p>
-      <p style="font-size:14px;color:rgba(220,230,248,.55);line-height:1.85;margin-bottom:24px">
-        There is a separate distribution channel used by travel agencies and wholesalers — fares that are contracted privately and never appear on consumer booking sites. These are sometimes called <em style="color:rgba(220,230,248,.75)">net fares</em>, <em style="color:rgba(220,230,248,.75)">bulk fares</em>, or <em style="color:rgba(220,230,248,.75)">contracted rates</em>. They represent the same seat on the same flight — just sourced differently.
-      </p>
-      <p style="font-size:14px;color:rgba(220,230,248,.55);line-height:1.85;margin-bottom:0">
-        Our specialists have worked these channels for over a decade. When you request a quote, that's what they're checking.
-      </p>
+<!-- WHY NOT GOOGLE / COMPARE TABLE -->
+<section class="section" id="why">
+  <div class="section-inner">
+    <div class="section-head">
+      <span class="t-eyebrow">Why Not Just Use Google Flights?</span>
+      <h2 class="t-h2">Google Flights shows <span class="accent">the most expensive<br>price</span> for that seat.</h2>
+      <p class="t-body" style="margin-top:14px">Google, Expedia, Kayak — they all show the same publicly filed fares. Every airline makes these available to everyone. Below them are wholesale rates that only move through specialist partners. That's where we operate — and why we can beat what you find online.</p>
     </div>
-    <div class="why-right">
-      <div class="why-compare">
-        <div class="why-compare-row why-compare-hdr">
-          <div></div>
-          <div class="why-col-hdr">Google Flights</div>
-          <div class="why-col-hdr why-col-hdr--bwt">BWT</div>
-        </div>
-        <div class="why-compare-row">
-          <div class="why-row-lbl">Published fares</div>
-          <div class="why-cell why-cell--yes">✓</div>
-          <div class="why-cell why-cell--yes why-cell--bwt">✓</div>
-        </div>
-        <div class="why-compare-row">
-          <div class="why-row-lbl">Private contracted fares</div>
-          <div class="why-cell why-cell--no">✗</div>
-          <div class="why-cell why-cell--yes why-cell--bwt">✓</div>
-        </div>
-        <div class="why-compare-row">
-          <div class="why-row-lbl">Consolidator rates</div>
-          <div class="why-cell why-cell--no">✗</div>
-          <div class="why-cell why-cell--yes why-cell--bwt">✓</div>
-        </div>
-        <div class="why-compare-row">
-          <div class="why-row-lbl">Human specialist</div>
-          <div class="why-cell why-cell--no">✗</div>
-          <div class="why-cell why-cell--yes why-cell--bwt">✓</div>
-        </div>
-        <div class="why-compare-row">
-          <div class="why-row-lbl">Booking fees</div>
-          <div class="why-cell why-cell--neutral">Varies</div>
-          <div class="why-cell why-cell--yes why-cell--bwt">None</div>
-        </div>
-        <div class="why-compare-row">
-          <div class="why-row-lbl">Quote before you commit</div>
-          <div class="why-cell why-cell--no">✗</div>
-          <div class="why-cell why-cell--yes why-cell--bwt">✓</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FARE EXAMPLE -->
-<section class="fare-example-section">
-  <div class="fare-example-inner">
-    <div class="section-eyebrow">Illustrative Example</div>
-    <h2 class="section-h2">What the difference can look like.</h2>
-    <p class="section-sub">Numbers are illustrative — actual savings vary by route, dates, and availability. But this is the kind of difference our clients regularly see.</p>
-    <div class="fare-compare">
-      <div class="fare-col fare-col--them">
-        <div class="fare-col-label">Booked direct with the airline</div>
-        <div class="fare-route">New York → London</div>
-        <div class="fare-cabin">Business Class · Round Trip</div>
-        <div class="fare-price fare-price--was">$4,800</div>
-        <div class="fare-note">Published fare — what you'd pay on their website today</div>
-        <div class="fare-tags">
-          <span class="fare-tag">Same airline</span>
-          <span class="fare-tag">Same flight</span>
-          <span class="fare-tag">Same seat</span>
-        </div>
-      </div>
-      <div class="fare-vs">
-        <div class="fare-vs-circle">VS</div>
-        <div class="fare-vs-arrow">→</div>
-      </div>
-      <div class="fare-col fare-col--bwt">
-        <div class="fare-col-label">Quoted through Business World Travel</div>
-        <div class="fare-route">New York → London</div>
-        <div class="fare-cabin">Business Class · Round Trip</div>
-        <div class="fare-price fare-price--now">$2,950</div>
-        <div class="fare-note">Private contracted rate · Illustrative — not a guarantee</div>
-        <div class="fare-saving">
-          <span class="fare-saving-amt">$1,850 saved</span>
-          <span class="fare-saving-pct">38% below published</span>
-        </div>
-      </div>
-    </div>
-    <div class="fare-disclaimer">Fares are illustrative examples only. Actual availability and savings vary by route, airline, travel dates, and booking timing. Past results do not guarantee future pricing.</div>
-    <div style="text-align:center;margin-top:32px">
-      <a href="#top" class="fare-cta-btn" onclick="window.scrollTo({top:0,behavior:'smooth'});return false">Search Your Route →</a>
+    <div class="compare-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align:left;background:#F7F8FA;color:var(--muted);padding:14px 22px;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase">Feature</th>
+            <th class="th-g" style="background:#F7F8FA;color:var(--muted);text-align:center;padding:14px 22px;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase">Google Flights</th>
+            <th class="th-b" style="background:var(--navy);color:var(--gold);text-align:center;padding:14px 22px;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase">BWT</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Published fares</td><td><span class="ck-y">✓</span></td><td><span class="ck-y">✓</span></td></tr>
+          <tr><td>Wholesale partner rates</td><td><span class="ck-n">✗</span></td><td><span class="ck-y">✓</span></td></tr>
+          <tr><td>Human specialist on every booking</td><td><span class="ck-n">✗</span></td><td><span class="ck-y">✓</span></td></tr>
+          <tr><td>Booking fees</td><td>Varies</td><td><span class="ck-g">Zero. Always.</span></td></tr>
+          <tr><td>See rate before committing</td><td><span class="ck-n">✗</span></td><td><span class="ck-y">✓</span></td></tr>
+          <tr><td>No obligation to book</td><td><span class="ck-n">✗</span></td><td><span class="ck-y">✓</span></td></tr>
+          <tr><td>Savings vs published fare</td><td>—</td><td><span class="ck-g">Up to 70%</span></td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </section>
 
 <!-- POPULAR ROUTES -->
-<section class="routes" id="routes">
-  <div class="routes-inner">
-    <div class="section-eyebrow">Where We're Strongest</div>
-    <h2 class="section-h2">Popular Business Class Routes</h2>
-    <p class="section-sub">These are the transatlantic corridors where our specialists have the deepest fare access and most consistent results.</p>
-    <div class="routes-grid" id="routesGrid"></div>
+<section class="section section--off" id="routes">
+  <div class="section-inner">
+    <div class="section-head">
+      <span class="t-eyebrow">Popular Routes</span>
+      <h2 class="t-h2">Flying one of these routes?<br><span class="accent">We can probably beat your fare.</span></h2>
+      <p class="t-body" style="margin-top:14px">Search your route, select the flight you were going to book, and let us come back with our rate. No fees. No obligation. If we can't beat it — you book normally.</p>
+    </div>
+    <div class="routes-grid">
+      <a class="route-card" href="#">
+        <div><div class="route-cities">New York → London</div><div class="route-from">From $1,900 · Business Class</div></div>
+        <span class="route-save">Save up to 41%</span>
+      </a>
+      <a class="route-card" href="#">
+        <div><div class="route-cities">Chicago → London</div><div class="route-from">From $2,000 · Business Class</div></div>
+        <span class="route-save">Save up to 41%</span>
+      </a>
+      <a class="route-card" href="#">
+        <div><div class="route-cities">New York → Paris</div><div class="route-from">From $1,950 · Business Class</div></div>
+        <span class="route-save">Save up to 41%</span>
+      </a>
+      <a class="route-card" href="#">
+        <div><div class="route-cities">San Francisco → London</div><div class="route-from">From $2,300 · Business Class</div></div>
+        <span class="route-save">Save up to 38%</span>
+      </a>
+      <a class="route-card" href="#">
+        <div><div class="route-cities">New York → Frankfurt</div><div class="route-from">From $1,950 · Business Class</div></div>
+        <span class="route-save">Save up to 40%</span>
+      </a>
+      <a class="route-card" href="#">
+        <div><div class="route-cities">Toronto → London</div><div class="route-from">From $1,750 · Business Class</div></div>
+        <span class="route-save">Save up to 41%</span>
+      </a>
+      <a class="route-card" href="#">
+        <div><div class="route-cities">Boston → London</div><div class="route-from">From $1,900 · Business Class</div></div>
+        <span class="route-save">Save up to 41%</span>
+      </a>
+      <a class="route-card" href="#">
+        <div><div class="route-cities">Los Angeles → London</div><div class="route-from">From $2,200 · Business Class</div></div>
+        <span class="route-save">Save up to 39%</span>
+      </a>
+      <a class="route-card" href="#">
+        <div><div class="route-cities">Miami → Amsterdam</div><div class="route-from">From $2,100 · Business Class</div></div>
+        <span class="route-save">Save up to 38%</span>
+      </a>
+    </div>
+    <div class="routes-more"><a href="#">View all routes →</a></div>
   </div>
 </section>
 
-<!-- DIRECT QUOTE CTA -->
-<section class="direct-cta-section" id="quote-direct">
-  <div class="direct-cta-inner">
-    <div class="dcta-left">
-      <div class="section-eyebrow" style="color:var(--gold)">Skip the Search</div>
-      <h2 class="section-h2" style="color:#fff;margin-bottom:12px">Just tell us where you're going.</h2>
-      <p style="font-size:14px;color:rgba(220,230,248,.5);line-height:1.8;margin-bottom:0">
-        No need to search if you already know your route and dates. Call us directly or send an email — a specialist will get back to you with a quote within 30 minutes.
-      </p>
-    </div>
-    <div class="dcta-right">
-      <a href="https://wa.me/YOUR_WA_NUMBER?text=Hi%20BWT%2C%20I%27m%20looking%20for%20a%20business%20class%20quote%20to%20Europe.%20Can%20you%20help%3F" target="_blank" rel="noopener" class="dcta-btn dcta-btn--wa">
-        <span class="dcta-btn-icon">
-          <svg viewBox="0 0 24 24" width="22" height="22"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z" fill="#fff"/></svg>
-        </span>
-        <span>
-          <span class="dcta-btn-lbl">WhatsApp — fastest response</span>
-          <span class="dcta-btn-num">Reply within the hour</span>
-        </span>
-      </a>
-      <a href="tel:+12129130450" class="dcta-btn dcta-btn--phone">
-        <span class="dcta-btn-icon">📞</span>
-        <span>
-          <span class="dcta-btn-lbl">Call us now</span>
-          <span class="dcta-btn-num">(212) 913-0450</span>
-        </span>
-      </a>
-      <a href="mailto:quotes@businessworldtravel.com" class="dcta-btn dcta-btn--email">
-        <span class="dcta-btn-icon">✉</span>
-        <span>
-          <span class="dcta-btn-lbl">Email a quote request</span>
-          <span class="dcta-btn-num">quotes@businessworldtravel.com</span>
-        </span>
-      </a>
-      <div class="dcta-hours">Phone: Mon–Fri 9am–7pm ET &nbsp;·&nbsp; WhatsApp: within the hour, any time</div>
+<!-- FINAL CTA -->
+<section class="cta-section">
+  <div class="cta-inner">
+    <span class="t-eyebrow" style="display:block;text-align:center">Nothing to lose. A lot to save.</span>
+    <h2 class="cta-h">Check your fare<br>before you <span class="accent">book it.</span></h2>
+    <p class="cta-sub">30 seconds. No fees. No obligation. No credit card. If we can't beat the published fare — you book normally and pay nothing. If we can — you save.</p>
+    <a class="cta-btn" href="#search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      Search Your Route Now →
+    </a>
+    <div class="cta-trust">
+      <div class="cta-ti">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        Zero fees. Ever.
+      </div>
+      <div class="cta-ti">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        No obligation to book.
+      </div>
+      <div class="cta-ti">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        Up to 70% below published.
+      </div>
+      <div class="cta-ti">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        Same airline. Same seat.
+      </div>
     </div>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-grid">
-    <div class="footer-brand">
-      <div style="font-size:16px;font-weight:700;color:#fff;margin-bottom:4px">Business World Travel</div>
-      <div style="font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:.1em">Business Class International</div>
-      <p>Specialists in international business class travel. USA & Canada to Europe and beyond. Private fare access that online booking engines can't match.</p>
-    </div>
-    <div>
-      <div class="footer-h">Services</div>
-      <ul class="footer-links">
-        <li><a href="#top">Search Flights</a></li>
-        <li><a href="#" href="results.html">Request a Quote</a></li>
-        <li><a href="portal.html">Corporate Portal</a></li>
-        <li><a href="#how">How It Works</a></li>
-      </ul>
-    </div>
-    <div>
-      <div class="footer-h">Contact</div>
-      <ul class="footer-links">
-        <li><a href="mailto:quotes@businessworldtravel.com">quotes@businessworldtravel.com</a></li>
-        <li><a href="tel:+12129130450">(212) 913-0450</a></li>
-        <li style="color:rgba(255,255,255,.4);font-size:12px">5 Penn Plaza, New York, NY</li>
-        <li style="color:rgba(255,255,255,.4);font-size:12px">Mon–Fri 9am–7pm ET</li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span>© 2026 Business World Travel. All rights reserved.</span>
-    <span><a href="privacy-policy.html">Privacy</a> · <a href="terms-of-use.html">Terms</a></span>
+  <span>© 2026 Business World Travel. All rights reserved.</span>
+  <div class="footer-links">
+    <a href="#">Privacy Policy</a>
+    <a href="#">Terms</a>
+    <a href="#">Contact</a>
   </div>
 </footer>
 
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
-
 <script>
-/* ═══════════════════════════════════════════════
-   CONFIG — update these when you go live
-═══════════════════════════════════════════════ */
-const CFG = {
-  // On businessworldtravel.com these resolve to /.netlify/functions/...
-  airportsUrl: '/api/airports',
-  searchUrl:   '/api/search',
-  quoteUrl:    '/api/quote',
-};
-
-/* ═══ STATE ═══ */
-let tripType   = 'round';
-let allOffers  = [];
-let selected   = null;   // currently selected offer for quote
-let acState    = { orig: null, dest: null };
-let _acFloat   = null;
-let _acInp     = null;
-let _acDebounce = null;
-
-/* ═══════════════════════════════════════════════
-   INIT
-═══════════════════════════════════════════════ */
-document.addEventListener('DOMContentLoaded', () => {
-  // Set date defaults
-  const today = new Date();
-  const fmt   = d => d.toISOString().slice(0,10);
-  const dep   = new Date(today); dep.setDate(dep.getDate() + 14);
-  const ret   = new Date(dep);   ret.setDate(ret.getDate() + 7);
-  document.getElementById('dep-date').min = fmt(today);
-  document.getElementById('dep-date').value = fmt(dep);
-  document.getElementById('ret-date').min = fmt(dep);
-  document.getElementById('ret-date').value = fmt(ret);
-
-  // Render popular routes
-  renderRoutes();
-});
-
-function onDepChange() {
-  const dep = document.getElementById('dep-date').value;
-  const ret = document.getElementById('ret-date');
-  if (dep && ret.value && ret.value < dep) {
-    const d = new Date(dep); d.setDate(d.getDate()+1);
-    ret.value = d.toISOString().slice(0,10);
-  }
-  if (dep) ret.min = dep;
-}
-
-function setTrip(type, btn) {
+// ── Trip type ──
+let tripType = 'round';
+let dep2Picker;
+function setTripType(type, btn) {
   tripType = type;
-  document.querySelectorAll('.search-tab').forEach(t => t.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('sf-return').style.display = type === 'oneway' ? 'none' : '';
-}
-
-/* ═══════════════════════════════════════════════
-   AUTOCOMPLETE — body-level floating panel
-═══════════════════════════════════════════════ */
-function getFloat() {
-  if (!_acFloat) {
-    _acFloat = document.createElement('div');
-    _acFloat.className = 'ac-float';
-    document.body.appendChild(_acFloat);
-    document.addEventListener('mousedown', e => {
-      if (!_acFloat.contains(e.target) && !e.target.classList.contains('sf-input'))
-        closeFloat();
-    });
-    window.addEventListener('scroll', repositionFloat, {passive:true});
-    window.addEventListener('resize', repositionFloat, {passive:true});
-  }
-  return _acFloat;
-}
-
-function openFloat(inp, results, q, onSelect) {
-  const panel = getFloat();
-  _acInp = inp;
-  panel.innerHTML = '';
-
-  const hdr = document.createElement('div');
-  hdr.className = 'ac-hdr';
-  hdr.textContent = q ? 'Matching airports' : 'Popular airports';
-  panel.appendChild(hdr);
-
-  if (!results.length) {
-    panel.innerHTML += '<div class="ac-empty">No airports found</div>';
-  } else {
-    results.forEach((a, i) => {
-      const item = document.createElement('div');
-      item.className = 'ac-item';
-      item.innerHTML =
-        `<div class="ac-flag">${a.flag||'🌍'}</div>` +
-        `<div class="ac-info">` +
-          `<div class="ac-city">${hl(a.city||a.name, q)}</div>` +
-          `<div class="ac-name">${hl(a.name||'', q)}</div>` +
-        `</div>` +
-        `<div class="ac-code">${a.iata}</div>`;
-      item.addEventListener('mousedown', e => { e.preventDefault(); onSelect(a); closeFloat(); });
-      item.addEventListener('mouseover', () => {
-        panel.querySelectorAll('.ac-item').forEach(el => el.classList.remove('hl'));
-        item.classList.add('hl');
-        panel._idx = i;
-      });
-      panel.appendChild(item);
+  document.querySelectorAll('.stab').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  const retField = document.getElementById('ret-field');
+  const multiLegs = document.getElementById('multi-legs');
+  retField.style.opacity = (type==='one'||type==='multi') ? '.35' : '1';
+  retField.style.pointerEvents = (type==='one'||type==='multi') ? 'none' : '';
+  multiLegs.style.display = type==='multi' ? 'block' : 'none';
+  if (type==='multi' && !dep2Picker) {
+    const fmt = {weekday:'short',month:'short',day:'numeric'};
+    dep2Picker = flatpickr('#dep2-date', {
+      minDate: new Date().toISOString().slice(0,10),
+      disableMobile: true,
+      onChange(sel, ds) {
+        const el = document.getElementById('dep2-display');
+        el.textContent = sel[0] ? sel[0].toLocaleDateString('en-US', fmt) : 'Select date';
+      }
     });
   }
-
-  panel._results = results;
-  panel._idx = -1;
-  panel.classList.add('open');
-  repositionFloat();
 }
 
-function closeFloat() {
-  if (_acFloat) _acFloat.classList.remove('open');
-  _acInp = null;
-}
-
-function repositionFloat() {
-  if (!_acFloat?.classList.contains('open') || !_acInp) return;
-  const r = _acInp.getBoundingClientRect();
-  const w = Math.max(300, Math.min(440, r.width + 40));
-  _acFloat.style.width    = Math.min(w, window.innerWidth - 16) + 'px';
-  _acFloat.style.left     = Math.max(8, r.left - 8) + 'px';
-  const spaceBelow = window.innerHeight - r.bottom - 8;
-  if (spaceBelow >= 180) {
-    _acFloat.style.top     = (r.bottom + 4) + 'px';
-    _acFloat.style.bottom  = 'auto';
-    _acFloat.style.maxHeight = Math.min(340, spaceBelow) + 'px';
+// ── Date display ──
+function setDtDisplay(field, val) {
+  const el = document.getElementById(field+'-display');
+  if (!el) return;
+  if (val) {
+    el.textContent = new Date(val+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+    el.style.color = '';
   } else {
-    _acFloat.style.bottom  = (window.innerHeight - r.top + 4) + 'px';
-    _acFloat.style.top     = 'auto';
-    _acFloat.style.maxHeight = Math.min(340, r.top - 8) + 'px';
+    el.textContent = field==='dep' ? 'Select date' : 'Select date';
   }
 }
 
-function hl(text, q) {
-  if (!q || !text) return text||'';
-  const i = text.toLowerCase().indexOf(q.toLowerCase());
-  if (i < 0) return text;
-  return text.slice(0,i) + '<mark class="ac-hl">' + text.slice(i,i+q.length) + '</mark>' + text.slice(i+q.length);
-}
+// Set min dates
+let depPicker, retPicker;
+document.addEventListener('DOMContentLoaded', () => {
+  const today = new Date().toISOString().slice(0,10);
+  const fmt = {weekday:'short',month:'short',day:'numeric'};
 
-/* ══ AIRPORT DATA — hardcoded fallback (works before Netlify deploy) ══ */
-const AIRPORTS_DB = [
-  {iata:'JFK',city:'New York',name:'John F. Kennedy International',country:'US',flag:'🇺🇸'},
-  {iata:'EWR',city:'Newark',name:'Newark Liberty International',country:'US',flag:'🇺🇸'},
-  {iata:'LGA',city:'New York',name:'LaGuardia Airport',country:'US',flag:'🇺🇸'},
-  {iata:'LHR',city:'London',name:'Heathrow Airport',country:'GB',flag:'🇬🇧'},
-  {iata:'LGW',city:'London',name:'Gatwick Airport',country:'GB',flag:'🇬🇧'},
-  {iata:'CDG',city:'Paris',name:'Charles de Gaulle Airport',country:'FR',flag:'🇫🇷'},
-  {iata:'ORY',city:'Paris',name:'Paris Orly Airport',country:'FR',flag:'🇫🇷'},
-  {iata:'FRA',city:'Frankfurt',name:'Frankfurt Airport',country:'DE',flag:'🇩🇪'},
-  {iata:'MUC',city:'Munich',name:'Munich Airport',country:'DE',flag:'🇩🇪'},
-  {iata:'AMS',city:'Amsterdam',name:'Amsterdam Schiphol Airport',country:'NL',flag:'🇳🇱'},
-  {iata:'MAD',city:'Madrid',name:'Adolfo Suárez Madrid-Barajas',country:'ES',flag:'🇪🇸'},
-  {iata:'BCN',city:'Barcelona',name:'Barcelona El Prat Airport',country:'ES',flag:'🇪🇸'},
-  {iata:'FCO',city:'Rome',name:'Leonardo da Vinci International',country:'IT',flag:'🇮🇹'},
-  {iata:'MXP',city:'Milan',name:'Milan Malpensa Airport',country:'IT',flag:'🇮🇹'},
-  {iata:'ZRH',city:'Zurich',name:'Zurich Airport',country:'CH',flag:'🇨🇭'},
-  {iata:'GVA',city:'Geneva',name:'Geneva Airport',country:'CH',flag:'🇨🇭'},
-  {iata:'VIE',city:'Vienna',name:'Vienna International Airport',country:'AT',flag:'🇦🇹'},
-  {iata:'BRU',city:'Brussels',name:'Brussels Airport',country:'BE',flag:'🇧🇪'},
-  {iata:'CPH',city:'Copenhagen',name:'Copenhagen Airport',country:'DK',flag:'🇩🇰'},
-  {iata:'ARN',city:'Stockholm',name:'Stockholm Arlanda Airport',country:'SE',flag:'🇸🇪'},
-  {iata:'OSL',city:'Oslo',name:'Oslo Gardermoen Airport',country:'NO',flag:'🇳🇴'},
-  {iata:'HEL',city:'Helsinki',name:'Helsinki-Vantaa Airport',country:'FI',flag:'🇫🇮'},
-  {iata:'DUB',city:'Dublin',name:'Dublin Airport',country:'IE',flag:'🇮🇪'},
-  {iata:'MAN',city:'Manchester',name:'Manchester Airport',country:'GB',flag:'🇬🇧'},
-  {iata:'EDI',city:'Edinburgh',name:'Edinburgh Airport',country:'GB',flag:'🇬🇧'},
-  {iata:'IST',city:'Istanbul',name:'Istanbul Airport',country:'TR',flag:'🇹🇷'},
-  {iata:'ATH',city:'Athens',name:'Athens Eleftherios Venizelos',country:'GR',flag:'🇬🇷'},
-  {iata:'PRG',city:'Prague',name:'Václav Havel Airport Prague',country:'CZ',flag:'🇨🇿'},
-  {iata:'WAW',city:'Warsaw',name:'Warsaw Chopin Airport',country:'PL',flag:'🇵🇱'},
-  {iata:'BUD',city:'Budapest',name:'Budapest Ferenc Liszt Airport',country:'HU',flag:'🇭🇺'},
-  {iata:'LIS',city:'Lisbon',name:'Lisbon Humberto Delgado Airport',country:'PT',flag:'🇵🇹'},
-  {iata:'IAD',city:'Washington DC',name:'Washington Dulles International',country:'US',flag:'🇺🇸'},
-  {iata:'ORD',city:'Chicago',name:"O'Hare International Airport",country:'US',flag:'🇺🇸'},
-  {iata:'LAX',city:'Los Angeles',name:'Los Angeles International',country:'US',flag:'🇺🇸'},
-  {iata:'SFO',city:'San Francisco',name:'San Francisco International',country:'US',flag:'🇺🇸'},
-  {iata:'BOS',city:'Boston',name:'Logan International Airport',country:'US',flag:'🇺🇸'},
-  {iata:'MIA',city:'Miami',name:'Miami International Airport',country:'US',flag:'🇺🇸'},
-  {iata:'ATL',city:'Atlanta',name:'Hartsfield-Jackson Atlanta',country:'US',flag:'🇺🇸'},
-  {iata:'YYZ',city:'Toronto',name:'Toronto Pearson International',country:'CA',flag:'🇨🇦'},
-  {iata:'YUL',city:'Montreal',name:'Montréal-Trudeau International',country:'CA',flag:'🇨🇦'},
-  {iata:'DOH',city:'Doha',name:'Hamad International Airport',country:'QA',flag:'🇶🇦'},
-  {iata:'DXB',city:'Dubai',name:'Dubai International Airport',country:'AE',flag:'🇦🇪'},
-  {iata:'SIN',city:'Singapore',name:'Singapore Changi Airport',country:'SG',flag:'🇸🇬'},
-  {iata:'HKG',city:'Hong Kong',name:'Hong Kong International',country:'HK',flag:'🇭🇰'},
-  {iata:'NRT',city:'Tokyo',name:'Narita International Airport',country:'JP',flag:'🇯🇵'},
-  {iata:'ICN',city:'Seoul',name:'Incheon International Airport',country:'KR',flag:'🇰🇷'},
-  {iata:'SYD',city:'Sydney',name:'Kingsford Smith Airport',country:'AU',flag:'🇦🇺'},
-  {iata:'MEX',city:'Mexico City',name:'Benito Juárez International',country:'MX',flag:'🇲🇽'},
-  {iata:'GRU',city:'São Paulo',name:'São Paulo Guarulhos International',country:'BR',flag:'🇧🇷'},
-  {iata:'EZE',city:'Buenos Aires',name:'Ministro Pistarini International',country:'AR',flag:'🇦🇷'},
-];
-
-const POPULAR_AIRPORTS = ['JFK','EWR','LHR','CDG','FRA','AMS','MAD','FCO','ZRH','DUB'];
-
-function searchLocalAirports(q) {
-  if (!q) return POPULAR_AIRPORTS.map(c => AIRPORTS_DB.find(a => a.iata === c)).filter(Boolean);
-  const ql = q.toLowerCase();
-  return AIRPORTS_DB.filter(a =>
-    a.iata.toLowerCase().startsWith(ql) ||
-    a.city.toLowerCase().includes(ql) ||
-    a.name.toLowerCase().includes(ql) ||
-    a.country.toLowerCase().includes(ql)
-  ).slice(0, 8);
-}
-
-/* Airport fetch — uses local static data, fast and reliable */
-function fetchAirports(q, cb) {
-  clearTimeout(_acDebounce);
-  _acDebounce = setTimeout(() => {
-    cb(searchLocalAirports(q));
-  }, q.length > 1 ? 120 : 0);
-}
-
-function acType(field) {
-  const inp    = document.getElementById(`${field}-input`);
-  const clear  = document.getElementById(`${field}-clear`);
-  const hidden = document.getElementById(`${field}-val`);
-  const q      = inp.value.trim();
-
-  acState[field] = null;
-  hidden.value   = '';
-  clear.style.display = q ? 'block' : 'none';
-
-  if (!q) { closeFloat(); return; }
-
-  // Show loading indicator immediately
-  openFloat(inp, [], q, () => {});
-
-  fetchAirports(q, results => {
-    if (inp === document.activeElement || _acInp === inp) {
-      openFloat(inp, results, q, a => acSelect(field, a));
+  depPicker = flatpickr('#dep-date', {
+    minDate: today,
+    disableMobile: true,
+    onChange(sel, ds) {
+      const el = document.getElementById('dep-display');
+      el.textContent = sel[0] ? sel[0].toLocaleDateString('en-US', fmt) : 'Select date';
+      el.style.color = sel[0] ? '' : '';
+      if (sel[0]) retPicker.set('minDate', ds);
     }
   });
-}
 
-function acFocus(field) {
-  const inp    = document.getElementById(`${field}-input`);
-  const hidden = document.getElementById(`${field}-val`);
-  if (inp.value.trim() && !hidden.value) {
-    acType(field);
-  } else if (!hidden.value) {
-    // Show popular airports
-    fetchAirports('', results => {
-      openFloat(inp, results, '', a => acSelect(field, a));
-    });
-  }
-}
-
-function acKey(e, field) {
-  const panel = _acFloat;
-  if (!panel?.classList.contains('open')) return;
-  const items = panel.querySelectorAll('.ac-item');
-  if (!items.length) return;
-  if (e.key === 'ArrowDown') {
-    e.preventDefault();
-    panel._idx = Math.min((panel._idx??-1)+1, items.length-1);
-    items.forEach((el,i) => el.classList.toggle('hl', i===panel._idx));
-    items[panel._idx]?.scrollIntoView({block:'nearest'});
-  } else if (e.key === 'ArrowUp') {
-    e.preventDefault();
-    panel._idx = Math.max((panel._idx??0)-1, 0);
-    items.forEach((el,i) => el.classList.toggle('hl', i===panel._idx));
-    items[panel._idx]?.scrollIntoView({block:'nearest'});
-  } else if (e.key === 'Enter') {
-    e.preventDefault();
-    const a = panel._results?.[panel._idx];
-    if (a) { acSelect(field, a); closeFloat(); }
-  } else if (e.key === 'Escape') {
-    closeFloat();
-  }
-}
-
-function acSelect(field, airport) {
-  const inp    = document.getElementById(`${field}-input`);
-  const clear  = document.getElementById(`${field}-clear`);
-  const code   = document.getElementById(`${field}-code`);
-  const hidden = document.getElementById(`${field}-val`);
-  inp.value    = `${airport.city||airport.name} (${airport.iata})`;
-  hidden.value = airport.iata;
-  code.textContent = airport.iata;
-  code.style.display = 'block';
-  clear.style.display = 'block';
-  acState[field] = airport;
-  closeFloat();
-  if (field === 'orig') document.getElementById('dest-input').focus();
-}
-
-function acClear(field) {
-  document.getElementById(`${field}-input`).value = '';
-  document.getElementById(`${field}-val`).value = '';
-  document.getElementById(`${field}-code`).style.display = 'none';
-  document.getElementById(`${field}-clear`).style.display = 'none';
-  acState[field] = null;
-  closeFloat();
-  document.getElementById(`${field}-input`).focus();
-}
-
-function swapAirports() {
-  const origInp = document.getElementById('orig-input');
-  const destInp = document.getElementById('dest-input');
-  const origVal = document.getElementById('orig-val');
-  const destVal = document.getElementById('dest-val');
-  const origCode = document.getElementById('orig-code');
-  const destCode = document.getElementById('dest-code');
-  [origInp.value, destInp.value] = [destInp.value, origInp.value];
-  [origVal.value, destVal.value] = [destVal.value, origVal.value];
-  [origCode.textContent, destCode.textContent] = [destCode.textContent, origCode.textContent];
-  [origCode.style.display, destCode.style.display] = [destCode.style.display, origCode.style.display];
-  [acState.orig, acState.dest] = [acState.dest, acState.orig];
-}
-
-function doSearch() {
-  const orig  = document.getElementById('orig-val').value.trim().toUpperCase();
-  const dest  = document.getElementById('dest-val').value.trim().toUpperCase();
-  const dep   = document.getElementById('dep-date').value;
-  const ret   = tripType === 'round' ? document.getElementById('ret-date').value : '';
-  const pax   = parseInt(document.getElementById('pax-sel').value) || 1;
-  const cabin = document.getElementById('cabin-sel')?.value || 'BUSINESS';
-  const origN = acState.orig?.city || orig;
-  const destN = acState.dest?.city || dest;
-
-  if (!orig || !dest) { showToast('Please select origin and destination airports.'); return; }
-  if (!dep)           { showToast('Please select a departure date.'); return; }
-  if (orig === dest)  { showToast('Origin and destination must be different.'); return; }
-
-  const params = new URLSearchParams({ from:orig, to:dest, dep, cabin, pax, fromN:origN, toN:destN });
-  if (ret) params.set('ret', ret);
-  window.location.href = 'results.html?' + params.toString();
-}
-
-function showToast(msg, type = '') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className   = 'toast' + (type ? ' ' + type : '');
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 4000);
-}
-
-// Keyboard: Escape closes modal
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
-    closeFloat();
-    closeQuoteModal();
-  }
+  retPicker = flatpickr('#ret-date', {
+    minDate: today,
+    disableMobile: true,
+    onChange(sel, ds) {
+      const el = document.getElementById('ret-display');
+      el.textContent = sel[0] ? sel[0].toLocaleDateString('en-US', fmt) : 'Select date';
+    }
+  });
 });
 
-// ── POPULAR ROUTES ──────────────────────────────────────────────────────────
-const POPULAR_ROUTES = [
-  {from:'New York',to:'London',orig:'JFK',dest:'LHR',pubLo:3200,pubHi:5800,bwtLo:1900,bwtHi:3400},
-  {from:'New York',to:'Paris',orig:'JFK',dest:'CDG',pubLo:3300,pubHi:5900,bwtLo:1950,bwtHi:3500},
-  {from:'New York',to:'Frankfurt',orig:'JFK',dest:'FRA',pubLo:3100,pubHi:5600,bwtLo:1850,bwtHi:3300},
-  {from:'New York',to:'Amsterdam',orig:'JFK',dest:'AMS',pubLo:3200,pubHi:5700,bwtLo:1900,bwtHi:3400},
-  {from:'New York',to:'Zurich',orig:'JFK',dest:'ZRH',pubLo:3300,pubHi:5800,bwtLo:1950,bwtHi:3500},
-  {from:'New York',to:'Rome',orig:'JFK',dest:'FCO',pubLo:3500,pubHi:6200,bwtLo:2100,bwtHi:3750},
-  {from:'Newark',to:'London',orig:'EWR',dest:'LHR',pubLo:3100,pubHi:5600,bwtLo:1850,bwtHi:3300},
-  {from:'Newark',to:'Frankfurt',orig:'EWR',dest:'FRA',pubLo:3000,pubHi:5500,bwtLo:1800,bwtHi:3250},
-  {from:'Boston',to:'London',orig:'BOS',dest:'LHR',pubLo:3300,pubHi:5900,bwtLo:1950,bwtHi:3500},
-  {from:'Chicago',to:'London',orig:'ORD',dest:'LHR',pubLo:3400,pubHi:6000,bwtLo:2000,bwtHi:3600},
-  {from:'Miami',to:'London',orig:'MIA',dest:'LHR',pubLo:3300,pubHi:5800,bwtLo:1950,bwtHi:3450},
-  {from:'Los Angeles',to:'London',orig:'LAX',dest:'LHR',pubLo:3600,pubHi:6400,bwtLo:2200,bwtHi:3900},
-  {from:'Toronto',to:'London',orig:'YYZ',dest:'LHR',pubLo:3000,pubHi:5400,bwtLo:1780,bwtHi:3200},
-  {from:'San Francisco',to:'London',orig:'SFO',dest:'LHR',pubLo:3700,pubHi:6600,bwtLo:2300,bwtHi:4000},
-  {from:'Atlanta',to:'London',orig:'ATL',dest:'LHR',pubLo:3350,pubHi:5900,bwtLo:2000,bwtHi:3500},
-  {from:'Dallas',to:'London',orig:'DFW',dest:'LHR',pubLo:3450,pubHi:6100,bwtLo:2050,bwtHi:3650},
+// ── Search ──
+function doSearch() {
+  const orig = document.getElementById('orig-val').value;
+  const dest = document.getElementById('dest-val').value;
+  const dep  = depPicker?.selectedDates[0] ? depPicker.selectedDates[0].toISOString().slice(0,10) : '';
+  const ret  = retPicker?.selectedDates[0] ? retPicker.selectedDates[0].toISOString().slice(0,10) : '';
+  const origN = document.getElementById('orig-input').value.replace(/\s*\([^)]*\)/, '').trim();
+  const destN = document.getElementById('dest-input').value.replace(/\s*\([^)]*\)/, '').trim();
+
+  if (!orig || !dest) { alert('Please enter origin and destination'); return; }
+  if (!dep)           { alert('Please select a departure date'); return; }
+
+  const p = new URLSearchParams({
+    from: orig, to: dest, dep,
+    cabin: 'BUSINESS',
+    fromN: origN, toN: destN,
+  });
+  if (tripType==='round' && ret) p.set('ret', ret);
+  if (tripType==='multi') {
+    const o2 = document.getElementById('orig2-val')?.value;
+    const d2 = document.getElementById('dest2-val')?.value;
+    const dep2 = dep2Picker?.selectedDates[0] ? dep2Picker.selectedDates[0].toISOString().slice(0,10) : '';
+    if (o2 && d2 && dep2) {
+      p.set('leg2', o2 + '-' + d2 + '-' + dep2);
+    }
+    p.set('tripType','multi');
+  }
+  window.location.href = 'results.html?' + p.toString();
+}
+
+// ── Airport typeahead ──
+// ══ AIRPORT DATA ══
+const AIRPORTS_DB=[
+  // ── North America ──
+  {iata:'JFK',city:'New York',name:'John F. Kennedy International',flag:'🇺🇸'},
+  {iata:'EWR',city:'Newark',name:'Newark Liberty International',flag:'🇺🇸'},
+  {iata:'LGA',city:'New York',name:'LaGuardia Airport',flag:'🇺🇸'},
+  {iata:'BOS',city:'Boston',name:'Logan International Airport',flag:'🇺🇸'},
+  {iata:'MIA',city:'Miami',name:'Miami International Airport',flag:'🇺🇸'},
+  {iata:'FLL',city:'Fort Lauderdale',name:'Fort Lauderdale-Hollywood International',flag:'🇺🇸'},
+  {iata:'ATL',city:'Atlanta',name:'Hartsfield-Jackson Atlanta International',flag:'🇺🇸'},
+  {iata:'ORD',city:'Chicago',name:"O'Hare International Airport",flag:'🇺🇸'},
+  {iata:'MDW',city:'Chicago',name:'Chicago Midway Airport',flag:'🇺🇸'},
+  {iata:'LAX',city:'Los Angeles',name:'Los Angeles International',flag:'🇺🇸'},
+  {iata:'SFO',city:'San Francisco',name:'San Francisco International',flag:'🇺🇸'},
+  {iata:'SJC',city:'San Jose',name:'Norman Y. Mineta San Jose International',flag:'🇺🇸'},
+  {iata:'OAK',city:'Oakland',name:'Oakland International Airport',flag:'🇺🇸'},
+  {iata:'IAD',city:'Washington DC',name:'Washington Dulles International',flag:'🇺🇸'},
+  {iata:'DCA',city:'Washington DC',name:'Ronald Reagan Washington National',flag:'🇺🇸'},
+  {iata:'BWI',city:'Baltimore',name:'Baltimore/Washington International',flag:'🇺🇸'},
+  {iata:'DFW',city:'Dallas',name:'Dallas/Fort Worth International',flag:'🇺🇸'},
+  {iata:'DAL',city:'Dallas',name:'Dallas Love Field',flag:'🇺🇸'},
+  {iata:'IAH',city:'Houston',name:'George Bush Intercontinental',flag:'🇺🇸'},
+  {iata:'HOU',city:'Houston',name:'William P. Hobby Airport',flag:'🇺🇸'},
+  {iata:'SEA',city:'Seattle',name:'Seattle-Tacoma International',flag:'🇺🇸'},
+  {iata:'DEN',city:'Denver',name:'Denver International Airport',flag:'🇺🇸'},
+  {iata:'LAS',city:'Las Vegas',name:'Harry Reid International Airport',flag:'🇺🇸'},
+  {iata:'PHX',city:'Phoenix',name:'Phoenix Sky Harbor International',flag:'🇺🇸'},
+  {iata:'MSP',city:'Minneapolis',name:'Minneapolis-Saint Paul International',flag:'🇺🇸'},
+  {iata:'DTW',city:'Detroit',name:'Detroit Metropolitan Wayne County',flag:'🇺🇸'},
+  {iata:'CLT',city:'Charlotte',name:'Charlotte Douglas International',flag:'🇺🇸'},
+  {iata:'PHL',city:'Philadelphia',name:'Philadelphia International Airport',flag:'🇺🇸'},
+  {iata:'SLC',city:'Salt Lake City',name:'Salt Lake City International',flag:'🇺🇸'},
+  {iata:'PDX',city:'Portland',name:'Portland International Airport',flag:'🇺🇸'},
+  {iata:'MCO',city:'Orlando',name:'Orlando International Airport',flag:'🇺🇸'},
+  {iata:'TPA',city:'Tampa',name:'Tampa International Airport',flag:'🇺🇸'},
+  {iata:'BNA',city:'Nashville',name:'Nashville International Airport',flag:'🇺🇸'},
+  {iata:'AUS',city:'Austin',name:'Austin-Bergstrom International',flag:'🇺🇸'},
+  {iata:'SAN',city:'San Diego',name:'San Diego International Airport',flag:'🇺🇸'},
+  {iata:'HNL',city:'Honolulu',name:'Daniel K. Inouye International',flag:'🇺🇸'},
+  {iata:'ANC',city:'Anchorage',name:'Ted Stevens Anchorage International',flag:'🇺🇸'},
+  {iata:'YYZ',city:'Toronto',name:'Toronto Pearson International',flag:'🇨🇦'},
+  {iata:'YUL',city:'Montreal',name:'Montréal-Trudeau International',flag:'🇨🇦'},
+  {iata:'YVR',city:'Vancouver',name:'Vancouver International Airport',flag:'🇨🇦'},
+  {iata:'YYC',city:'Calgary',name:'Calgary International Airport',flag:'🇨🇦'},
+  {iata:'YEG',city:'Edmonton',name:'Edmonton International Airport',flag:'🇨🇦'},
+  {iata:'YOW',city:'Ottawa',name:'Ottawa Macdonald-Cartier International',flag:'🇨🇦'},
+  {iata:'MEX',city:'Mexico City',name:'Benito Juárez International',flag:'🇲🇽'},
+  {iata:'CUN',city:'Cancún',name:'Cancún International Airport',flag:'🇲🇽'},
+  {iata:'GDL',city:'Guadalajara',name:'Miguel Hidalgo y Costilla International',flag:'🇲🇽'},
+  // ── Europe ──
+  {iata:'LHR',city:'London',name:'Heathrow Airport',flag:'🇬🇧'},
+  {iata:'LGW',city:'London',name:'Gatwick Airport',flag:'🇬🇧'},
+  {iata:'STN',city:'London',name:'Stansted Airport',flag:'🇬🇧'},
+  {iata:'LTN',city:'London',name:'Luton Airport',flag:'🇬🇧'},
+  {iata:'LCY',city:'London',name:'City Airport',flag:'🇬🇧'},
+  {iata:'MAN',city:'Manchester',name:'Manchester Airport',flag:'🇬🇧'},
+  {iata:'BHX',city:'Birmingham',name:'Birmingham Airport',flag:'🇬🇧'},
+  {iata:'EDI',city:'Edinburgh',name:'Edinburgh Airport',flag:'🇬🇧'},
+  {iata:'GLA',city:'Glasgow',name:'Glasgow Airport',flag:'🇬🇧'},
+  {iata:'CDG',city:'Paris',name:'Charles de Gaulle Airport',flag:'🇫🇷'},
+  {iata:'ORY',city:'Paris',name:'Paris Orly Airport',flag:'🇫🇷'},
+  {iata:'NCE',city:'Nice',name:'Cote d Azur Airport',flag:'🇫🇷'},
+  {iata:'LYS',city:'Lyon',name:'Lyon-Saint Exupéry Airport',flag:'🇫🇷'},
+  {iata:'MRS',city:'Marseille',name:'Marseille Provence Airport',flag:'🇫🇷'},
+  {iata:'FRA',city:'Frankfurt',name:'Frankfurt Airport',flag:'🇩🇪'},
+  {iata:'MUC',city:'Munich',name:'Munich Airport',flag:'🇩🇪'},
+  {iata:'BER',city:'Berlin',name:'Berlin Brandenburg Airport',flag:'🇩🇪'},
+  {iata:'DUS',city:'Düsseldorf',name:'Düsseldorf Airport',flag:'🇩🇪'},
+  {iata:'HAM',city:'Hamburg',name:'Hamburg Airport',flag:'🇩🇪'},
+  {iata:'STR',city:'Stuttgart',name:'Stuttgart Airport',flag:'🇩🇪'},
+  {iata:'CGN',city:'Cologne',name:'Cologne Bonn Airport',flag:'🇩🇪'},
+  {iata:'AMS',city:'Amsterdam',name:'Amsterdam Schiphol Airport',flag:'🇳🇱'},
+  {iata:'MAD',city:'Madrid',name:'Adolfo Suárez Madrid-Barajas',flag:'🇪🇸'},
+  {iata:'BCN',city:'Barcelona',name:'Barcelona El Prat Airport',flag:'🇪🇸'},
+  {iata:'AGP',city:'Málaga',name:'Málaga-Costa del Sol Airport',flag:'🇪🇸'},
+  {iata:'PMI',city:'Palma de Mallorca',name:'Palma de Mallorca Airport',flag:'🇪🇸'},
+  {iata:'VLC',city:'Valencia',name:'Valencia Airport',flag:'🇪🇸'},
+  {iata:'FCO',city:'Rome',name:'Leonardo da Vinci International',flag:'🇮🇹'},
+  {iata:'MXP',city:'Milan',name:'Milan Malpensa Airport',flag:'🇮🇹'},
+  {iata:'LIN',city:'Milan',name:'Milan Linate Airport',flag:'🇮🇹'},
+  {iata:'VCE',city:'Venice',name:'Venice Marco Polo Airport',flag:'🇮🇹'},
+  {iata:'NAP',city:'Naples',name:'Naples International Airport',flag:'🇮🇹'},
+  {iata:'BGY',city:'Bergamo',name:'Bergamo Orio al Serio Airport',flag:'🇮🇹'},
+  {iata:'ZRH',city:'Zurich',name:'Zurich Airport',flag:'🇨🇭'},
+  {iata:'GVA',city:'Geneva',name:'Geneva Airport',flag:'🇨🇭'},
+  {iata:'VIE',city:'Vienna',name:'Vienna International Airport',flag:'🇦🇹'},
+  {iata:'BRU',city:'Brussels',name:'Brussels Airport',flag:'🇧🇪'},
+  {iata:'CPH',city:'Copenhagen',name:'Copenhagen Airport',flag:'🇩🇰'},
+  {iata:'ARN',city:'Stockholm',name:'Stockholm Arlanda Airport',flag:'🇸🇪'},
+  {iata:'GOT',city:'Gothenburg',name:'Gothenburg Landvetter Airport',flag:'🇸🇪'},
+  {iata:'OSL',city:'Oslo',name:'Oslo Gardermoen Airport',flag:'🇳🇴'},
+  {iata:'HEL',city:'Helsinki',name:'Helsinki Vantaa Airport',flag:'🇫🇮'},
+  {iata:'DUB',city:'Dublin',name:'Dublin Airport',flag:'🇮🇪'},
+  {iata:'LIS',city:'Lisbon',name:'Lisbon Humberto Delgado Airport',flag:'🇵🇹'},
+  {iata:'OPO',city:'Porto',name:'Francisco Sá Carneiro Airport',flag:'🇵🇹'},
+  {iata:'ATH',city:'Athens',name:'Athens Eleftherios Venizelos',flag:'🇬🇷'},
+  {iata:'SKG',city:'Thessaloniki',name:'Thessaloniki Macedonia Airport',flag:'🇬🇷'},
+  {iata:'IST',city:'Istanbul',name:'Istanbul Airport',flag:'🇹🇷'},
+  {iata:'SAW',city:'Istanbul',name:'Istanbul Sabiha Gökçen Airport',flag:'🇹🇷'},
+  {iata:'ADB',city:'Izmir',name:'Izmir Adnan Menderes Airport',flag:'🇹🇷'},
+  {iata:'PRG',city:'Prague',name:'Václav Havel Airport Prague',flag:'🇨🇿'},
+  {iata:'WAW',city:'Warsaw',name:'Warsaw Chopin Airport',flag:'🇵🇱'},
+  {iata:'BUD',city:'Budapest',name:'Budapest Ferenc Liszt Airport',flag:'🇭🇺'},
+  {iata:'OTP',city:'Bucharest',name:'Henri Coandă International',flag:'🇷🇴'},
+  {iata:'SOF',city:'Sofia',name:'Sofia Airport',flag:'🇧🇬'},
+  {iata:'KBP',city:'Kyiv',name:'Boryspil International Airport',flag:'🇺🇦'},
+  {iata:'SVO',city:'Moscow',name:'Sheremetyevo International',flag:'🇷🇺'},
+  {iata:'DME',city:'Moscow',name:'Domodedovo International',flag:'🇷🇺'},
+  {iata:'LED',city:'St Petersburg',name:'Pulkovo Airport',flag:'🇷🇺'},
+  {iata:'KEF',city:'Reykjavik',name:'Keflavík International Airport',flag:'🇮🇸'},
+  {iata:'LUX',city:'Luxembourg',name:'Luxembourg Airport',flag:'🇱🇺'},
+  {iata:'GRO',city:'Girona',name:'Girona-Costa Brava Airport',flag:'🇪🇸'},
+  {iata:'SVQ',city:'Seville',name:'Seville Airport',flag:'🇪🇸'},
+  // ── Middle East & Africa ──
+  {iata:'DXB',city:'Dubai',name:'Dubai International Airport',flag:'🇦🇪'},
+  {iata:'DWC',city:'Dubai',name:'Al Maktoum International Airport',flag:'🇦🇪'},
+  {iata:'AUH',city:'Abu Dhabi',name:'Abu Dhabi International Airport',flag:'🇦🇪'},
+  {iata:'SHJ',city:'Sharjah',name:'Sharjah International Airport',flag:'🇦🇪'},
+  {iata:'DOH',city:'Doha',name:'Hamad International Airport',flag:'🇶🇦'},
+  {iata:'RUH',city:'Riyadh',name:'King Khalid International Airport',flag:'🇸🇦'},
+  {iata:'JED',city:'Jeddah',name:'King Abdulaziz International',flag:'🇸🇦'},
+  {iata:'MCT',city:'Muscat',name:'Muscat International Airport',flag:'🇴🇲'},
+  {iata:'KWI',city:'Kuwait City',name:'Kuwait International Airport',flag:'🇰🇼'},
+  {iata:'BAH',city:'Bahrain',name:'Bahrain International Airport',flag:'🇧🇭'},
+  {iata:'AMM',city:'Amman',name:'Queen Alia International Airport',flag:'🇯🇴'},
+  {iata:'BEY',city:'Beirut',name:'Rafic Hariri International Airport',flag:'🇱🇧'},
+  {iata:'TLV',city:'Tel Aviv',name:'Ben Gurion International Airport',flag:'🇮🇱'},
+  {iata:'CAI',city:'Cairo',name:'Cairo International Airport',flag:'🇪🇬'},
+  {iata:'HRG',city:'Hurghada',name:'Hurghada International Airport',flag:'🇪🇬'},
+  {iata:'SSH',city:'Sharm el-Sheikh',name:'Sharm el-Sheikh International',flag:'🇪🇬'},
+  {iata:'CMN',city:'Casablanca',name:'Mohammed V International Airport',flag:'🇲🇦'},
+  {iata:'RAK',city:'Marrakech',name:'Marrakech Menara Airport',flag:'🇲🇦'},
+  {iata:'TUN',city:'Tunis',name:'Tunis-Carthage International',flag:'🇹🇳'},
+  {iata:'ALG',city:'Algiers',name:'Houari Boumediene Airport',flag:'🇩🇿'},
+  {iata:'JNB',city:'Johannesburg',name:'O.R. Tambo International',flag:'🇿🇦'},
+  {iata:'CPT',city:'Cape Town',name:'Cape Town International',flag:'🇿🇦'},
+  {iata:'DUR',city:'Durban',name:'King Shaka International Airport',flag:'🇿🇦'},
+  {iata:'NBO',city:'Nairobi',name:'Jomo Kenyatta International',flag:'🇰🇪'},
+  {iata:'MBA',city:'Mombasa',name:'Moi International Airport',flag:'🇰🇪'},
+  {iata:'ADD',city:'Addis Ababa',name:'Addis Ababa Bole International',flag:'🇪🇹'},
+  {iata:'DAR',city:'Dar es Salaam',name:'Julius Nyerere International',flag:'🇹🇿'},
+  {iata:'EBB',city:'Kampala',name:'Entebbe International Airport',flag:'🇺🇬'},
+  {iata:'ACC',city:'Accra',name:'Kotoka International Airport',flag:'🇬🇭'},
+  {iata:'LOS',city:'Lagos',name:'Murtala Muhammed International',flag:'🇳🇬'},
+  {iata:'ABV',city:'Abuja',name:'Nnamdi Azikiwe International',flag:'🇳🇬'},
+  {iata:'DKR',city:'Dakar',name:'Blaise Diagne International Airport',flag:'🇸🇳'},
+  {iata:'ABJ',city:'Abidjan',name:'Félix-Houphouët-Boigny International',flag:'🇨🇮'},
+  // ── Asia Pacific ──
+  {iata:'NRT',city:'Tokyo',name:'Narita International Airport',flag:'🇯🇵'},
+  {iata:'HND',city:'Tokyo',name:'Haneda Airport',flag:'🇯🇵'},
+  {iata:'KIX',city:'Osaka',name:'Kansai International Airport',flag:'🇯🇵'},
+  {iata:'ITM',city:'Osaka',name:'Itami Airport',flag:'🇯🇵'},
+  {iata:'NGO',city:'Nagoya',name:'Chubu Centrair International',flag:'🇯🇵'},
+  {iata:'CTS',city:'Sapporo',name:'New Chitose Airport',flag:'🇯🇵'},
+  {iata:'ICN',city:'Seoul',name:'Incheon International Airport',flag:'🇰🇷'},
+  {iata:'GMP',city:'Seoul',name:'Gimpo International Airport',flag:'🇰🇷'},
+  {iata:'PEK',city:'Beijing',name:'Beijing Capital International',flag:'🇨🇳'},
+  {iata:'PKX',city:'Beijing',name:'Beijing Daxing International',flag:'🇨🇳'},
+  {iata:'PVG',city:'Shanghai',name:'Shanghai Pudong International',flag:'🇨🇳'},
+  {iata:'SHA',city:'Shanghai',name:'Shanghai Hongqiao International',flag:'🇨🇳'},
+  {iata:'CAN',city:'Guangzhou',name:'Guangzhou Baiyun International',flag:'🇨🇳'},
+  {iata:'SZX',city:'Shenzhen',name:'Shenzhen Baoan International',flag:'🇨🇳'},
+  {iata:'CTU',city:'Chengdu',name:'Chengdu Tianfu International',flag:'🇨🇳'},
+  {iata:'HKG',city:'Hong Kong',name:'Hong Kong International',flag:'🇭🇰'},
+  {iata:'TPE',city:'Taipei',name:'Taiwan Taoyuan International',flag:'🇹🇼'},
+  {iata:'TSA',city:'Taipei',name:'Taipei Songshan Airport',flag:'🇹🇼'},
+  {iata:'MNL',city:'Manila',name:'Ninoy Aquino International',flag:'🇵🇭'},
+  {iata:'CEB',city:'Cebu',name:'Mactan-Cebu International',flag:'🇵🇭'},
+  {iata:'SIN',city:'Singapore',name:'Singapore Changi Airport',flag:'🇸🇬'},
+  {iata:'KUL',city:'Kuala Lumpur',name:'Kuala Lumpur International',flag:'🇲🇾'},
+  {iata:'SZB',city:'Kuala Lumpur',name:'Sultan Abdul Aziz Shah Airport',flag:'🇲🇾'},
+  {iata:'BKK',city:'Bangkok',name:'Suvarnabhumi Airport',flag:'🇹🇭'},
+  {iata:'DMK',city:'Bangkok',name:'Don Mueang International',flag:'🇹🇭'},
+  {iata:'HKT',city:'Phuket',name:'Phuket International Airport',flag:'🇹🇭'},
+  {iata:'CNX',city:'Chiang Mai',name:'Chiang Mai International',flag:'🇹🇭'},
+  {iata:'CGK',city:'Jakarta',name:'Soekarno-Hatta International',flag:'🇮🇩'},
+  {iata:'DPS',city:'Bali',name:'Ngurah Rai International',flag:'🇮🇩'},
+  {iata:'SUB',city:'Surabaya',name:'Juanda International Airport',flag:'🇮🇩'},
+  {iata:'SGN',city:'Ho Chi Minh City',name:'Tan Son Nhat International',flag:'🇻🇳'},
+  {iata:'HAN',city:'Hanoi',name:'Noi Bai International Airport',flag:'🇻🇳'},
+  {iata:'DAD',city:'Da Nang',name:'Da Nang International Airport',flag:'🇻🇳'},
+  {iata:'RGN',city:'Yangon',name:'Yangon International Airport',flag:'🇲🇲'},
+  {iata:'PNH',city:'Phnom Penh',name:'Phnom Penh International',flag:'🇰🇭'},
+  {iata:'REP',city:'Siem Reap',name:'Siem Reap-Angkor International',flag:'🇰🇭'},
+  {iata:'VTE',city:'Vientiane',name:'Wattay International Airport',flag:'🇱🇦'},
+  {iata:'DEL',city:'Delhi',name:'Indira Gandhi International',flag:'🇮🇳'},
+  {iata:'BOM',city:'Mumbai',name:'Chhatrapati Shivaji Maharaj International',flag:'🇮🇳'},
+  {iata:'BLR',city:'Bangalore',name:'Kempegowda International Airport',flag:'🇮🇳'},
+  {iata:'MAA',city:'Chennai',name:'Chennai International Airport',flag:'🇮🇳'},
+  {iata:'HYD',city:'Hyderabad',name:'Rajiv Gandhi International Airport',flag:'🇮🇳'},
+  {iata:'CCU',city:'Kolkata',name:'Netaji Subhas Chandra Bose International',flag:'🇮🇳'},
+  {iata:'COK',city:'Kochi',name:'Cochin International Airport',flag:'🇮🇳'},
+  {iata:'AMD',city:'Ahmedabad',name:'Sardar Vallabhbhai Patel International',flag:'🇮🇳'},
+  {iata:'CMB',city:'Colombo',name:'Bandaranaike International Airport',flag:'🇱🇰'},
+  {iata:'KTM',city:'Kathmandu',name:'Tribhuvan International Airport',flag:'🇳🇵'},
+  {iata:'DAC',city:'Dhaka',name:'Hazrat Shahjalal International',flag:'🇧🇩'},
+  {iata:'KHI',city:'Karachi',name:'Jinnah International Airport',flag:'🇵🇰'},
+  {iata:'LHE',city:'Lahore',name:'Allama Iqbal International Airport',flag:'🇵🇰'},
+  {iata:'ISB',city:'Islamabad',name:'New Islamabad International',flag:'🇵🇰'},
+  {iata:'KBL',city:'Kabul',name:'Hamid Karzai International',flag:'🇦🇫'},
+  {iata:'TAS',city:'Tashkent',name:'Islam Karimov Tashkent International',flag:'🇺🇿'},
+  {iata:'ALA',city:'Almaty',name:'Almaty International Airport',flag:'🇰🇿'},
+  {iata:'SYD',city:'Sydney',name:'Kingsford Smith Airport',flag:'🇦🇺'},
+  {iata:'MEL',city:'Melbourne',name:'Melbourne Airport',flag:'🇦🇺'},
+  {iata:'BNE',city:'Brisbane',name:'Brisbane Airport',flag:'🇦🇺'},
+  {iata:'PER',city:'Perth',name:'Perth Airport',flag:'🇦🇺'},
+  {iata:'ADL',city:'Adelaide',name:'Adelaide Airport',flag:'🇦🇺'},
+  {iata:'AKL',city:'Auckland',name:'Auckland Airport',flag:'🇳🇿'},
+  {iata:'CHC',city:'Christchurch',name:'Christchurch Airport',flag:'🇳🇿'},
+  {iata:'WLG',city:'Wellington',name:'Wellington International Airport',flag:'🇳🇿'},
+  // ── Caribbean & Latin America ──
+  {iata:'GRU',city:'São Paulo',name:'São Paulo Guarulhos International',flag:'🇧🇷'},
+  {iata:'CGH',city:'São Paulo',name:'São Paulo Congonhas Airport',flag:'🇧🇷'},
+  {iata:'GIG',city:'Rio de Janeiro',name:'Rio de Janeiro Galeão International',flag:'🇧🇷'},
+  {iata:'SDU',city:'Rio de Janeiro',name:'Santos Dumont Airport',flag:'🇧🇷'},
+  {iata:'BSB',city:'Brasília',name:'Brasília International Airport',flag:'🇧🇷'},
+  {iata:'FOR',city:'Fortaleza',name:'Pinto Martins International',flag:'🇧🇷'},
+  {iata:'REC',city:'Recife',name:'Recife/Guararapes International',flag:'🇧🇷'},
+  {iata:'EZE',city:'Buenos Aires',name:'Ministro Pistarini International',flag:'🇦🇷'},
+  {iata:'AEP',city:'Buenos Aires',name:'Jorge Newbery Airfield',flag:'🇦🇷'},
+  {iata:'SCL',city:'Santiago',name:'Arturo Merino Benítez International',flag:'🇨🇱'},
+  {iata:'LIM',city:'Lima',name:'Jorge Chávez International Airport',flag:'🇵🇪'},
+  {iata:'BOG',city:'Bogotá',name:'El Dorado International Airport',flag:'🇨🇴'},
+  {iata:'MDE',city:'Medellín',name:'José María Córdova International',flag:'🇨🇴'},
+  {iata:'CTG',city:'Cartagena',name:'Rafael Núñez International Airport',flag:'🇨🇴'},
+  {iata:'UIO',city:'Quito',name:'Mariscal Sucre International',flag:'🇪🇨'},
+  {iata:'GYE',city:'Guayaquil',name:'José Joaquín de Olmedo International',flag:'🇪🇨'},
+  {iata:'CCS',city:'Caracas',name:'Simón Bolívar International',flag:'🇻🇪'},
+  {iata:'GUA',city:'Guatemala City',name:'La Aurora International Airport',flag:'🇬🇹'},
+  {iata:'SAL',city:'San Salvador',name:'Monseñor Óscar Arnulfo Romero',flag:'🇸🇻'},
+  {iata:'PTY',city:'Panama City',name:'Tocumen International Airport',flag:'🇵🇦'},
+  {iata:'SJO',city:'San José',name:'Juan Santamaría International',flag:'🇨🇷'},
+  {iata:'SDQ',city:'Santo Domingo',name:'Las Américas International',flag:'🇩🇴'},
+  {iata:'PUJ',city:'Punta Cana',name:'Punta Cana International Airport',flag:'🇩🇴'},
+  {iata:'HAV',city:'Havana',name:'José Martí International Airport',flag:'🇨🇺'},
+  {iata:'MBJ',city:'Montego Bay',name:'Sangster International Airport',flag:'🇯🇲'},
+  {iata:'KIN',city:'Kingston',name:'Norman Manley International',flag:'🇯🇲'},
+  {iata:'NAS',city:'Nassau',name:'Lynden Pindling International',flag:'🇧🇸'},
+  {iata:'AUA',city:'Aruba',name:'Queen Beatrix International Airport',flag:'🇦🇼'},
+  {iata:'CUR',city:'Curaçao',name:'Hato International Airport',flag:'🇨🇼'},
+  {iata:'SXM',city:'St Maarten',name:'Princess Juliana International',flag:'🇸🇽'},
+  {iata:'BGI',city:'Bridgetown',name:'Grantley Adams International',flag:'🇧🇧'},
+  {iata:'POS',city:'Port of Spain',name:'Piarco International Airport',flag:'🇹🇹'},
 ];
+const POPULAR_AC=['JFK','EWR','LHR','CDG','FRA','AMS','MAD','DXB','DOH','SIN','LAX','NRT'];
 
-function renderRoutes() {
-  const grid = document.getElementById('routesGrid');
-  if (!grid) return;
-  const pct = r => Math.round(((r.pubLo - r.bwtLo) / r.pubLo) * 100);
-  grid.innerHTML = POPULAR_ROUTES.map(r => `
-    <div class="route-card" onclick="prefillSearch('${r.orig}','${r.dest}','${r.from}','${r.to}')">
-      <div>
-        <div class="route-card-route">${r.from} → ${r.to}</div>
-        <div class="route-card-price">From $${r.bwtLo.toLocaleString()} · Save up to ${pct(r)}%</div>
-      </div>
-      <div class="route-card-arrow">→</div>
-    </div>`).join('');
+function hlTxt(text, q) {
+  if (!q||!text) return text||'';
+  const i=text.toLowerCase().indexOf(q.toLowerCase());
+  if (i<0) return text;
+  return text.slice(0,i)+'<mark class="m">'+text.slice(i,i+q.length)+'</mark>'+text.slice(i+q.length);
 }
 
-function prefillSearch(orig, dest, origCity, destCity) {
-  // Scroll to search box and prefill
-  window.scrollTo({top:0,behavior:'smooth'});
-  setTimeout(() => {
-    const origInp = document.getElementById('orig-input');
-    const destInp = document.getElementById('dest-input');
-    if (origInp) {
-      origInp.value = origCity + ' (' + orig + ')';
-      document.getElementById('orig-val').value = orig;
-      const origCode = document.getElementById('orig-code');
-      if (origCode) { origCode.textContent = orig; origCode.style.display = 'block'; }
-      acState.orig = {iata:orig, city:origCity, name:origCity};
-    }
-    if (destInp) {
-      destInp.value = destCity + ' (' + dest + ')';
-      document.getElementById('dest-val').value = dest;
-      const destCode = document.getElementById('dest-code');
-      if (destCode) { destCode.textContent = dest; destCode.style.display = 'block'; }
-      acState.dest = {iata:dest, city:destCity, name:destCity};
-    }
-  }, 400);
+const _acIdx = {orig:-1, dest:-1};
+
+function acSuggest(field, q) {
+  const ql = (q||'').trim().toLowerCase();
+  const sug = document.getElementById(field+'-sug');
+  const list = ql
+    ? AIRPORTS_DB.filter(a =>
+        a.iata.toLowerCase().startsWith(ql) ||
+        a.city.toLowerCase().startsWith(ql) ||
+        a.city.toLowerCase().includes(ql) ||
+        a.name.toLowerCase().includes(ql)
+      ).slice(0,7)
+    : POPULAR_AC.map(c => AIRPORTS_DB.find(a => a.iata===c)).filter(Boolean);
+
+  _acIdx[field] = -1;
+  sug.innerHTML = '';
+  list.forEach(a => {
+    const row = document.createElement('div');
+    row.className = 'ac-row';
+    row.innerHTML = '<div class="ac-flag">'+(a.flag||'🌍')+'</div>'
+      +'<div class="ac-inf"><div class="ac-city">'+a.city+'</div>'
+      +'<div class="ac-name">'+a.name+'</div></div>'
+      +'<div class="ac-code">'+a.iata+'</div>';
+    row.addEventListener('mousedown', e => { e.preventDefault(); acPick(field,a); });
+    sug.appendChild(row);
+  });
+  sug.classList.toggle('open', list.length > 0);
 }
 
+function acCloseSug(field) {
+  const s = document.getElementById(field+'-sug');
+  if (s) s.classList.remove('open');
+}
+
+function acNavSug(e, field) {
+  const sug = document.getElementById(field+'-sug');
+  if (!sug||!sug.classList.contains('open')) return;
+  const rows = sug.querySelectorAll('.ac-row');
+  if (!rows.length) return;
+  if (e.key==='ArrowDown') { e.preventDefault(); _acIdx[field]=Math.min(_acIdx[field]+1,rows.length-1); }
+  else if (e.key==='ArrowUp') { e.preventDefault(); _acIdx[field]=Math.max(_acIdx[field]-1,0); }
+  else if (e.key==='Enter') { e.preventDefault(); if(_acIdx[field]>=0) rows[_acIdx[field]].dispatchEvent(new MouseEvent('mousedown')); else if(rows[0]) rows[0].dispatchEvent(new MouseEvent('mousedown')); return; }
+  else if (e.key==='Escape') { acCloseSug(field); return; }
+  rows.forEach((r,i) => r.classList.toggle('hl', i===_acIdx[field]));
+  rows[_acIdx[field]]?.scrollIntoView({block:'nearest'});
+}
+
+function acPick(field, a) {
+  document.getElementById(field+'-input').value = (a.city||a.name)+' ('+a.iata+')';
+  document.getElementById(field+'-val').value = a.iata;
+  acCloseSug(field);
+  if (field==='orig') {
+    setTimeout(() => { document.getElementById('dest-input').focus(); acSuggest('dest',''); }, 60);
+  } else {
+    setTimeout(() => document.getElementById('dep-date').focus(), 60);
+  }
+}
+
+document.addEventListener('mousedown', e => {
+  if (!e.target.closest('.sf')) { acCloseSug('orig'); acCloseSug('dest'); }
+});
 </script>
-
-<!-- ══ WHATSAPP FLOATING BUBBLE ══ -->
-<a class="wa-bubble" href="https://wa.me/YOUR_WA_NUMBER?text=Hi%20BWT%2C%20I%27m%20looking%20for%20a%20business%20class%20quote%20to%20Europe.%20Can%20you%20help%3F" target="_blank" rel="noopener" title="WhatsApp BWT">
-  <div class="wa-bubble-label">
-    WhatsApp a quote request
-    <span>We respond within the hour · any time</span>
-  </div>
-  <div class="wa-bubble-btn">
-    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
-  </div>
-</a>
-
 </body>
 </html>
