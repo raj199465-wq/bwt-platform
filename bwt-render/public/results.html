@@ -506,10 +506,13 @@ setTimeout(function(){
 <!-- HERO CTA STRIP -->
 <div class="hero-strip">
   <div class="hs-inner">
-    <div class="hs-left">
-      <div class="hs-eyebrow">Found this flight on Google or elsewhere?</div>
-      <div class="hs-title">We can often beat it by 20–40%</div>
-      <div class="hs-sub">Same flight. Same seat. Same airline.</div>
+    <div class="hs-left" style="display:flex;align-items:flex-start;gap:16px">
+      <div style="width:48px;height:48px;border-radius:50%;border:1.5px solid rgba(201,168,76,.4);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:22px;margin-top:2px">🏷</div>
+      <div>
+        <div class="hs-eyebrow">Found this flight on Google or elsewhere?</div>
+        <div class="hs-title">We can often beat it by 20–40%</div>
+        <div class="hs-sub">Same flight. Same seat. Same airline.</div>
+      </div>
     </div>
     <div class="hs-checks">
       <div class="hs-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Same airline & itinerary</div>
@@ -660,12 +663,10 @@ function gateCheck() {
       }
     } catch(e) {}
   }
-  // Not verified — show filter lock overlay only
-  const fg = document.getElementById('filterGate');
-  if (fg) fg.style.display = 'flex';
+  // Not verified — just disable filters, don't show the overlay
+  // The card gate handles access control
   document.querySelectorAll('.sidebar input, .sidebar button, .sidebar select, .sidebar label')
-    .forEach(el => { el.style.pointerEvents='none'; el.tabIndex=-1; });
-  // DO NOT show full-screen gate — let results load, gate card-3+
+    .forEach(el => { el.style.pointerEvents='none'; el.tabIndex=-1; el.style.opacity='.5'; });
 }
 
 function gateSubmit() {
@@ -717,6 +718,10 @@ function showGateError(msg) {
 
 function gatePass() {
   document.getElementById('bwt-gate').classList.add('hidden');
+  // Re-enable all sidebar filters
+  document.querySelectorAll('.sidebar input, .sidebar button, .sidebar select, .sidebar label')
+    .forEach(el => { el.style.pointerEvents=''; el.tabIndex=0; el.style.opacity=''; });
+  const _fg2 = document.getElementById('filterGate'); if(_fg2) _fg2.style.display='none';
   const fg = document.getElementById('filterGate');
   if (fg) fg.style.display = 'none';
   // Re-enable all filter inputs
@@ -2768,39 +2773,24 @@ function injectWAStrip(orig, dest) {
 function injectUnknownRoutePanel(orig, dest) {
   const old = document.getElementById('unknownRoutePanel');
   if (old) old.remove();
-
-  const origN = acState.orig?.city || orig;
-  const destN = acState.dest?.city || dest;
-  const dep   = document.getElementById('dep-date')?.value || '';
-  const ret   = document.getElementById('ret-date')?.value || '';
-  const msg   = waRouteMsg(orig, dest, dep, ret, 'business class');
-  const waHref = waLink(msg);
-
+  const origN = (acState && acState.orig?.city) || orig;
+  const destN = (acState && acState.dest?.city) || dest;
   const panel = document.createElement('div');
   panel.id = 'unknownRoutePanel';
-  panel.className = 'wa-unknown-route';
+  panel.style.cssText = 'background:#fff;border:1px solid #e2e8f2;border-radius:12px;padding:20px 24px;margin-bottom:12px;display:flex;align-items:center;gap:16px';
   panel.innerHTML = `
-    <div class="wa-ur-icon">✈️</div>
-    <div class="wa-ur-title">We cover ${origN} → ${destN}</div>
-    <div class="wa-ur-sub">
-      This route falls outside our transatlantic fare database — but our specialists source business class fares on routes worldwide including Asia, Middle East, Africa, Australia and Latin America.<br><br>
-      WhatsApp us your dates and we'll come back with a quote, typically within the hour.
-    </div>
-    <div class="wa-ur-btns">
-      <a class="wa-ur-btn-wa" data-wa href="${waHref}" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
-        WhatsApp Us — Get a Quote
-      </a>
-      <a class="wa-ur-btn-call" href="tel:+12129130450">
-        📞 Call (212) 913-0450
-      </a>
+    <div style="font-size:24px;flex-shrink:0">✈️</div>
+    <div>
+      <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#0a1628;margin-bottom:4px">We cover ${origN} → ${destN}</div>
+      <div style="font-size:12px;color:#5a6e8f;line-height:1.6">This route falls outside our transatlantic fare database — but our specialists source business class fares worldwide including Asia, Middle East, Africa, Australia and Latin America.</div>
+      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+        <a href="tel:+12129130450" style="background:#c9a84c;color:#0a1628;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;padding:7px 16px;border-radius:6px;text-decoration:none">📞 Call (212) 913-0450</a>
+        <a href="mailto:quotes@businessworldtravel.com" style="background:#f5f7fa;color:#0a1628;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;padding:7px 16px;border-radius:6px;text-decoration:none;border:1px solid #e2e8f2">Email us for a quote →</a>
+      </div>
     </div>`;
-
-  // Insert before the cards div
   const cards = document.getElementById('cards');
   if (cards) cards.insertAdjacentElement('beforebegin', panel);
 }
-
 
 
 // ── Nav search bar init ──
@@ -2815,27 +2805,29 @@ document.addEventListener('DOMContentLoaded', () => {
   const origN = p.get('fromN')||orig;
   const destN = p.get('toN')||dest;
 
-  if (orig) { document.getElementById('orig-input').value = origN+' ('+orig+')'; document.getElementById('orig-val').value = orig; }
-  if (dest) { document.getElementById('dest-input').value = destN+' ('+dest+')'; document.getElementById('dest-val').value = dest; }
+  const _oi=document.getElementById('orig-input'); if(_oi&&orig) _oi.value=origN+' ('+orig+')';
+  const _ov=document.getElementById('orig-val'); if(_ov&&orig) _ov.value=orig;
+  const _di=document.getElementById('dest-input'); if(_di&&dest) _di.value=destN+' ('+dest+')';
+  const _dv=document.getElementById('dest-val'); if(_dv&&dest) _dv.value=dest;
 
   const fmt = {weekday:'short',month:'short',day:'numeric'};
-  if (dep) { const d=new Date(dep+'T12:00:00'); document.getElementById('nav-dep-display').textContent=d.toLocaleDateString('en-US',fmt); document.getElementById('nav-dep-display').classList.remove('ph'); }
-  if (ret) { const d=new Date(ret+'T12:00:00'); document.getElementById('nav-ret-display').textContent=d.toLocaleDateString('en-US',fmt); document.getElementById('nav-ret-display').classList.remove('ph'); }
+  if (dep) { const d=new Date(dep+'T12:00:00'); const _dd=document.getElementById('nav-dep-display'); if(_dd){_dd.textContent=d.toLocaleDateString('en-US',fmt);_dd.classList.remove('ph');} }
+  if (ret) { const d=new Date(ret+'T12:00:00'); const _rd=document.getElementById('nav-ret-display'); if(_rd){_rd.textContent=d.toLocaleDateString('en-US',fmt);_rd.classList.remove('ph');} }
 
   // Update route header
-  if (orig) document.getElementById('rhOrig').textContent = orig;
-  if (dest) document.getElementById('rhDest').textContent = dest;
+  const _rho=document.getElementById('rhOrig'); if(_rho&&orig) _rho.textContent=orig;
+  const _rhd=document.getElementById('rhDest'); if(_rhd&&dest) _rhd.textContent=dest;
   if (dep && dest) {
     const depD = new Date(dep+'T12:00:00');
     const dStr = depD.toLocaleDateString('en-US',{month:'short',day:'numeric'});
     if (ret) {
       const retD = new Date(ret+'T12:00:00');
-      document.getElementById('rhDates').textContent = dStr + ' – ' + retD.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+      const _rdt=document.getElementById('rhDates'); if(_rdt) _rdt.textContent = dStr + ' – ' + retD.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
     } else {
-      document.getElementById('rhDates').textContent = dStr;
+      const _rdts=document.getElementById('rhDates'); if(_rdts) _rdts.textContent=dStr;
     }
   }
-  document.getElementById('rhCabin').textContent = {BUSINESS:'Business Class',FIRST:'First Class',PREMIUM_ECONOMY:'Premium Economy'}[cabin]||'Business Class';
+  const _rhc=document.getElementById('rhCabin'); if(_rhc) _rhc.textContent={BUSINESS:'Business Class',FIRST:'First Class',PREMIUM_ECONOMY:'Premium Economy'}[cabin]||'Business Class';
   const specRoute = origN + ' → ' + destN + ' routes';
   const sr = document.getElementById('rhSpecRoute'); if(sr) sr.textContent = specRoute;
 
