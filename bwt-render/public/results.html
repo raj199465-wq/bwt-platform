@@ -158,7 +158,7 @@ input[type=range]{width:100%;accent-color:var(--navy)}
 .fc-badge-row{padding:7px 14px 0}
 .fc-badge-beat{display:inline-flex;align-items:center;gap:4px;background:#e8f5e9;color:var(--green);border:1px solid rgba(26,143,90,.2);border-radius:3px;font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px}
 /* Card body: 3 cols — airline | route | price */
-.fc-body{display:grid;grid-template-columns:140px 1fr 200px;align-items:center;gap:14px;padding:10px 14px}
+.fc-body{display:grid;grid-template-columns:130px 1fr 220px;align-items:start;gap:12px;padding:12px 14px}
 /* Airline */
 .fc-airline{display:flex;align-items:flex-start;gap:8px}
 .fc-logo{width:32px;height:32px;border-radius:7px;background:var(--off);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
@@ -184,15 +184,15 @@ input[type=range]{width:100%;accent-color:var(--navy)}
 .fc-stops-lbl.nonstop{color:var(--green)}
 .fc-stops-lbl.one,.fc-stops-lbl.multi{color:var(--red)}
 /* Tags */
-.fc-tags{display:flex;gap:4px;flex-wrap:wrap;padding:2px 14px 8px}
+.fc-tags{display:flex;gap:4px;flex-wrap:wrap;padding:4px 0 0}
 .fc-tag{font-size:10px;padding:2px 8px;border-radius:4px;border:1px solid var(--border);color:var(--muted);font-weight:500}
 .fc-tag-cabin{border-color:rgba(201,168,76,.3);color:#8a6900;background:rgba(201,168,76,.08)}
 /* Price column */
 .fc-price-col{text-align:right;border-left:1px solid var(--border);padding-left:14px}
 .fc-pub-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
-.fc-price{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--navy);line-height:1;letter-spacing:-.02em}
+.fc-price{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--navy);line-height:1;letter-spacing:-.02em}
 .fc-price-note{font-size:10px;color:var(--muted);margin-bottom:8px;margin-top:1px}
-.fc-cta{display:block;width:100%;background:var(--gold2);color:var(--navy);border:none;border-radius:7px;padding:11px 10px;font-family:'Syne',sans-serif;font-size:12px;font-weight:800;cursor:pointer;text-align:center;white-space:nowrap;transition:all .15s;box-shadow:0 3px 10px rgba(240,192,64,.28)}
+.fc-cta{display:block;width:100%;background:var(--gold2);color:var(--navy);border:none;border-radius:7px;padding:11px 8px;font-family:'Syne',sans-serif;font-size:11px;font-weight:800;cursor:pointer;text-align:center;white-space:normal;transition:all .15s;box-shadow:0 3px 10px rgba(240,192,64,.28);line-height:1.3}
 .fc-cta:hover{background:#e6b830;transform:translateY(-1px)}
 .fc-cta-note{font-size:9px;color:var(--muted);text-align:center;margin-top:5px}
 /* Footer */
@@ -201,6 +201,7 @@ input[type=range]{width:100%;accent-color:var(--navy)}
 .fc-footer-right{color:var(--muted)}
 /* Gate overlay */
 .fcard.gated{overflow:visible}
+.fcard.blurred{pointer-events:none;opacity:.35;filter:blur(3px)}
 .gate-overlay{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to bottom,transparent,rgba(6,10,28,.96) 28%);border-radius:0 0 10px 10px;padding:60px 20px 24px;z-index:10}
 .gate-box{text-align:center;max-width:360px;margin:0 auto}
 .gate-icon{font-size:20px;margin-bottom:6px;display:block}
@@ -1327,13 +1328,16 @@ function renderCards(offers) {
 
   const FREE_CARDS = 2; // Show 2 teasers then gate
   let cardIdx = 0;
+  let gateShown = false; // Only show gate overlay on first gated card
 
   // ── Lufthansa Group section ──
   if (lhOffers.length) {
     stack.appendChild(buildLHGroupDivider(lhOffers.length));
     lhOffers.forEach(o => {
-      // ICTA removed — email gate handles access
-      const card = buildCard(o, cardIdx, cardIdx>=FREE_CARDS, true);
+      const shouldGate = cardIdx>=FREE_CARDS && !gateShown;
+      if (shouldGate) gateShown = true;
+      const card = buildCard(o, cardIdx, shouldGate, true);
+      if (cardIdx>FREE_CARDS && gateShown && !shouldGate) card.classList.add('blurred');
       card.style.animationDelay=(Math.min(cardIdx,7)*32)+'ms';
       stack.appendChild(card);
       cardIdx++;
@@ -1344,8 +1348,10 @@ function renderCards(offers) {
   if (otherOffers.length) {
     if (lhOffers.length) stack.appendChild(buildOtherDivider());
     otherOffers.forEach(o => {
-      // ICTA removed — email gate handles access
-      const card = buildCard(o, cardIdx, cardIdx>=FREE_CARDS, false);
+      const shouldGate2 = cardIdx>=FREE_CARDS && !gateShown;
+      if (shouldGate2) gateShown = true;
+      const card = buildCard(o, cardIdx, shouldGate2, false);
+      if (cardIdx>FREE_CARDS && gateShown && !shouldGate2) card.classList.add('blurred');
       card.style.animationDelay=(Math.min(cardIdx,7)*32)+'ms';
       stack.appendChild(card);
       cardIdx++;
@@ -1427,7 +1433,8 @@ function buildCard(offer, idx, gated=false, starPriority=false) {
         WE MAY BEAT THIS PRICE
       </span>
     </div>
-    <div class="fc-body">
+    <div class="fc-body" style="display:grid;grid-template-columns:120px 1fr 210px;align-items:center;gap:10px;padding:10px 14px">
+      <!-- Col 1: Airline -->
       <div class="fc-airline">
         <div class="fc-logo">
           <img src="${logoUrl}" onerror="this.style.display='none';this.parentNode.innerHTML='<span class=\'fc-logo-fb\'>${offer.validatingCarrier||''}</span>'" alt="${groupName}" loading="lazy">
@@ -1439,40 +1446,43 @@ function buildCard(offer, idx, gated=false, starPriority=false) {
         </div>
       </div>
 
-      <div class="fc-route">
-        <div class="fc-endpoint">
-          <div class="fc-time">${depT}</div>
-          <div class="fc-iata">${origCode}</div>
-          <div class="fc-city">${origCity}</div>
-        </div>
-        <div class="fc-path">
-          <div class="fc-dur">${dur}</div>
-          <div class="fc-line-wrap">
-            <div class="fc-line"></div>
-            ${stops>0?`<div class="fc-dot"></div><div class="fc-line"></div>`:''}
-            <svg class="fc-plane-ico" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+      <!-- Col 2: Route + tags -->
+      <div>
+        <div class="fc-route">
+          <div class="fc-endpoint">
+            <div class="fc-time">${depT}</div>
+            <div class="fc-iata">${origCode}</div>
+            <div class="fc-city">${(origCity||'').split(' ').slice(0,2).join(' ')}</div>
           </div>
-          <div class="fc-stops-lbl ${stopsCls}">${stopsLbl}${stops>0&&stopCity?` in ${stopCity} (${stopIata})`:''}</div>
+          <div class="fc-path">
+            <div class="fc-dur">${dur}</div>
+            <div class="fc-line-wrap">
+              <div class="fc-line"></div>
+              ${stops>0?`<div class="fc-dot"></div><div class="fc-line"></div>`:''}
+              <svg class="fc-plane-ico" viewBox="0 0 24 24" fill="currentColor" width="12" height="12"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+            </div>
+            <div class="fc-stops-lbl ${stopsCls}">${stopsLbl}${stops>0&&stopCity?` in ${stopCity} (${stopIata})`:''}</div>
+          </div>
+          <div class="fc-endpoint" style="text-align:right">
+            <div class="fc-time fc-time-arr">${arrT}${nd?'<sup style="font-size:9px"> +1</sup>':''}</div>
+            <div class="fc-iata">${destCode}</div>
+            <div class="fc-city">${destCity}</div>
+          </div>
         </div>
-        <div class="fc-endpoint" style="text-align:right">
-          <div class="fc-time fc-time-arr">${arrT}${nd?'<sup style="font-size:10px"> +1</sup>':''}</div>
-          <div class="fc-iata">${destCode}</div>
-          <div class="fc-city">${destCity}</div>
+        <div class="fc-tags">
+          <span class="fc-tag fc-tag-cabin">Business Class</span>
+          <span class="fc-tag">2 Bags Included</span>
+          ${isRefundable?'<span class="fc-tag">Refundable</span>':''}
         </div>
       </div>
 
-      <div class="fc-tags">
-        <span class="fc-tag fc-tag-cabin">Business Class</span>
-        <span class="fc-tag">2 Bags Included</span>
-        ${isRefundable?'<span class="fc-tag">Refundable</span>':''}
-      </div>
-
-      <div class="fc-price-col">
+      <!-- Col 3: Price + CTA -->
+      <div class="fc-price-col" style="text-align:right;border-left:1px solid #e2e8f2;padding-left:12px">
         <div class="fc-pub-lbl">Published Fare</div>
         <div class="fc-price">$${price.toLocaleString()}</div>
         <div class="fc-price-note">one way · per person</div>
         <button class="fc-cta" onclick="openModal(window._offerMap[${idx}])">
-          Check If We Can Beat This →
+          Check If We Can<br>Beat This →
         </button>
         <div class="fc-cta-note">⚡ Takes 30 seconds · No obligation</div>
       </div>
@@ -1487,6 +1497,7 @@ function buildCard(offer, idx, gated=false, starPriority=false) {
   `;
 
   if (gated) {
+    // Show gate form overlay
     const ov = document.createElement('div');
     ov.className = 'gate-overlay';
     const totalStr = window._totalOffers||'all';
@@ -2782,8 +2793,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   const _rhc=document.getElementById('rhCabin'); if(_rhc) _rhc.textContent={BUSINESS:'Business Class',FIRST:'First Class',PREMIUM_ECONOMY:'Premium Economy'}[cabin]||'Business Class';
-  const specRoute = origN + ' → ' + destN + ' routes';
-  const sr = document.getElementById('rhSpecRoute'); if(sr) sr.textContent = specRoute;
+  const specRoute = (origN&&origN!==orig ? origN : orig) + ' → ' + (destN&&destN!==dest ? destN : dest);
+  const sr = document.getElementById('rhSpecRoute'); if(sr && specRoute.length>3) sr.textContent = specRoute + ' routes';
 
   // Sort count
   const sc = document.getElementById('sortCount');
