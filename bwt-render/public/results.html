@@ -358,7 +358,17 @@ mark.m{background:rgba(200,168,75,.25);color:#f0c040;border-radius:2px}
 </style>
 </head>
 <body>
-<script>window._loaderShown = Date.now();</script>
+<script>
+window._loaderShown = Date.now();
+// Absolute failsafe — hide loader after 7s no matter what
+setTimeout(function(){
+  var ldr = document.getElementById('bwt-loader');
+  if (ldr && ldr.style.display !== 'none') {
+    ldr.classList.add('fade-out');
+    setTimeout(function(){ ldr.style.display='none'; }, 500);
+  }
+}, 7000);
+</script>
 
 <!-- LOADER -->
 <div id="bwt-loader">
@@ -1325,9 +1335,16 @@ async function doSearch() {
       if (!getRouteRange(orig, dest)) injectUnknownRoutePanel(orig, dest);
     }, 150);
   } finally {
-    document.getElementById('skels').style.display='none';
-    btn.disabled=false;
-    btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg> Search';
+    try {
+      const sk = document.getElementById('skels');
+      if (sk) sk.style.display='none';
+      hideLdr();
+    } catch(fe) {
+      console.error('finally error:', fe);
+      // Force hide loader
+      const ldr = document.getElementById('bwt-loader');
+      if (ldr) { ldr.style.display='none'; }
+    }
   }
 }
 
@@ -1342,7 +1359,7 @@ function renderCards(offers) {
   ['routeRangeBar','waStrip','unknownRoutePanel'].forEach(id => {
     const el = document.getElementById(id); if (el) el.remove();
   });
-  document.getElementById('rcnt').textContent=`${offers.length} of ${allOffers.length}`;
+  const rcnt=document.getElementById('rcnt'); if(rcnt) rcnt.textContent=`${offers.length} of ${allOffers.length}`;
   const sf=document.getElementById('sfSection');
   if (sf) sf.style.display = (offers.length===allOffers.length && allOffers.length>0) ? 'block' : 'none';
 
@@ -2871,10 +2888,14 @@ function setSort(val,btn){ document.querySelectorAll('.sort-btn').forEach(b=>b.c
 // ── Loader hide helper ──
 function hideLdr(){
   const ldr=document.getElementById('bwt-loader');
-  if(!ldr) return;
+  if(!ldr||ldr.style.display==='none') return;
   const shown=window._loaderShown||Date.now();
-  const wait=Math.max(0,3500-(Date.now()-shown));
-  setTimeout(()=>{ldr.classList.add('fade-out');setTimeout(()=>{ldr.style.display='none';},500);},wait);
+  const elapsed=Date.now()-shown;
+  const wait=Math.max(0, 3000-elapsed);
+  setTimeout(()=>{
+    ldr.classList.add('fade-out');
+    setTimeout(()=>{ ldr.style.display='none'; },500);
+  }, wait);
 }
 
 // ── Modal helpers ──
