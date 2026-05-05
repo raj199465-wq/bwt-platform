@@ -503,7 +503,7 @@ app.post('/api/quote', async (req, res) => {
           method: 'POST',
           headers: {'Content-Type':'application/json','Authorization':`Bearer ${process.env.RESEND_API_KEY}`},
           body: JSON.stringify({
-            from: 'BWT Platform <noreply@businessworldtravel.com>',
+            from: 'BWT Platform <onboarding@resend.dev>',
             to: ['quotes@businessworldtravel.com'],
             subject: `New fare access request: ${email} — ${route}`,
             html: `<p><strong>Email:</strong> ${email}</p><p><strong>Route:</strong> ${route}</p><p><strong>Date:</strong> ${dep}</p><p><strong>Source:</strong> ${source}</p>`
