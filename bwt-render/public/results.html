@@ -104,8 +104,9 @@ mark.m{background:rgba(200,168,75,.25);color:#f0c040;border-radius:2px}
 @media(max-width:800px){.hs-inner{grid-template-columns:1fr;gap:12px}.hs-icon{display:none}.hs-title{white-space:normal}}
 
 /* MAIN 3-COLUMN LAYOUT */
-.results-layout{max-width:1340px;margin:0 auto;padding:14px 20px;display:grid;grid-template-columns:220px 1fr;gap:14px;align-items:start}
+.results-layout{max-width:1340px;margin:0 auto;padding:14px 20px;display:grid;grid-template-columns:220px 1fr 260px;gap:14px;align-items:start}
 @media(max-width:1100px){.results-layout{grid-template-columns:200px 1fr}}
+@media(max-width:1100px){.sticky-panel{display:none}}
 @media(max-width:780px){.results-layout{grid-template-columns:1fr;padding:10px}}
 
 /* SIDEBAR */
@@ -564,7 +565,33 @@ setTimeout(function(){
     <div id="cards"></div>
   </div>
 
-
+  <!-- STICKY RIGHT PANEL -->
+  <div class="sticky-panel">
+    <div class="sp-icon">💼</div>
+    <div class="sp-title">Why Business Travelers Choose Us</div>
+    <div class="sp-bullets">
+      <div class="sp-bullet">
+        <div class="sp-bullet-ico">💰</div>
+        <div><div class="sp-bullet-title">Save 20–40%</div><div class="sp-bullet-sub">vs retail published fares</div></div>
+      </div>
+      <div class="sp-bullet">
+        <div class="sp-bullet-ico">✈</div>
+        <div><div class="sp-bullet-title">Same exact flights</div><div class="sp-bullet-sub">same seats, same airline</div></div>
+      </div>
+      <div class="sp-bullet">
+        <div class="sp-bullet-ico">🎧</div>
+        <div><div class="sp-bullet-title">Concierge support</div><div class="sp-bullet-sub">real people, real help</div></div>
+      </div>
+      <div class="sp-bullet">
+        <div class="sp-bullet-ico">🛡</div>
+        <div><div class="sp-bullet-title">No obligation</div><div class="sp-bullet-sub">it's free to check</div></div>
+      </div>
+    </div>
+    <button class="sp-btn" onclick="openModal(null)">Check My Price Now →</button>
+    <div class="sp-note">Takes 30 seconds · No obligation</div>
+    <div class="sp-stars">★★★★★</div>
+    <div class="sp-trust">Trusted by thousands of business travelers</div>
+  </div>
 
 </div>
 
@@ -620,10 +647,24 @@ function gateSubmit() {
     return;
   }
 
-  // Pass — store and unlock
+  // Pass — store and send notification email
   btn.disabled = true;
   btn.textContent = 'Verifying…';
-  
+
+  // Notify BWT team
+  const p2 = new URLSearchParams(location.search);
+  fetch('/api/quote', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      type: 'gate_access',
+      email,
+      route: (p2.get('from')||'') + ' → ' + (p2.get('to')||''),
+      dep: p2.get('dep')||'',
+      source: 'results_gate'
+    })
+  }).catch(()=>{});
+
   setTimeout(() => {
     localStorage.setItem(GATE_KEY, JSON.stringify({email, ts: Date.now()}));
     gatePass();
@@ -686,6 +727,20 @@ function gateSubmitInline() {
 
   const btn = document.querySelector('.gate-inline-btn');
   if (btn) { btn.disabled = true; btn.textContent = 'Unlocking…'; }
+
+  // Notify BWT team
+  const _p = new URLSearchParams(location.search);
+  fetch('/api/quote', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      type: 'gate_access',
+      email,
+      route: (_p.get('from')||'') + ' → ' + (_p.get('to')||''),
+      dep: _p.get('dep')||'',
+      source: 'results_card_gate'
+    })
+  }).catch(()=>{});
 
   setTimeout(() => {
     localStorage.setItem(GATE_KEY, JSON.stringify({email, ts: Date.now()}));
