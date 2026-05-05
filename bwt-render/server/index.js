@@ -492,6 +492,27 @@ const FROM_EMAIL  = process.env.FROM_EMAIL   || 'noreply@businessworldtravel.com
 const RESEND_KEY  = process.env.RESEND_API_KEY;
 
 app.post('/api/quote', async (req, res) => {
+  // Handle gate access notifications
+  if (req.body && req.body.type === 'gate_access') {
+    const { email, route, dep, source } = req.body;
+    log('info', 'gate', `New access: ${email} | ${route} | ${dep} | ${source}`);
+    // Send notification email to BWT team
+    if (process.env.RESEND_API_KEY) {
+      try {
+        await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json','Authorization':`Bearer ${process.env.RESEND_API_KEY}`},
+          body: JSON.stringify({
+            from: 'BWT Platform <noreply@businessworldtravel.com>',
+            to: ['quotes@businessworldtravel.com'],
+            subject: `New fare access request: ${email} — ${route}`,
+            html: `<p><strong>Email:</strong> ${email}</p><p><strong>Route:</strong> ${route}</p><p><strong>Date:</strong> ${dep}</p><p><strong>Source:</strong> ${source}</p>`
+          })
+        });
+      } catch(e) { log('warn','gate','Email notify failed: '+e.message); }
+    }
+    return res.json({ ok: true });
+  }
   const ip = getIP(req);
   const rl = check(`quote:${ip}`, 5, 60 * 60 * 1000);
   if (!rl.allowed) {
