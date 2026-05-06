@@ -491,49 +491,93 @@ const AGENT_EMAIL = process.env.AGENT_EMAIL  || 'quotes@businessworldtravel.com'
 const FROM_EMAIL  = process.env.FROM_EMAIL   || 'noreply@businessworldtravel.com';
 const RESEND_KEY  = process.env.RESEND_API_KEY;
 
+// ── Email verification token store (in-memory, 1hr TTL) ──────────────────
+const verifyTokens = new Map(); // token -> { email, route, dep, returnUrl, expires }
+
+app.get('/verify', (req, res) => {
+  const { token } = req.query;
+  const data = verifyTokens.get(token);
+  if (!data || Date.now() > data.expires) {
+    return res.send(`<!DOCTYPE html><html><head><title>Link Expired</title>
+    <style>body{font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background:#0a1628}
+    .box{background:#fff;border-radius:12px;padding:40px;text-align:center;max-width:400px}
+    h2{color:#c0392b}p{color:#666}a{color:#c9a84c;font-weight:700}</style></head>
+    <body><div class="box"><h2>Link Expired</h2><p>This verification link has expired or already been used.</p>
+    <a href="/">Return to site</a></div></body></html>`);
+  }
+  // Valid — clear token and redirect back with verified flag
+  verifyTokens.delete(token);
+  const { email, returnUrl } = data;
+  // Encode email into redirect URL so client can store in localStorage
+  const url = new URL(returnUrl || '/', `https://${req.headers.host}`);
+  url.searchParams.set('verified', Buffer.from(email).toString('base64'));
+  log('info', 'gate', `Email verified: ${email}`);
+  return res.redirect(url.toString());
+});
+
 app.post('/api/quote', async (req, res) => {
-  // Handle gate access notifications
+  // Handle gate access — send verification email
   if (req.body && req.body.type === 'gate_access') {
-    const { email, route, dep, source } = req.body;
-    log('info', 'gate', `New access: ${email} | ${route} | ${dep} | ${source}`);
-    // Send notification email to BWT team
+    const { email, route, dep, source, returnUrl } = req.body;
+    log('info', 'gate', `Verify request: ${email} | ${route}`);
+
     if (!process.env.RESEND_API_KEY) {
-      log('warn', 'gate', `RESEND_API_KEY not set — email skipped for ${email}`);
-      return res.json({ ok: true, warning: 'Email not sent — RESEND_API_KEY missing' });
+      log('warn', 'gate', `RESEND_API_KEY not set — auto-passing ${email}`);
+      return res.json({ ok: true, autoPass: true, warning: 'No email sent — add RESEND_API_KEY' });
     }
     if (process.env.RESEND_API_KEY) {
       try {
-        // Use AGENT_EMAIL env var (must match your Resend account email while using onboarding@resend.dev)
-        const notifyTo = process.env.AGENT_EMAIL || 'quotes@businessworldtravel.com';
-        
-        // 1. Notify BWT team
+        // Generate a secure token
+        const crypto = require('crypto');
+        const token = crypto.randomBytes(32).toString('hex');
+        verifyTokens.set(token, {
+          email, route, dep, source,
+          returnUrl: returnUrl || '',
+          expires: Date.now() + 60 * 60 * 1000 // 1 hour
+        });
+
+        const host = process.env.RENDER_EXTERNAL_URL || `https://${req.headers.host}`;
+        const verifyLink = `${host}/verify?token=${token}`;
+        log('info', 'gate', `Verify link for ${email}: ${verifyLink}`);
+
+        const notifyTo = process.env.AGENT_EMAIL || email;
+
+        // Send verification email to user
         const r1 = await fetch('https://api.resend.com/emails', {
           method: 'POST',
           headers: {'Content-Type':'application/json','Authorization':`Bearer ${process.env.RESEND_API_KEY}`},
           body: JSON.stringify({
             from: 'onboarding@resend.dev',
             to: [notifyTo],
-            subject: `New BWT fare access: ${email} — ${route}`,
-            html: `<h2>New fare access request</h2><p><strong>Email:</strong> ${email}</p><p><strong>Route:</strong> ${route}</p><p><strong>Date:</strong> ${dep}</p><p><strong>Source:</strong> ${source}</p>`
+            subject: 'Verify your email to access all BWT fares',
+            html: `<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;max-width:500px;margin:40px auto;padding:20px">
+              <img src="https://bwt-platform.onrender.com/logo.png" alt="BWT" style="height:40px;margin-bottom:24px" onerror="this.style.display='none'">
+              <h2 style="color:#0a1628;margin-bottom:8px">One click to access all fares</h2>
+              <p style="color:#5a6e8f;margin-bottom:24px">Click the button below to verify your email and unlock all published fares for <strong>${route}</strong>.</p>
+              <a href="${verifyLink}" style="display:inline-block;background:#f0c040;color:#0a1628;font-weight:800;padding:14px 32px;border-radius:8px;text-decoration:none;font-size:15px">
+                ✓ Verify &amp; Access All Fares →
+              </a>
+              <p style="color:#8fa3be;font-size:12px;margin-top:24px">This link expires in 1 hour. If you didn't request this, ignore this email.</p>
+              <p style="color:#8fa3be;font-size:12px">— Business World Travel &nbsp;|&nbsp; (212) 913-0450</p>
+            </body></html>`
           })
         });
         const r1j = await r1.json();
-        log('info', 'gate', `Team email result: ${JSON.stringify(r1j)}`);
+        log('info', 'gate', `Verify email sent: ${JSON.stringify(r1j)}`);
 
-        // 2. Confirm to user (only works if domain verified, otherwise skip)
-        const r2 = await fetch('https://api.resend.com/emails', {
-          method: 'POST',
-          headers: {'Content-Type':'application/json','Authorization':`Bearer ${process.env.RESEND_API_KEY}`},
-          body: JSON.stringify({
-            from: 'onboarding@resend.dev',
-            to: [notifyTo], // Send to yourself until domain verified
-            reply_to: email,
-            subject: `FWD: Fare access request from ${email} — ${route}`,
-            html: `<p>User <strong>${email}</strong> just unlocked fares for route <strong>${route}</strong>.</p><p>Reply to this email to follow up with them directly.</p>`
-          })
-        });
-        const r2j = await r2.json();
-        log('info', 'gate', `User email result: ${JSON.stringify(r2j)}`);
+        // Also notify BWT team
+        if (process.env.AGENT_EMAIL) {
+          await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json','Authorization':`Bearer ${process.env.RESEND_API_KEY}`},
+            body: JSON.stringify({
+              from: 'onboarding@resend.dev',
+              to: [process.env.AGENT_EMAIL],
+              subject: `New fare access request: ${email} — ${route}`,
+              html: `<p><strong>${email}</strong> requested access for <strong>${route}</strong> on ${dep}.</p><p>A verification email has been sent to them.</p>`
+            })
+          }).catch(()=>{});
+        }
       } catch(e) { log('warn','gate','Email notify failed: '+e.message); }
     }
     return res.json({ ok: true });
