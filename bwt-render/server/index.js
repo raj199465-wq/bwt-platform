@@ -499,14 +499,26 @@ app.post('/api/quote', async (req, res) => {
     // Send notification email to BWT team
     if (process.env.RESEND_API_KEY) {
       try {
+        // 1. Notify BWT team
         await fetch('https://api.resend.com/emails', {
           method: 'POST',
           headers: {'Content-Type':'application/json','Authorization':`Bearer ${process.env.RESEND_API_KEY}`},
           body: JSON.stringify({
             from: 'BWT Platform <onboarding@resend.dev>',
             to: ['quotes@businessworldtravel.com'],
-            subject: `New fare access request: ${email} — ${route}`,
-            html: `<p><strong>Email:</strong> ${email}</p><p><strong>Route:</strong> ${route}</p><p><strong>Date:</strong> ${dep}</p><p><strong>Source:</strong> ${source}</p>`
+            subject: `New fare access: ${email} — ${route}`,
+            html: `<h2>New fare access request</h2><p><strong>Email:</strong> ${email}</p><p><strong>Route:</strong> ${route}</p><p><strong>Date:</strong> ${dep}</p><p><strong>Source:</strong> ${source}</p>`
+          })
+        });
+        // 2. Confirm to user
+        await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json','Authorization':`Bearer ${process.env.RESEND_API_KEY}`},
+          body: JSON.stringify({
+            from: 'Business World Travel <onboarding@resend.dev>',
+            to: [email],
+            subject: 'You now have full access to BWT fares',
+            html: `<p>Hi,</p><p>You now have full access to all published fares on <a href="https://bwt-platform.onrender.com">businessworldtravel.com</a>.</p><p>Your route: <strong>${route}</strong></p><p>If you'd like us to check if we can beat the published fare, simply click <strong>"Check If We Can Beat This"</strong> on any flight card.</p><p>We respond within the hour.</p><p>— The BWT Team</p><p>📞 (212) 913-0450</p>`
           })
         });
       } catch(e) { log('warn','gate','Email notify failed: '+e.message); }
