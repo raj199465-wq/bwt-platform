@@ -497,6 +497,10 @@ app.post('/api/quote', async (req, res) => {
     const { email, route, dep, source } = req.body;
     log('info', 'gate', `New access: ${email} | ${route} | ${dep} | ${source}`);
     // Send notification email to BWT team
+    if (!process.env.RESEND_API_KEY) {
+      log('warn', 'gate', `RESEND_API_KEY not set — email skipped for ${email}`);
+      return res.json({ ok: true, warning: 'Email not sent — RESEND_API_KEY missing' });
+    }
     if (process.env.RESEND_API_KEY) {
       try {
         // 1. Notify BWT team
