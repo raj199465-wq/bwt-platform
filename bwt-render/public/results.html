@@ -689,13 +689,10 @@ function gatePass() {
     if (ov) ov.remove();
   });
   document.querySelectorAll('.gate-overlay').forEach(el => el.remove());
-  // Re-render existing results without loader
-  if (allOffers && allOffers.length) {
-    renderCards(allOffers);
-  } else {
-    const p = new URLSearchParams(location.search);
-    const orig = p.get('from'), dest = p.get('to'), dep = p.get('dep');
-    if (orig && dest && dep) doSearch();
+  // Re-render existing cards with full access (no loader)
+  if (window.allOffers && window.allOffers.length) {
+    window.filteredOffers = [...window.allOffers];
+    renderCards(window.filteredOffers);
   }
 }
 
@@ -1209,7 +1206,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('orig-val').value   = orig;
   document.getElementById('dest-input').value = destN!==dest ? `${destN} (${dest})` : dest;
   document.getElementById('dest-val').value   = dest;
-  document.getElementById('dep-date').value = dep;
+  const _depEl=document.getElementById('dep-date'); if(_depEl) _depEl.value=dep;
   setDateDisplay('dep', dep);
   document.getElementById('dep-date').min = new Date().toISOString().slice(0,10);
   document.getElementById('dep-date').addEventListener('change', function(){ setDateDisplay('dep', this.value); });
@@ -1315,8 +1312,6 @@ async function doSearch() {
     }, 150);
   } finally {
     document.getElementById('skels').style.display='none';
-    btn.disabled=false;
-    btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg> Search';
   }
 }
 
@@ -2411,8 +2406,6 @@ async function submitQuote() {
   document.getElementById('qEmailErr').classList.remove('on');
 
   const btn=document.getElementById('qBtn');
-  btn.disabled=true;
-  btn.innerHTML='<span class="spin" style="border-color:rgba(8,13,22,.2);border-top-color:#080d16"></span> Sending…';
 
   try {
     const orig=document.getElementById('orig-val').value;
@@ -2431,8 +2424,6 @@ async function submitQuote() {
   } catch(e) {
     showToast('Network error. Email quotes@businessworldtravel.com','err');
   } finally {
-    btn.disabled=false;
-    btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Send Quote Request';
   }
 }
 
