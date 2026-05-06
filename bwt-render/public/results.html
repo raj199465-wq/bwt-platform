@@ -570,22 +570,10 @@ setTimeout(function(){
     <div class="sp-icon">💼</div>
     <div class="sp-title">Why Business Travelers Choose Us</div>
     <div class="sp-bullets">
-      <div class="sp-bullet">
-        <div class="sp-bullet-ico">💰</div>
-        <div><div class="sp-bullet-title">Save 20–40%</div><div class="sp-bullet-sub">vs retail published fares</div></div>
-      </div>
-      <div class="sp-bullet">
-        <div class="sp-bullet-ico">✈</div>
-        <div><div class="sp-bullet-title">Same exact flights</div><div class="sp-bullet-sub">same seats, same airline</div></div>
-      </div>
-      <div class="sp-bullet">
-        <div class="sp-bullet-ico">🎧</div>
-        <div><div class="sp-bullet-title">Concierge support</div><div class="sp-bullet-sub">real people, real help</div></div>
-      </div>
-      <div class="sp-bullet">
-        <div class="sp-bullet-ico">🛡</div>
-        <div><div class="sp-bullet-title">No obligation</div><div class="sp-bullet-sub">it's free to check</div></div>
-      </div>
+      <div class="sp-bullet"><div class="sp-bullet-ico">💰</div><div><div class="sp-bullet-title">Save 20–40%</div><div class="sp-bullet-sub">vs retail published fares</div></div></div>
+      <div class="sp-bullet"><div class="sp-bullet-ico">✈</div><div><div class="sp-bullet-title">Same exact flights</div><div class="sp-bullet-sub">same seats, same airline</div></div></div>
+      <div class="sp-bullet"><div class="sp-bullet-ico">🎧</div><div><div class="sp-bullet-title">Concierge support</div><div class="sp-bullet-sub">real people, real help</div></div></div>
+      <div class="sp-bullet"><div class="sp-bullet-ico">🛡</div><div><div class="sp-bullet-title">No obligation</div><div class="sp-bullet-sub">it's free to check</div></div></div>
     </div>
     <button class="sp-btn" onclick="openModal(null)">Check My Price Now →</button>
     <div class="sp-note">Takes 30 seconds · No obligation</div>
@@ -701,10 +689,14 @@ function gatePass() {
     if (ov) ov.remove();
   });
   document.querySelectorAll('.gate-overlay').forEach(el => el.remove());
-  // Re-render results with full access
-  const p = new URLSearchParams(location.search);
-  const orig = p.get('from'), dest = p.get('to'), dep = p.get('dep'), ret = p.get('ret');
-  if (orig && dest && dep) doSearch();
+  // Re-render existing results without loader
+  if (allOffers && allOffers.length) {
+    renderCards(allOffers);
+  } else {
+    const p = new URLSearchParams(location.search);
+    const orig = p.get('from'), dest = p.get('to'), dep = p.get('dep');
+    if (orig && dest && dep) doSearch();
+  }
 }
 
 function gateSubmitInline() {
@@ -738,7 +730,8 @@ function gateSubmitInline() {
       email,
       route: (_p.get('from')||'') + ' → ' + (_p.get('to')||''),
       dep: _p.get('dep')||'',
-      source: 'results_card_gate'
+      source: 'results_card_gate',
+      sendUserEmail: true
     })
   }).catch(()=>{});
 
