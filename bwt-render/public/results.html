@@ -598,6 +598,7 @@ function gateCheck() {
     try {
       const {email, ts} = JSON.parse(saved);
       if (email && ts && (Date.now() - ts) < 30 * 24 * 60 * 60 * 1000) {
+        window._gateVerified = true;
         gatePass();
         return;
       }
@@ -641,6 +642,7 @@ function gateSubmit() {
 
   // Notify BWT team
   const p2 = new URLSearchParams(location.search);
+  console.log('[BWT] Full gate access:', email);
   fetch('/api/quote', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
@@ -649,9 +651,10 @@ function gateSubmit() {
       email,
       route: (p2.get('from')||'') + ' → ' + (p2.get('to')||''),
       dep: p2.get('dep')||'',
-      source: 'results_gate'
+      source: 'results_gate',
+      sendUserEmail: true
     })
-  }).catch(()=>{});
+  }).then(r => r.json()).then(d => console.log('[BWT] Gate API:', d)).catch(e => console.warn('[BWT] Gate failed:', e));
 
   setTimeout(() => {
     localStorage.setItem(GATE_KEY, JSON.stringify({email, ts: Date.now()}));
@@ -689,7 +692,9 @@ function gatePass() {
     if (ov) ov.remove();
   });
   document.querySelectorAll('.gate-overlay').forEach(el => el.remove());
-  // Re-render existing cards with full access (no loader)
+  // Mark as verified so renderCards shows all cards
+  window._gateVerified = true;
+  // Re-render with full access
   if (window.allOffers && window.allOffers.length) {
     window.filteredOffers = [...window.allOffers];
     renderCards(window.filteredOffers);
@@ -719,6 +724,7 @@ function gateSubmitInline() {
 
   // Notify BWT team
   const _p = new URLSearchParams(location.search);
+  console.log('[BWT] Gate access:', email);
   fetch('/api/quote', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
@@ -730,7 +736,7 @@ function gateSubmitInline() {
       source: 'results_card_gate',
       sendUserEmail: true
     })
-  }).catch(()=>{});
+  }).then(r => r.json()).then(d => console.log('[BWT] Gate API response:', d)).catch(e => console.warn('[BWT] Gate notify failed:', e));
 
   setTimeout(() => {
     localStorage.setItem(GATE_KEY, JSON.stringify({email, ts: Date.now()}));
@@ -1339,7 +1345,7 @@ function renderCards(offers) {
   const lhOffers    = offers.filter(o => LH_GROUP.has(o.validatingCarrier));
   const otherOffers = offers.filter(o => !LH_GROUP.has(o.validatingCarrier));
 
-  const FREE_CARDS = 2; // Show 2 teasers then gate
+  const FREE_CARDS = window._gateVerified ? 99999 : 2; // Show all if verified
   let cardIdx = 0;
   let gateShown = false; // Only show gate overlay on first gated card
 
