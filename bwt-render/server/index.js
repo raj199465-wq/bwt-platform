@@ -503,28 +503,37 @@ app.post('/api/quote', async (req, res) => {
     }
     if (process.env.RESEND_API_KEY) {
       try {
+        // Use AGENT_EMAIL env var (must match your Resend account email while using onboarding@resend.dev)
+        const notifyTo = process.env.AGENT_EMAIL || 'quotes@businessworldtravel.com';
+        
         // 1. Notify BWT team
-        await fetch('https://api.resend.com/emails', {
+        const r1 = await fetch('https://api.resend.com/emails', {
           method: 'POST',
           headers: {'Content-Type':'application/json','Authorization':`Bearer ${process.env.RESEND_API_KEY}`},
           body: JSON.stringify({
-            from: 'BWT Platform <onboarding@resend.dev>',
-            to: ['quotes@businessworldtravel.com'],
-            subject: `New fare access: ${email} — ${route}`,
+            from: 'onboarding@resend.dev',
+            to: [notifyTo],
+            subject: `New BWT fare access: ${email} — ${route}`,
             html: `<h2>New fare access request</h2><p><strong>Email:</strong> ${email}</p><p><strong>Route:</strong> ${route}</p><p><strong>Date:</strong> ${dep}</p><p><strong>Source:</strong> ${source}</p>`
           })
         });
-        // 2. Confirm to user
-        await fetch('https://api.resend.com/emails', {
+        const r1j = await r1.json();
+        log('info', 'gate', `Team email result: ${JSON.stringify(r1j)}`);
+
+        // 2. Confirm to user (only works if domain verified, otherwise skip)
+        const r2 = await fetch('https://api.resend.com/emails', {
           method: 'POST',
           headers: {'Content-Type':'application/json','Authorization':`Bearer ${process.env.RESEND_API_KEY}`},
           body: JSON.stringify({
-            from: 'Business World Travel <onboarding@resend.dev>',
-            to: [email],
-            subject: 'You now have full access to BWT fares',
-            html: `<p>Hi,</p><p>You now have full access to all published fares on <a href="https://bwt-platform.onrender.com">businessworldtravel.com</a>.</p><p>Your route: <strong>${route}</strong></p><p>If you'd like us to check if we can beat the published fare, simply click <strong>"Check If We Can Beat This"</strong> on any flight card.</p><p>We respond within the hour.</p><p>— The BWT Team</p><p>📞 (212) 913-0450</p>`
+            from: 'onboarding@resend.dev',
+            to: [notifyTo], // Send to yourself until domain verified
+            reply_to: email,
+            subject: `FWD: Fare access request from ${email} — ${route}`,
+            html: `<p>User <strong>${email}</strong> just unlocked fares for route <strong>${route}</strong>.</p><p>Reply to this email to follow up with them directly.</p>`
           })
         });
+        const r2j = await r2.json();
+        log('info', 'gate', `User email result: ${JSON.stringify(r2j)}`);
       } catch(e) { log('warn','gate','Email notify failed: '+e.message); }
     }
     return res.json({ ok: true });
