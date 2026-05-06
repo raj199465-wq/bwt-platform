@@ -652,14 +652,27 @@ function gateSubmit() {
       route: (p2.get('from')||'') + ' → ' + (p2.get('to')||''),
       dep: p2.get('dep')||'',
       source: 'results_gate',
-      sendUserEmail: true
+      returnUrl: location.href
     })
-  }).then(r => r.json()).then(d => console.log('[BWT] Gate API:', d)).catch(e => console.warn('[BWT] Gate failed:', e));
-
-  setTimeout(() => {
-    localStorage.setItem(GATE_KEY, JSON.stringify({email, ts: Date.now()}));
-    gatePass();
-  }, 800);
+  })
+  .then(r => r.json())
+  .then(d => {
+    if (d.autoPass) {
+      localStorage.setItem(GATE_KEY, JSON.stringify({email, ts: Date.now()}));
+      window._gateVerified = true;
+      gatePass();
+    } else {
+      // Show check email message on full gate
+      document.getElementById('bwt-gate').innerHTML = `
+        <div class="gate-card" style="text-align:center">
+          <div style="font-size:48px;margin-bottom:16px">📧</div>
+          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:#fff;margin-bottom:10px">Check your email</div>
+          <p style="font-size:14px;color:rgba(255,255,255,.55);line-height:1.7">We sent a verification link to<br><strong style="color:#f0c040">${email}</strong><br><br>Click the link to unlock all fares.<br>The link expires in 1 hour.</p>
+          <p style="font-size:12px;color:rgba(255,255,255,.3);margin-top:20px">Didn't receive it? Check your spam folder.</p>
+        </div>`;
+    }
+  })
+  .catch(() => { btn.disabled=false; btn.textContent='Access Business Fares →'; });
 }
 
 function showGateError(msg) {
@@ -2777,6 +2790,25 @@ function injectUnknownRoutePanel(orig, dest) {
 let navDepPicker, navRetPicker;
 document.addEventListener('DOMContentLoaded', () => {
   const p = new URLSearchParams(location.search);
+
+  // Handle email verification redirect
+  const verifiedParam = p.get('verified');
+  if (verifiedParam) {
+    try {
+      const email = atob(verifiedParam);
+      if (email && email.includes('@')) {
+        localStorage.setItem(GATE_KEY, JSON.stringify({email, ts: Date.now()}));
+        window._gateVerified = true;
+        console.log('[BWT] Email verified:', email);
+        // Clean URL
+        const clean = new URL(location.href);
+        clean.searchParams.delete('verified');
+        history.replaceState({}, '', clean.toString());
+        showToast('✓ Email verified — all fares unlocked!', 'success');
+      }
+    } catch(e) { console.warn('Verify param error', e); }
+  }
+
   const orig  = p.get('from')||'';
   const dest  = p.get('to')||'';
   const dep   = p.get('dep')||'';
