@@ -72,7 +72,7 @@ nav{background:var(--navy);position:sticky;top:0;z-index:500;border-bottom:1px s
 .search-star{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px;padding-right:4px}
 .search-star svg{color:var(--gold)}
 .search-bar{display:flex;align-items:stretch;height:68px;overflow:hidden}
-.sf-box{display:flex;align-items:center;gap:10px;padding:0 18px;flex:1;min-width:0;position:relative;border-right:1px solid var(--border);cursor:pointer;transition:background .12s}
+.sf-box{display:flex;align-items:center;gap:8px;padding:0 14px;flex:1;min-width:0;position:relative;border-right:1px solid var(--border);cursor:pointer;transition:background .12s}
 .sf-box:hover{background:#f9fafb}
 .sf-icon{color:var(--gold);flex-shrink:0}
 .sf-box-inner{flex:1;min-width:0}
@@ -84,7 +84,7 @@ nav{background:var(--navy);position:sticky;top:0;z-index:500;border-bottom:1px s
 .sf-date-val{font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--navy)}
 .sf-date-val.ph{color:#b8c4d0;font-weight:400}
 .search-btn-wrap{padding:8px 10px;display:flex;align-items:center;flex-shrink:0}
-.search-btn{background:var(--gold);color:var(--navy);border:none;border-radius:8px;padding:0 20px;height:100%;font-family:'Syne',sans-serif;font-size:13px;font-weight:800;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:7px;white-space:nowrap;letter-spacing:.02em}
+.search-btn{background:var(--gold);color:var(--navy);border:none;border-radius:8px;padding:0 24px;height:100%;font-family:'Syne',sans-serif;font-size:13px;font-weight:800;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:7px;white-space:nowrap;letter-spacing:.02em}
 .search-btn:hover{background:var(--gold2);transform:translateY(-1px)}
 .search-upload{padding:12px 20px 14px;border-top:1px solid var(--border);font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;cursor:pointer;transition:color .15s}
 .search-upload:hover{color:var(--navy)}
@@ -386,7 +386,7 @@ footer{background:#060e1e;padding:24px clamp(16px,4vw,64px);display:flex;align-i
       </div>
       <div style="width:1px;height:40px;background:var(--border);flex-shrink:0;align-self:center"></div>
       <!-- Travelers -->
-      <div class="sf-box" style="flex:.8;cursor:pointer" onclick="this.querySelector('select').focus()">
+      <div class="sf-box" style="flex:.7;cursor:pointer" onclick="this.querySelector('select').focus()">
         <svg class="sf-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
         <div class="sf-box-inner">
           <div class="sf-lbl">Travelers</div>
@@ -401,7 +401,7 @@ footer{background:#060e1e;padding:24px clamp(16px,4vw,64px);display:flex;align-i
       <div class="search-btn-wrap">
         <button class="search-btn" onclick="doSearch()">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-          Search &amp; Compare Prices
+          Search
         </button>
       </div>
     </div>
