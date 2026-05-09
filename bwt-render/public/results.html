@@ -408,6 +408,7 @@ setTimeout(function(){
         <div><div class="modal-fare-label">Published Fare</div><div class="modal-fare-price" id="fprPrice">$—</div></div>
         <div style="text-align:right"><div class="modal-fare-label">Route</div><div style="font-size:13px;font-weight:600;color:var(--navy)" id="fprRoute">—</div></div>
       </div>
+      <div id="fprFlightDetails" style="font-size:11px;color:var(--muted);margin:-6px 0 12px;display:flex;flex-wrap:wrap;gap:4px"></div>
       <div class="modal-fields">
         <div class="modal-field-row">
           <div class="modal-field"><label>First Name</label><input id="fprFirst" placeholder="Sarah"></div>
@@ -2002,7 +2003,10 @@ function applyFilters() {
   filteredOffers=allOffers.filter(o=>{
     if (filters.stops!=='any' && o.totalStops!==parseInt(filters.stops)) return false;
     if (o.totalPrice>filters.maxPrice) return false;
-    if (filters.airlines.size>0 && filters.airlines.has(o.validatingCarrier)) return false;
+    if (filters.airlines.size>0) {
+      const carrier = o.validatingCarrier||'';
+      if (filters.airlines.has(carrier)) return false;
+    }
     if (filters.bag && !o.baggageSummary?.included) return false;
     if (filters.ref && o.refundable!==true) return false;
     if (filters.time!=='any') {
@@ -2976,12 +2980,27 @@ function openModal(offer) {
   window._currentQuoteOffer = offer || null;
   if (offer) {
     const price = Math.round(offer.totalPrice||0);
-    const orig = offer.journeys?.[0]?.origin||'';
-    const dest = offer.journeys?.[0]?.destination||'';
+    const j = offer.journeys?.[0]||{};
+    const orig = j.origin||'';
+    const dest = j.destination||'';
+    const seg0 = j.segments?.[0]||{};
+    const fNum = seg0.flightNumber||'';
+    const aircraft = seg0.aircraft||'';
+    const depDt = seg0.departure?.datetime||'';
+    const depDate = depDt ? (() => { try { return new Date(String(depDt).replace(' ','T')).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'}); } catch(e){ return ''; } })() : '';
+    const carrier = offer.validatingCarrier||offer.carrierName||'';
+
     const el = document.getElementById('fprPrice');
     const rt = document.getElementById('fprRoute');
+    const fd = document.getElementById('fprFlightDetails');
     if (el) el.textContent = '$' + price.toLocaleString() + ' published fare';
     if (rt) rt.textContent = orig + ' → ' + dest;
+    if (fd) {
+      fd.innerHTML = (depDate ? '<span>📅 '+depDate+'</span>' : '') +
+        (fNum ? ' &nbsp;·&nbsp; <span>✈ '+fNum+'</span>' : '') +
+        (aircraft ? ' &nbsp;·&nbsp; <span>'+aircraft+'</span>' : '') +
+        (carrier ? ' &nbsp;·&nbsp; <span>'+carrier+'</span>' : '');
+    }
   }
   // Reset form
   const body = modal.querySelector('.modal-body');
@@ -3041,6 +3060,7 @@ async function submitQuote() {
         origin:orig, destination:dest, departureDate:dep, returnDate:ret,
         cabin:'BUSINESS', adults:1, publishedFare:price, route,
         notes: (document.getElementById('fprNotes')?.value||'').trim(),
+        flightDetails: document.getElementById('fprFlightDetails')?.textContent||'',
         selectedOffer: window._currentQuoteOffer||null
       })
     });
@@ -3062,68 +3082,76 @@ async function submitQuote() {
 }
 
 function buildSegHtml(offer) {
-  // Parse datetime safely — handles both "2026-05-18T19:20:00" and "2026-05-18 19:20:00"
-  function safeFmtDate(dt) {
+  function safeDate(dt) {
     if (!dt) return '';
     try {
-      // Replace space with T for ISO compatibility
-      const d = new Date(dt.replace(' ', 'T'));
-      if (isNaN(d.getTime())) return '';
-      return d.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'});
-    } catch(e) { return ''; }
+      const d = new Date(String(dt).replace(' ','T'));
+      return isNaN(d) ? '' : d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+    } catch(e){ return ''; }
   }
 
   function renderJourney(journey, label) {
     if (!journey) return '';
     const segs = journey.segments||[];
     if (!segs.length) return '';
-    let html = '<div class="seg-hd">'+label+' · '+(journey.origin||'')+' → '+(journey.destination||'')+'</div>';
-    segs.forEach((seg, i) => {
-      const dep = fmtTime(seg.departure?.datetime||'');
-      const arr = fmtTime(seg.arrival?.datetime||'');
-      const depDate = safeFmtDate(seg.departure?.datetime);
+    let html = '<div class="seg-hd" style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:8px 0 4px;border-top:1px solid var(--border);display:flex;align-items:center;gap:6px">';
+    if (label==='Return') html += '<span style="color:var(--gold)">↩</span> ';
+    else html += '<span>✈</span> ';
+    html += label+' · '+(journey.origin||'')+' → '+(journey.destination||'');
+    html += '</div>';
+    segs.forEach((seg,i) => {
+      // Support both API formats: seg.flightNumber or seg.airline.iata + number
+      const depDt = seg.departure?.datetime||seg.departure?.time||'';
+      const arrDt = seg.arrival?.datetime||seg.arrival?.time||'';
+      const dep   = fmtTime(depDt);
+      const arr   = fmtTime(arrDt);
+      const depDate = safeDate(depDt);
       const depCity = seg.departure?.city||'';
       const arrCity = seg.arrival?.city||'';
       const depApt  = seg.departure?.airport||'';
       const arrApt  = seg.arrival?.airport||'';
-      const airlineName = seg.airline?.name||seg.airline?.iata||'';
-      const fNum = (seg.airline?.iata ? seg.airline.iata+' ' : '') + (seg.flightNumber||'');
-      const dur  = seg.duration||'';
-      const ac   = seg.aircraft||'';
-      const stops = segs.length > 1 && i < segs.length-1;
+      const fNum    = seg.flightNumber || ((seg.airline?.iata||'') + ' ' + (seg.flightNumber||''));
+      const airline = seg.airline?.name || seg.carrierName || '';
+      const dur     = seg.duration||'';
+      const ac      = seg.aircraft||'';
 
-      html += '<div class="seg-row">';
+      html += '<div class="seg-row" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:10px 0;border-bottom:1px solid var(--border)">';
+      // Departure
       html += '<div>';
-      html +=   '<div class="seg-t">'+dep+'</div>';
-      if (depDate) html += '<div class="seg-date">'+depDate+'</div>';
-      html +=   '<div class="seg-apt-name">'+(depCity||depApt)+(depApt?' ('+depApt+')':'')+'</div>';
+      html +=   '<div style="font-family:Syne,sans-serif;font-size:20px;font-weight:700;color:var(--navy)">'+dep+'</div>';
+      html +=   '<div style="font-size:11px;color:var(--muted);margin-top:2px">'+depDate+'</div>';
+      html +=   '<div style="font-size:11px;color:var(--muted)">'+(depCity||depApt)+'</div>';
+      html +=   '<div style="font-size:10px;color:var(--muted)">'+depApt+'</div>';
       html += '</div>';
-      html += '<div class="seg-mid">';
-      html +=   '<div class="seg-mid-dur">'+dur+'</div>';
-      html +=   '<div class="seg-mid-line"></div>';
-      html +=   '<div class="seg-info">'+airlineName+' '+fNum+(ac?' · '+ac:'')+'</div>';
+      // Middle
+      html += '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center">';
+      html +=   '<div style="font-size:11px;color:var(--muted)">'+dur+'</div>';
+      html +=   '<div style="width:100%;height:1px;background:#d0d8e8;position:relative"><span style="position:absolute;right:-4px;top:-7px;font-size:12px;color:var(--gold)">✈</span></div>';
+      html +=   '<div style="font-size:10px;color:var(--muted)">'+fNum+(ac?' · '+ac:'')+'</div>';
+      html +=   (airline ? '<div style="font-size:10px;color:var(--muted)">'+airline+'</div>' : '');
       html += '</div>';
+      // Arrival
       html += '<div style="text-align:right">';
-      html +=   '<div class="seg-t">'+arr+'</div>';
-      html +=   '<div class="seg-apt-name">'+(arrCity||arrApt)+(arrApt?' ('+arrApt+')':'')+'</div>';
+      html +=   '<div style="font-family:Syne,sans-serif;font-size:20px;font-weight:700;color:var(--navy)">'+arr+'</div>';
+      html +=   '<div style="font-size:11px;color:var(--muted);margin-top:2px">&nbsp;</div>';
+      html +=   '<div style="font-size:11px;color:var(--muted)">'+(arrCity||arrApt)+'</div>';
+      html +=   '<div style="font-size:10px;color:var(--muted)">'+arrApt+'</div>';
       html += '</div>';
       html += '</div>';
-
-      // Layover between segments
-      if (stops) {
-        const nextSeg = segs[i+1];
-        const layoverCity = seg.arrival?.city||seg.arrival?.airport||'';
-        html += '<div class="layover">🕐 Layover in '+layoverCity+'</div>';
+      // Layover
+      if (i < segs.length-1) {
+        const layCity = seg.arrival?.city||seg.arrival?.airport||'';
+        html += '<div style="background:rgba(201,168,76,.07);border-left:3px solid rgba(201,168,76,.3);padding:6px 10px;font-size:11px;color:var(--muted);margin:2px 0">🕐 Layover in '+layCity+'</div>';
       }
     });
     return html;
   }
 
   const journeys = offer.journeys||[];
-  let html = '<div class="seg-wrap">';
+  let html = '<div style="padding:10px 14px">';
   html += renderJourney(journeys[0], 'Outbound');
-  if (journeys[1]) {
-    html += '<div style="height:1px;background:var(--border);margin:8px 0"></div>';
+  if (journeys.length > 1 && journeys[1]) {
+    html += '<div style="margin:6px 0"></div>';
     html += renderJourney(journeys[1], 'Return');
   }
   html += '</div>';
@@ -3180,11 +3208,12 @@ function toggleAirline(iata, el) {
   const cb = el.querySelector('input');
   if (!cb) return;
   cb.checked = !cb.checked;
-  // Rebuild airline filter set from all checkboxes
+  // Rebuild exclusion set from unchecked boxes
   filters.airlines.clear();
-  document.querySelectorAll('.al-item input[type=checkbox]').forEach(c => {
-    if (!c.checked) filters.airlines.add(c.dataset.iata);
+  document.querySelectorAll('#airlineList .al-item input[type=checkbox]').forEach(c => {
+    if (!c.checked && c.dataset.iata) filters.airlines.add(c.dataset.iata);
   });
+  console.log('[BWT] Airline exclusions:', [...filters.airlines]);
   applyFilters();
 }
 
