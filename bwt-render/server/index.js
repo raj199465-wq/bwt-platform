@@ -494,6 +494,49 @@ const RESEND_KEY  = process.env.RESEND_API_KEY;
 // ── Email verification token store (in-memory, 1hr TTL) ──────────────────
 const verifyTokens = new Map(); // token -> { email, route, dep, returnUrl, expires }
 
+// ── POST /api/signin — send magic link to returning user ─────────────────
+app.post('/api/signin', async (req, res) => {
+  const { email, returnUrl } = req.body || {};
+  if (!email || !email.includes('@')) return res.status(400).json({ error: 'Invalid email' });
+
+  if (!process.env.RESEND_API_KEY) {
+    return res.json({ ok: true, autoPass: true });
+  }
+
+  const crypto = require('crypto');
+  const token = crypto.randomBytes(32).toString('hex');
+  verifyTokens.set(token, {
+    email, returnUrl: returnUrl || '/',
+    expires: Date.now() + 60 * 60 * 1000
+  });
+
+  const host = process.env.RENDER_EXTERNAL_URL || `https://${req.headers.host}`;
+  const link = `${host}/verify?token=${token}`;
+  const from = process.env.FROM_EMAIL || 'noreply@businessworldtravel.com';
+
+  await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json','Authorization':`Bearer ${process.env.RESEND_API_KEY}`},
+    body: JSON.stringify({
+      from,
+      to: [email],
+      subject: 'Your BWT sign-in link',
+      html: `<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;max-width:500px;margin:40px auto;padding:20px">
+        <h2 style="color:#0a1628">Sign in to Business World Travel</h2>
+        <p style="color:#5a6e8f;margin-bottom:24px">Click below to sign in and access all published fares.</p>
+        <a href="${link}" style="display:inline-block;background:#f0c040;color:#0a1628;font-weight:800;padding:14px 32px;border-radius:8px;text-decoration:none;font-size:15px">
+          Sign In →
+        </a>
+        <p style="color:#8fa3be;font-size:12px;margin-top:24px">Link expires in 1 hour. If you didn't request this, ignore this email.</p>
+        <p style="color:#8fa3be;font-size:12px">— Business World Travel &nbsp;|&nbsp; (212) 913-0450</p>
+      </body></html>`
+    })
+  });
+
+  log('info', 'signin', `Magic link sent to ${email}`);
+  return res.json({ ok: true });
+});
+
 app.get('/verify', (req, res) => {
   const { token } = req.query;
   const data = verifyTokens.get(token);
