@@ -612,8 +612,7 @@ setTimeout(function(){
       <div class="sp-bullet"><div class="sp-bullet-ico">🎧</div><div><div class="sp-bullet-title">Concierge support</div><div class="sp-bullet-sub">real people, real help</div></div></div>
       <div class="sp-bullet"><div class="sp-bullet-ico">🛡</div><div><div class="sp-bullet-title">No obligation</div><div class="sp-bullet-sub">it's free to check</div></div></div>
     </div>
-    <button class="sp-btn" onclick="openModal(null)">Check My Price Now →</button>
-    <div class="sp-note">Takes 30 seconds · No obligation</div>
+    <div class="sp-note" style="margin-bottom:14px">Click any <strong style="color:var(--gold2)">"Check If We Can Beat This"</strong> button on a fare card to request our rate.</div>
     <div class="sp-stars">★★★★★</div>
     <div class="sp-trust">Trusted by thousands of business travelers</div>
   </div>
@@ -2450,37 +2449,56 @@ function closeModal() {
   document.body.style.overflow='';
 }
 async function submitQuote() {
-  const first=document.getElementById('qFirst').value.trim();
-  const last =document.getElementById('qLast').value.trim();
-  const email=document.getElementById('qEmail').value.trim();
-  const phone=document.getElementById('qPhone').value.trim();
-  const co   =document.getElementById('qCo').value.trim();
-  const flex =document.getElementById('qFlex').value;
-  const notes=document.getElementById('qNotes').value.trim();
+  const first = (document.getElementById('fprFirst')?.value||'').trim();
+  const last  = (document.getElementById('fprLast')?.value||'').trim();
+  const email = (document.getElementById('fprEmail')?.value||'').trim();
+  const co    = (document.getElementById('fprCompany')?.value||'').trim();
+  const phone = (document.getElementById('fprPhone')?.value||'').trim();
 
-  if (!first||!last) { showToast('Please enter your full name.'); return; }
-  if (!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { document.getElementById('qEmailErr').classList.add('on'); document.getElementById('qEmail').focus(); return; }
-  document.getElementById('qEmailErr').classList.remove('on');
+  if (!first) { showToast('Please enter your first name.'); return; }
+  if (!last)  { showToast('Please enter your last name.');  return; }
+  if (!email || !email.includes('@')) { showToast('Please enter a valid work email.'); return; }
+  if (!co)    { showToast('Please enter your company name.'); return; }
 
-  const btn=document.getElementById('qBtn');
+  const btn = document.querySelector('#quoteModal .modal-submit');
+  if (btn) { btn.disabled=true; btn.textContent='Sending…'; }
+
+  const p = new URLSearchParams(location.search);
+  const orig = p.get('from')||'';
+  const dest = p.get('to')||'';
+  const dep  = p.get('dep')||'';
+  const ret  = p.get('ret')||null;
+  const price = document.getElementById('fprPrice')?.textContent||'';
+  const route = document.getElementById('fprRoute')?.textContent||`${orig} → ${dest}`;
 
   try {
-    const orig=document.getElementById('orig-val').value;
-    const dest=document.getElementById('dest-val').value;
-    const dep=document.getElementById('dep-date').value;
-    const ret=tripType==='round'?document.getElementById('ret-date').value:null;
-    const res=await fetch(CFG.quoteUrl,{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({firstName:first,lastName:last,email,phone,company:co,origin:orig,originName:acState.orig?.city||orig,destination:dest,destinationName:acState.dest?.city||dest,departureDate:dep,returnDate:ret,tripType,adults:1,cabin:'BUSINESS',flexibility:flex,notes,selectedOffer:quoteOffer||null}),
+    const r = await fetch(CFG.quoteUrl, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        firstName:first, lastName:last, email, phone, company:co,
+        origin:orig, destination:dest,
+        departureDate:dep, returnDate:ret,
+        cabin:'BUSINESS', adults:1,
+        publishedFare: price, route,
+        selectedOffer: window._currentQuoteOffer||null
+      })
     });
-    const data=await res.json();
-    if (!res.ok) { showToast(data.error||'Submit failed.','err'); return; }
-    document.getElementById('qRef').textContent=data.quoteId;
-    document.getElementById('mForm').style.display='none';
-    document.getElementById('qSuccess').classList.add('on');
+    const data = await r.json();
+    if (!r.ok) { showToast(data.error||'Submit failed. Please try again.','error'); return; }
+
+    // Show success inside modal
+    document.querySelector('#quoteModal .modal-body').innerHTML = `
+      <div style="text-align:center;padding:20px 0">
+        <div style="font-size:48px;margin-bottom:16px">✅</div>
+        <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--navy);margin-bottom:8px">Quote request sent!</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7">Thanks ${first}! We'll review your fare and come back with our best price — usually within the hour.</p>
+        <p style="font-size:12px;color:var(--muted);margin-top:16px">📞 (212) 913-0450 &nbsp;·&nbsp; quotes@businessworldtravel.com</p>
+        <button onclick="closeModal()" style="margin-top:20px;background:var(--gold2);border:none;border-radius:7px;padding:10px 24px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;color:var(--navy)">Done</button>
+      </div>`;
   } catch(e) {
-    showToast('Network error. Email quotes@businessworldtravel.com','err');
+    showToast('Network error. Please email quotes@businessworldtravel.com','error');
   } finally {
+    if (btn) { btn.disabled=false; btn.textContent='Send My Quote Request →'; }
   }
 }
 
@@ -3019,14 +3037,36 @@ async function submitSignin() {
 function openModal(offer) {
   const modal = document.getElementById('quoteModal');
   if (!modal) return;
+  window._currentQuoteOffer = offer || null;
   if (offer) {
     const price = Math.round(offer.totalPrice||0);
     const orig = offer.journeys?.[0]?.origin||'';
     const dest = offer.journeys?.[0]?.destination||'';
     const el = document.getElementById('fprPrice');
     const rt = document.getElementById('fprRoute');
-    if (el) el.textContent = '$' + price.toLocaleString();
+    if (el) el.textContent = '$' + price.toLocaleString() + ' published fare';
     if (rt) rt.textContent = orig + ' → ' + dest;
+  }
+  // Reset form
+  const body = modal.querySelector('.modal-body');
+  if (body && !body.querySelector('.modal-fare-box')) {
+    // Form was replaced by success message — rebuild it
+    body.innerHTML = `
+      <div class="modal-fare-box">
+        <div><div class="modal-fare-label">Published Fare</div><div class="modal-fare-price" id="fprPrice">${offer ? '$'+Math.round(offer.totalPrice||0).toLocaleString()+' published fare' : '$—'}</div></div>
+        <div style="text-align:right"><div class="modal-fare-label">Route</div><div style="font-size:13px;font-weight:600;color:var(--navy)" id="fprRoute">${offer ? (offer.journeys?.[0]?.origin||'')+'→'+(offer.journeys?.[0]?.destination||'') : '—'}</div></div>
+      </div>
+      <div class="modal-fields">
+        <div class="modal-field-row">
+          <div class="modal-field"><label>First Name</label><input id="fprFirst" placeholder="Sarah"></div>
+          <div class="modal-field"><label>Last Name</label><input id="fprLast" placeholder="Johnson"></div>
+        </div>
+        <div class="modal-field"><label>Work Email</label><input id="fprEmail" type="email" placeholder="sarah@company.com"></div>
+        <div class="modal-field"><label>Company</label><input id="fprCompany" placeholder="Acme Corp"></div>
+        <div class="modal-field"><label>Phone (optional)</label><input id="fprPhone" type="tel" placeholder="+1 (555) 000-0000"></div>
+      </div>
+      <button class="modal-submit" onclick="submitQuote()">Send My Quote Request →</button>
+      <div class="modal-note">No fees · No obligation · We respond within 1 hour</div>`;
   }
   modal.classList.add('open');
 }

@@ -386,12 +386,25 @@ footer{background:#060e1e;padding:24px clamp(16px,4vw,64px);display:flex;align-i
       </div>
       <div style="width:1px;height:40px;background:var(--border);flex-shrink:0;align-self:center"></div>
       <!-- Travelers -->
-      <div class="sf-box" style="flex:none;width:140px;cursor:pointer" onclick="this.querySelector('select').focus()">
-        <svg class="sf-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+      <div class="sf-box" style="flex:none;width:120px;cursor:pointer" onclick="this.querySelector('select').focus()">
+        <svg class="sf-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
         <div class="sf-box-inner">
           <div class="sf-lbl">Travelers</div>
-          <select id="pax-select" style="border:none;outline:none;background:transparent;font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--navy);cursor:pointer;width:100%;padding:0">
+          <select id="pax-select" style="border:none;outline:none;background:transparent;font-family:'Syne',sans-serif;font-size:13px;font-weight:600;color:var(--navy);cursor:pointer;width:100%;padding:0">
             <option>1 Passenger</option><option>2 Passengers</option><option>3 Passengers</option><option>4 Passengers</option>
+          </select>
+        </div>
+      </div>
+      <div style="width:1px;height:40px;background:var(--border);flex-shrink:0;align-self:center"></div>
+      <!-- Cabin Class -->
+      <div class="sf-box" style="flex:none;width:130px;cursor:pointer" onclick="this.querySelector('select').focus()">
+        <svg class="sf-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-4 0v2"/></svg>
+        <div class="sf-box-inner">
+          <div class="sf-lbl">Cabin</div>
+          <select id="cabin-select" style="border:none;outline:none;background:transparent;font-family:'Syne',sans-serif;font-size:13px;font-weight:600;color:var(--navy);cursor:pointer;width:100%;padding:0">
+            <option value="BUSINESS" selected>Business</option>
+            <option value="FIRST">First Class</option>
+            <option value="PREMIUM_ECONOMY">Prem. Economy</option>
           </select>
         </div>
       </div>
@@ -811,7 +824,7 @@ function doSearch() {
 
   const p = new URLSearchParams({
     from: orig, to: dest, dep,
-    cabin: 'BUSINESS',
+    cabin: document.getElementById('cabin-select')?.value || 'BUSINESS',
     fromN: origN, toN: destN,
   });
   if (tripType==='round' && ret) p.set('ret', ret);
