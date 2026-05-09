@@ -408,7 +408,7 @@ setTimeout(function(){
         <div><div class="modal-fare-label">Published Fare</div><div class="modal-fare-price" id="fprPrice">$—</div></div>
         <div style="text-align:right"><div class="modal-fare-label">Route</div><div style="font-size:13px;font-weight:600;color:var(--navy)" id="fprRoute">—</div></div>
       </div>
-      <div id="fprFlightDetails" style="font-size:11px;color:var(--muted);margin:-6px 0 12px;display:flex;flex-wrap:wrap;gap:4px"></div>
+      <div id="fprFlightDetails" style="background:#f5f7fa;border-radius:8px;padding:10px 14px;margin:-4px 0 14px;font-size:12px;color:var(--muted);line-height:1.7;display:none"></div>
       <div class="modal-fields">
         <div class="modal-field-row">
           <div class="modal-field"><label>First Name</label><input id="fprFirst" placeholder="Sarah"></div>
@@ -1254,37 +1254,82 @@ let filters = {stops:'any', maxPrice:99999, time:'any', airlines:new Set(), bag:
    INIT
 ═══════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
-  const p = new URLSearchParams(location.search);
-  const orig  = p.get('from')  || 'JFK';
-  const dest  = p.get('to')    || 'LHR';
-  const dep   = p.get('dep')   || daysOut(14);
-  const ret   = p.get('ret')   || '';
-  const pax   = p.get('pax')   || '1';
-  const cabin = p.get('cabin') || 'BUSINESS';
-  const origN = p.get('fromN') || orig;
-  const destN = p.get('toN')   || dest;
+  const p    = new URLSearchParams(location.search);
+  const orig = p.get('from')  || 'JFK';
+  const dest = p.get('to')    || 'LHR';
+  const dep  = p.get('dep')   || '';
+  const ret  = p.get('ret')   || '';
+  const pax  = p.get('pax')   || '1';
+  const cabin= p.get('cabin') || 'BUSINESS';
+  const origN= p.get('fromN') || orig;
+  const destN= p.get('toN')   || dest;
+  const isRound = !!ret;
 
-  document.getElementById('orig-input').value = origN!==orig ? `${origN} (${orig})` : orig;
-  document.getElementById('orig-val').value   = orig;
-  document.getElementById('dest-input').value = destN!==dest ? `${destN} (${dest})` : dest;
-  document.getElementById('dest-val').value   = dest;
-  const _depEl=document.getElementById('dep-date'); if(_depEl) _depEl.value=dep;
-  setDateDisplay('dep', dep);
-  // dep-date not in results page
-  // dep-date not in results page
-  // ret-date not in results page
-  if (ret) { document.getElementById('ret-date').value=ret; document.getElementById('ret-date').min=dep; }
-  document.getElementById('paxLbl').textContent   = `${pax} Adult${pax>1?'s':''}`;
-  document.getElementById('cabinLbl').textContent  = {BUSINESS:'Business',FIRST:'First Class',PREMIUM_ECONOMY:'Prem. Economy'}[cabin]||cabin;
-  acState.orig={iata:orig,city:origN};
-  acState.dest={iata:dest,city:destN};
-  document.getElementById('rhOrig').textContent = orig;
-  document.getElementById('rhDest').textContent = dest;
-  document.getElementById('rhDates').textContent = dep ? new Date(dep+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}) : '—';
-  const cabinEl = document.getElementById('rhCabin');
-  if (cabinEl) cabinEl.textContent = {BUSINESS:'Business Class',FIRST:'First Class',PREMIUM_ECONOMY:'Premium Economy'}[cabin]||cabin;
-  const specRoute = document.getElementById('rhSpecRoute');
-  if (specRoute) specRoute.textContent = origN + ' → ' + destN + ' routes';
+  // Store for use across page
+  window._searchDep  = dep;
+  window._searchRet  = ret;
+  window._searchOrig = orig;
+  window._searchDest = dest;
+  window._isRound    = isRound;
+
+  // Safe element setter
+  const set = (id, val) => { const el=document.getElementById(id); if(el) el.textContent=val; };
+  const setV= (id, val) => { const el=document.getElementById(id); if(el) el.value=val; };
+
+  // Nav inputs
+  setV('orig-val', orig);
+  setV('dest-val', dest);
+  const oi = document.getElementById('orig-input');
+  if (oi) oi.value = origN !== orig ? origN+' ('+orig+')' : orig;
+  const di = document.getElementById('dest-input');
+  if (di) di.value = destN !== dest ? destN+' ('+dest+')' : dest;
+
+  // Nav date displays
+  const fmtShort = {month:'short', day:'numeric'};
+  const fmtFull  = {month:'short', day:'numeric', year:'numeric'};
+  const depStr = dep ? new Date(dep+'T12:00:00').toLocaleDateString('en-US', fmtShort) : '';
+  const retStr = ret ? new Date(ret+'T12:00:00').toLocaleDateString('en-US', fmtFull)  : '';
+  const navDep = document.getElementById('nav-dep-display');
+  if (navDep) { navDep.textContent = depStr||'Depart'; navDep.classList.toggle('ph', !depStr); }
+  const navRet = document.getElementById('nav-ret-display');
+  if (navRet) { navRet.textContent = retStr||'Return'; navRet.classList.toggle('ph', !retStr); }
+
+  // Nav pax/cabin extras
+  const navPax   = document.getElementById('nav-pax');
+  if (navPax)   navPax.textContent = pax+' Adult'+(parseInt(pax)>1?'s':'');
+  const navCabin = document.getElementById('nav-cabin');
+  if (navCabin) navCabin.textContent = {BUSINESS:'Business',FIRST:'First Class',PREMIUM_ECONOMY:'Prem. Economy'}[cabin]||cabin;
+
+  // Results header
+  set('rhOrig', origN||orig);
+  set('rhDest', destN||dest);
+  const dateDisplay = depStr + (retStr ? ' – '+retStr : '');
+  set('rhDates', dateDisplay||'—');
+  set('rhCabin', {BUSINESS:'Business Class',FIRST:'First Class',PREMIUM_ECONOMY:'Premium Economy'}[cabin]||'Business Class');
+  const sr = document.getElementById('rhSpecRoute');
+  if (sr) sr.textContent = (origN||orig)+' → '+(destN||dest)+' routes';
+
+  // acState for autocomplete
+  acState.orig = {iata:orig, city:origN};
+  acState.dest = {iata:dest, city:destN};
+
+  // Handle verified param
+  const verifiedParam = p.get('verified');
+  if (verifiedParam) {
+    try {
+      const email = atob(verifiedParam);
+      if (email && email.includes('@')) {
+        localStorage.setItem(GATE_KEY, JSON.stringify({email, ts:Date.now()}));
+        window._gateVerified = true;
+        const clean = new URL(location.href);
+        clean.searchParams.delete('verified');
+        history.replaceState({}, '', clean.toString());
+        showToast('✓ Email verified — all fares unlocked!', 'success');
+      }
+    } catch(e) {}
+  }
+
+  updateNavAuth();
   doSearch();
 });
 
@@ -1518,6 +1563,7 @@ function buildCard(offer, idx, gated=false, starPriority=false) {
           <div class="fc-airline-name">${groupName}</div>
           <div class="fc-flight-num">${flightNum}</div>
           <div class="fc-aircraft">${aircraft}</div>
+          ${(()=>{const _ds=window._searchDep?new Date(window._searchDep+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}):'';const _rs=window._searchRet?new Date(window._searchRet+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'';return _ds?'<div style="font-size:9px;color:var(--muted);margin-top:4px">📅 '+_ds+(_rs?' → '+_rs:'')+'</div>':''})()}':''})()}
         </div>
       </div>
 
@@ -1555,7 +1601,7 @@ function buildCard(offer, idx, gated=false, starPriority=false) {
       <div class="fc-price-col" style="text-align:right;border-left:1px solid #e2e8f2;padding-left:12px">
         <div class="fc-pub-lbl">Published Fare</div>
         <div class="fc-price">$${price.toLocaleString()}</div>
-        <div class="fc-price-note">one way · per person</div>
+        <div class="fc-price-note">${window._isRound ? 'round trip · per person' : 'one way · per person'}</div>
         <button class="fc-cta" onclick="openModal(window._offerMap[${idx}])">
           Check If We Can<br>Beat This →
         </button>
@@ -2993,13 +3039,22 @@ function openModal(offer) {
     const el = document.getElementById('fprPrice');
     const rt = document.getElementById('fprRoute');
     const fd = document.getElementById('fprFlightDetails');
-    if (el) el.textContent = '$' + price.toLocaleString() + ' published fare';
-    if (rt) rt.textContent = orig + ' → ' + dest;
+    const _dep = window._searchDep||'';
+    const _ret = window._searchRet||'';
+    const _ds = _dep ? new Date(_dep+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
+    const _rs = _ret ? new Date(_ret+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
+    const tripLabel = window._isRound ? 'round trip' : 'one way';
+    if (el) el.textContent = '$' + price.toLocaleString() + ' · ' + tripLabel;
+    if (rt) rt.textContent = orig + ' → ' + dest + (_ds ? '  ·  ' + _ds + (_rs ? ' – '+_rs : '') : '');
     if (fd) {
-      fd.innerHTML = (depDate ? '<span>📅 '+depDate+'</span>' : '') +
-        (fNum ? ' &nbsp;·&nbsp; <span>✈ '+fNum+'</span>' : '') +
-        (aircraft ? ' &nbsp;·&nbsp; <span>'+aircraft+'</span>' : '') +
-        (carrier ? ' &nbsp;·&nbsp; <span>'+carrier+'</span>' : '');
+      const lines = [];
+      if (fNum) lines.push('✈ Flight: <strong>'+fNum+'</strong>'+(aircraft?' · '+aircraft:'')+(carrier?' ('+carrier+')':''));
+      if (_ds) lines.push('📅 Depart: <strong>'+_ds+'</strong>'+(depDate?' at '+fmtTime(depDt):''));
+      if (_rs) lines.push('🔄 Return: <strong>'+_rs+'</strong>');
+      lines.push('💺 Cabin: <strong>Business Class</strong>');
+      lines.push('👥 Passengers: <strong>'+('1 Adult')+'</strong>');
+      fd.innerHTML = lines.join('<br>');
+      fd.style.display = lines.length ? 'block' : 'none';
     }
   }
   // Reset form
@@ -3094,10 +3149,16 @@ function buildSegHtml(offer) {
     if (!journey) return '';
     const segs = journey.segments||[];
     if (!segs.length) return '';
+    // Get journey date from URL params
+    const _p = new URLSearchParams(location.search);
+    const journeyDate = label==='Return'
+      ? (_p.get('ret') ? new Date(_p.get('ret')+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}) : '')
+      : (_p.get('dep') ? new Date(_p.get('dep')+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}) : '');
     let html = '<div class="seg-hd" style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:8px 0 4px;border-top:1px solid var(--border);display:flex;align-items:center;gap:6px">';
     if (label==='Return') html += '<span style="color:var(--gold)">↩</span> ';
     else html += '<span>✈</span> ';
     html += label+' · '+(journey.origin||'')+' → '+(journey.destination||'');
+    if (journeyDate) html += '<span style="margin-left:auto;font-weight:400;text-transform:none;letter-spacing:0;color:var(--navy)">'+journeyDate+'</span>';
     html += '</div>';
     segs.forEach((seg,i) => {
       // Support both API formats: seg.flightNumber or seg.airline.iata + number
