@@ -2426,81 +2426,7 @@ document.addEventListener('mousedown', e => {
 /* ═══════════════════════════════════════════════
    MODAL
 ═══════════════════════════════════════════════ */
-function openModal(offerRaw) {
-  quoteOffer = offerRaw ? JSON.parse(typeof offerRaw==='string'?offerRaw:JSON.stringify(offerRaw)) : null;
-  const w=document.getElementById('fprWrap');
-  if (quoteOffer) {
-    const j=quoteOffer.journeys?.[0]||{};
-    document.getElementById('fprRoute').textContent=`${j.origin||''} → ${j.destination||''}`;
-    document.getElementById('fprMeta').textContent=`${quoteOffer.carrierName||''} · ${quoteOffer.outboundDuration||''} · ${quoteOffer.totalStops===0?'Non-stop':quoteOffer.totalStops+' stop(s)'}`;
-    document.getElementById('fprPrice').textContent=`$${Math.round(quoteOffer.totalPrice||0).toLocaleString()} ${quoteOffer.currency||'USD'} / person (published fare)`;
-    w.style.display='block';
-  } else {
-    w.style.display='none';
-  }
-  document.getElementById('mForm').style.display='block';
-  document.getElementById('qSuccess').classList.remove('on');
-  document.getElementById('qModal').classList.add('on');
-  document.body.style.overflow='hidden';
-  setTimeout(()=>document.getElementById('qFirst').focus(),80);
-}
-function closeModal() {
-  document.getElementById('qModal').classList.remove('on');
-  document.body.style.overflow='';
-}
-async function submitQuote() {
-  const first = (document.getElementById('fprFirst')?.value||'').trim();
-  const last  = (document.getElementById('fprLast')?.value||'').trim();
-  const email = (document.getElementById('fprEmail')?.value||'').trim();
-  const co    = (document.getElementById('fprCompany')?.value||'').trim();
-  const phone = (document.getElementById('fprPhone')?.value||'').trim();
-
-  if (!first) { showToast('Please enter your first name.'); return; }
-  if (!last)  { showToast('Please enter your last name.');  return; }
-  if (!email || !email.includes('@')) { showToast('Please enter a valid work email.'); return; }
-  if (!co)    { showToast('Please enter your company name.'); return; }
-
-  const btn = document.querySelector('#quoteModal .modal-submit');
-  if (btn) { btn.disabled=true; btn.textContent='Sending…'; }
-
-  const p = new URLSearchParams(location.search);
-  const orig = p.get('from')||'';
-  const dest = p.get('to')||'';
-  const dep  = p.get('dep')||'';
-  const ret  = p.get('ret')||null;
-  const price = document.getElementById('fprPrice')?.textContent||'';
-  const route = document.getElementById('fprRoute')?.textContent||`${orig} → ${dest}`;
-
-  try {
-    const r = await fetch(CFG.quoteUrl, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        firstName:first, lastName:last, email, phone, company:co,
-        origin:orig, destination:dest,
-        departureDate:dep, returnDate:ret,
-        cabin:'BUSINESS', adults:1,
-        publishedFare: price, route,
-        selectedOffer: window._currentQuoteOffer||null
-      })
-    });
-    const data = await r.json();
-    if (!r.ok) { showToast(data.error||'Submit failed. Please try again.','error'); return; }
-
-    // Show success inside modal
-    document.querySelector('#quoteModal .modal-body').innerHTML = `
-      <div style="text-align:center;padding:20px 0">
-        <div style="font-size:48px;margin-bottom:16px">✅</div>
-        <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--navy);margin-bottom:8px">Quote request sent!</div>
-        <p style="font-size:13px;color:var(--muted);line-height:1.7">Thanks ${first}! We'll review your fare and come back with our best price — usually within the hour.</p>
-        <p style="font-size:12px;color:var(--muted);margin-top:16px">📞 (212) 913-0450 &nbsp;·&nbsp; quotes@businessworldtravel.com</p>
-        <button onclick="closeModal()" style="margin-top:20px;background:var(--gold2);border:none;border-radius:7px;padding:10px 24px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;color:var(--navy)">Done</button>
-      </div>`;
-  } catch(e) {
-    showToast('Network error. Please email quotes@businessworldtravel.com','error');
-  } finally {
-    if (btn) { btn.disabled=false; btn.textContent='Send My Quote Request →'; }
-  }
-}
+// openModal handled below
 
 /* ═══════════════════════════════════════════════
    HELPERS
@@ -3070,29 +2996,61 @@ function openModal(offer) {
   }
   modal.classList.add('open');
 }
+async function submitQuote() {
+  const first = (document.getElementById('fprFirst')?.value||'').trim();
+  const last  = (document.getElementById('fprLast')?.value||'').trim();
+  const email = (document.getElementById('fprEmail')?.value||'').trim();
+  const co    = (document.getElementById('fprCompany')?.value||'').trim();
+  const phone = (document.getElementById('fprPhone')?.value||'').trim();
+
+  if (!first) { showToast('Please enter your first name.'); return; }
+  if (!last)  { showToast('Please enter your last name.');  return; }
+  if (!email || !email.includes('@')) { showToast('Please enter a valid work email.'); return; }
+  if (!co)    { showToast('Please enter your company name.'); return; }
+
+  const btn = document.querySelector('#quoteModal .modal-submit');
+  if (btn) { btn.disabled=true; btn.textContent='Sending...'; }
+
+  const p = new URLSearchParams(location.search);
+  const orig = p.get('from')||'';
+  const dest = p.get('to')||'';
+  const dep  = p.get('dep')||'';
+  const ret  = p.get('ret')||null;
+  const price = document.getElementById('fprPrice')?.textContent||'';
+  const route = document.getElementById('fprRoute')?.textContent||orig+' to '+dest;
+
+  try {
+    const r = await fetch(CFG.quoteUrl, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        firstName:first, lastName:last, email, phone, company:co,
+        origin:orig, destination:dest, departureDate:dep, returnDate:ret,
+        cabin:'BUSINESS', adults:1, publishedFare:price, route,
+        selectedOffer: window._currentQuoteOffer||null
+      })
+    });
+    const data = await r.json();
+    if (!r.ok) { showToast(data.error||'Submit failed.','error'); return; }
+    document.querySelector('#quoteModal .modal-body').innerHTML =
+      '<div style="text-align:center;padding:20px 0">' +
+      '<div style="font-size:48px;margin-bottom:16px">&#x2705;</div>' +
+      '<div style="font-family:Syne,sans-serif;font-size:18px;font-weight:700;color:#0a1628;margin-bottom:8px">Quote request sent!</div>' +
+      '<p style="font-size:13px;color:#6b7fa3;line-height:1.7">Thanks ' + first + '! We will review your fare and come back with our best price — usually within the hour.</p>' +
+      '<p style="font-size:12px;color:#6b7fa3;margin-top:16px">(212) 913-0450 · quotes@businessworldtravel.com</p>' +
+      '<button onclick="closeModal()" style="margin-top:20px;background:#f0c040;border:none;border-radius:7px;padding:10px 24px;font-family:Syne,sans-serif;font-size:13px;font-weight:700;cursor:pointer;color:#0a1628">Done</button>' +
+      '</div>';
+  } catch(e) {
+    showToast('Network error. Please email quotes@businessworldtravel.com','error');
+  } finally {
+    if (btn) { btn.disabled=false; btn.textContent='Send My Quote Request'; }
+  }
+}
+
 function closeModal() {
   const modal = document.getElementById('quoteModal');
   if (modal) modal.classList.remove('open');
 }
-async function submitQuote() {
-  const first = document.getElementById('fprFirst')?.value.trim();
-  const last = document.getElementById('fprLast')?.value.trim();
-  const email = document.getElementById('fprEmail')?.value.trim();
-  const company = document.getElementById('fprCompany')?.value.trim();
-  if (!first||!last||!email||!company) { showToast('Please fill in all required fields','error'); return; }
-  showToast('Quote request sent! We respond within 1 hour.','success');
-  closeModal();
-}
-// Close modal on bg click
-document.addEventListener('click', e => {
-  if (e.target.id === 'quoteModal') closeModal();
-  if (e.target.id === 'signinModal') document.getElementById('signinModal').classList.remove('open');
-});
-// Keyboard escape
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModal();
-});
-
+// submitQuote handled below
 function buildAirlineFilter(offers) {
   const seen = {};
   offers.forEach(o => {
