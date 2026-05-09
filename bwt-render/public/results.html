@@ -3062,27 +3062,70 @@ async function submitQuote() {
 }
 
 function buildSegHtml(offer) {
-  const segs = offer.journeys?.[0]?.segments||[];
-  const j = offer.journeys?.[0]||{};
-  let html = '<div class="seg-wrap"><div class="seg-hd">Outbound · '+(j.origin||'')+' → '+(j.destination||'')+'</div>';
-  segs.forEach(seg => {
-    const dep = fmtTime(seg.departure?.datetime||'');
-    const arr = fmtTime(seg.arrival?.datetime||'');
-    const depDate = seg.departure?.datetime ? new Date(seg.departure.datetime).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}) : '';
-    const depCity = (seg.departure?.city||seg.departure?.airport||'');
-    const arrCity = (seg.arrival?.city||seg.arrival?.airport||'');
-    const depApt  = seg.departure?.airport||'';
-    const arrApt  = seg.arrival?.airport||'';
-    const airline = seg.airline?.name||seg.airline?.iata||'';
-    const fNum    = (seg.airline?.iata||'')+' '+(seg.flightNumber||'');
-    const dur     = seg.duration||'';
-    const aircraft= seg.aircraft||'';
-    html += '<div class="seg-row">';
-    html += '<div><div class="seg-t">'+dep+'</div><div class="seg-date">'+depDate+'</div><div class="seg-apt-name">'+depCity+' ('+depApt+')</div></div>';
-    html += '<div class="seg-mid"><div class="seg-mid-dur">'+dur+'</div><div class="seg-mid-line"></div><div class="seg-info">'+airline+' '+fNum+(aircraft?' · '+aircraft:'')+'</div></div>';
-    html += '<div style="text-align:right"><div class="seg-t">'+arr+'</div><div class="seg-apt-name">'+arrCity+' ('+arrApt+')</div></div>';
-    html += '</div>';
-  });
+  // Parse datetime safely — handles both "2026-05-18T19:20:00" and "2026-05-18 19:20:00"
+  function safeFmtDate(dt) {
+    if (!dt) return '';
+    try {
+      // Replace space with T for ISO compatibility
+      const d = new Date(dt.replace(' ', 'T'));
+      if (isNaN(d.getTime())) return '';
+      return d.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'});
+    } catch(e) { return ''; }
+  }
+
+  function renderJourney(journey, label) {
+    if (!journey) return '';
+    const segs = journey.segments||[];
+    if (!segs.length) return '';
+    let html = '<div class="seg-hd">'+label+' · '+(journey.origin||'')+' → '+(journey.destination||'')+'</div>';
+    segs.forEach((seg, i) => {
+      const dep = fmtTime(seg.departure?.datetime||'');
+      const arr = fmtTime(seg.arrival?.datetime||'');
+      const depDate = safeFmtDate(seg.departure?.datetime);
+      const depCity = seg.departure?.city||'';
+      const arrCity = seg.arrival?.city||'';
+      const depApt  = seg.departure?.airport||'';
+      const arrApt  = seg.arrival?.airport||'';
+      const airlineName = seg.airline?.name||seg.airline?.iata||'';
+      const fNum = (seg.airline?.iata ? seg.airline.iata+' ' : '') + (seg.flightNumber||'');
+      const dur  = seg.duration||'';
+      const ac   = seg.aircraft||'';
+      const stops = segs.length > 1 && i < segs.length-1;
+
+      html += '<div class="seg-row">';
+      html += '<div>';
+      html +=   '<div class="seg-t">'+dep+'</div>';
+      if (depDate) html += '<div class="seg-date">'+depDate+'</div>';
+      html +=   '<div class="seg-apt-name">'+(depCity||depApt)+(depApt?' ('+depApt+')':'')+'</div>';
+      html += '</div>';
+      html += '<div class="seg-mid">';
+      html +=   '<div class="seg-mid-dur">'+dur+'</div>';
+      html +=   '<div class="seg-mid-line"></div>';
+      html +=   '<div class="seg-info">'+airlineName+' '+fNum+(ac?' · '+ac:'')+'</div>';
+      html += '</div>';
+      html += '<div style="text-align:right">';
+      html +=   '<div class="seg-t">'+arr+'</div>';
+      html +=   '<div class="seg-apt-name">'+(arrCity||arrApt)+(arrApt?' ('+arrApt+')':'')+'</div>';
+      html += '</div>';
+      html += '</div>';
+
+      // Layover between segments
+      if (stops) {
+        const nextSeg = segs[i+1];
+        const layoverCity = seg.arrival?.city||seg.arrival?.airport||'';
+        html += '<div class="layover">🕐 Layover in '+layoverCity+'</div>';
+      }
+    });
+    return html;
+  }
+
+  const journeys = offer.journeys||[];
+  let html = '<div class="seg-wrap">';
+  html += renderJourney(journeys[0], 'Outbound');
+  if (journeys[1]) {
+    html += '<div style="height:1px;background:var(--border);margin:8px 0"></div>';
+    html += renderJourney(journeys[1], 'Return');
+  }
   html += '</div>';
   return html;
 }
