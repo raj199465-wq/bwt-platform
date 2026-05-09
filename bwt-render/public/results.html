@@ -335,6 +335,7 @@ setTimeout(function(){
 </script>
 
 <!-- LOADER -->
+<div id="toast" class="toast"></div>
 <div id="bwt-loader">
   <div class="loader-ring"></div>
   <div class="loader-title">Finding live fares — <span>we'll check if we can beat every one</span></div>
@@ -1264,9 +1265,9 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('dest-val').value   = dest;
   const _depEl=document.getElementById('dep-date'); if(_depEl) _depEl.value=dep;
   setDateDisplay('dep', dep);
-  document.getElementById('dep-date').min = new Date().toISOString().slice(0,10);
-  document.getElementById('dep-date').addEventListener('change', function(){ setDateDisplay('dep', this.value); });
-  document.getElementById('ret-date').addEventListener('change', function(){ setDateDisplay('ret', this.value); });
+  // dep-date not in results page
+  // dep-date not in results page
+  // ret-date not in results page
   if (ret) { document.getElementById('ret-date').value=ret; document.getElementById('ret-date').min=dep; }
   document.getElementById('paxLbl').textContent   = `${pax} Adult${pax>1?'s':''}`;
   document.getElementById('cabinLbl').textContent  = {BUSINESS:'Business',FIRST:'First Class',PREMIUM_ECONOMY:'Prem. Economy'}[cabin]||cabin;
@@ -2480,7 +2481,7 @@ function getHour(dt) { try { return new Date(dt).getHours(); } catch { return 0;
 function daysOut(n) { const d=new Date(); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); }
 function setRhCount(txt) { document.getElementById('rhCount').innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg> ${txt}`; }
 function setBadge(type,txt) { const b=document.getElementById('rhBadge'); b.className='badge '+type; b.textContent=txt; }
-function showToast(msg,type='') { const t=document.getElementById('toast'); t.textContent=msg; t.className='toast'+(type?' '+type:''); t.classList.add('on'); setTimeout(()=>t.classList.remove('on'),4000); }
+function showToast(msg,type='') { let t=document.getElementById('toast'); if(!t){t=document.createElement('div');t.id='toast';document.body.appendChild(t);} t.textContent=msg; t.className='toast'+(type?' '+type:''); t.classList.add('on'); setTimeout(()=>t.classList.remove('on'),4000); }
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'){acClose();closeModal();} });
 
 // ════════════════════════════════════════════
