@@ -64,6 +64,12 @@ body{font-family:'DM Sans',sans-serif;color:var(--text);background:#f0f2f5;min-h
 .tn-extras{display:flex;align-items:center;gap:3px;margin-left:6px;flex-shrink:0}
 .tn-extra{font-size:11px;color:rgba(255,255,255,.55);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:5px;padding:4px 8px;display:flex;align-items:center;gap:4px;cursor:pointer;white-space:nowrap}
 .tn-extra svg{color:rgba(201,168,76,.6)}
+.nav-signin-btn{background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);border-radius:6px;padding:5px 12px;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--gold);cursor:pointer;display:flex;align-items:center;gap:5px;transition:background .15s}
+.nav-signin-btn:hover{background:rgba(201,168,76,.25)}
+.nav-user{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:5px 12px;font-size:11px;color:rgba(255,255,255,.7);display:flex;align-items:center;gap:6px;max-width:180px}
+.nav-user-email{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'Syne',sans-serif;font-weight:600}
+.nav-signout{background:none;border:none;color:rgba(255,255,255,.35);font-size:10px;cursor:pointer;padding:0;margin-left:4px}
+.nav-signout:hover{color:rgba(255,255,255,.7)}
 .ac-sug{position:absolute;top:calc(100% + 4px);left:0;width:280px;background:#0d1b3e;border:1px solid rgba(200,168,75,.25);border-radius:8px;box-shadow:0 8px 32px rgba(0,0,0,.6);overflow:hidden;z-index:9999;display:none}
 .ac-sug.open{display:block;animation:acIn .1s ease both}
 @keyframes acIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
@@ -357,6 +363,36 @@ setTimeout(function(){
 </div>
 
 <!-- QUOTE MODAL -->
+<!-- SIGN IN MODAL -->
+<div class="modal-bg" id="signinModal">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-head">
+      <div>
+        <div class="modal-head-title">Sign In</div>
+        <div class="modal-head-sub">We'll send you a secure link — no password needed</div>
+      </div>
+      <button class="modal-close" onclick="document.getElementById('signinModal').classList.remove('open')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="signin-form">
+        <div class="modal-field" style="margin-bottom:14px">
+          <label>Work Email</label>
+          <input id="signinEmail" type="email" placeholder="you@yourcompany.com">
+        </div>
+        <div id="signin-error" style="font-size:12px;color:#e05555;margin-bottom:8px;display:none"></div>
+        <button class="modal-submit" onclick="submitSignin()">Send Sign In Link →</button>
+        <div class="modal-note">No password · Link expires in 1 hour · Business emails only</div>
+      </div>
+      <div id="signin-sent" style="display:none;text-align:center;padding:20px 0">
+        <div style="font-size:48px;margin-bottom:12px">📧</div>
+        <div style="font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:var(--navy);margin-bottom:8px">Check your email</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7">We sent a sign-in link to<br><strong id="signin-email-sent" style="color:var(--navy)"></strong><br><br>Click the link to sign in and access all fares.</p>
+        <p style="font-size:11px;color:var(--muted);margin-top:16px">Didn't get it? Check your spam folder.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal-bg" id="quoteModal">
   <div class="modal">
     <div class="modal-head">
@@ -433,6 +469,7 @@ setTimeout(function(){
     <div class="tn-extra"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span id="nav-pax">1 Adult</span></div>
     <div class="tn-extra"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-4 0v2"/></svg><span id="nav-cabin">Business</span></div>
   </div>
+  <div id="nav-auth" style="margin-left:8px;flex-shrink:0"></div>
 </nav>
 
 <!-- RESULTS HEADER -->
@@ -707,6 +744,7 @@ function gatePass() {
   document.querySelectorAll('.gate-overlay').forEach(el => el.remove());
   // Mark as verified so renderCards shows all cards
   window._gateVerified = true;
+  updateNavAuth();
   // Re-render with full access
   if (window.allOffers && window.allOffers.length) {
     window.filteredOffers = [...window.allOffers];
@@ -2791,6 +2829,9 @@ let navDepPicker, navRetPicker;
 document.addEventListener('DOMContentLoaded', () => {
   const p = new URLSearchParams(location.search);
 
+  // Update nav auth state
+  updateNavAuth();
+
   // Handle email verification redirect
   const verifiedParam = p.get('verified');
   if (verifiedParam) {
@@ -2804,6 +2845,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const clean = new URL(location.href);
         clean.searchParams.delete('verified');
         history.replaceState({}, '', clean.toString());
+        updateNavAuth();
         showToast('✓ Email verified — all fares unlocked!', 'success');
       }
     } catch(e) { console.warn('Verify param error', e); }
@@ -2892,6 +2934,87 @@ function hideLdr(){
   setTimeout(()=>{ldr.classList.add('fade-out');setTimeout(()=>{ldr.style.display='none';},500);},wait);
 }
 
+// ── Auth / Sign In ──────────────────────────────────────
+function updateNavAuth() {
+  const saved = localStorage.getItem(GATE_KEY);
+  const slot = document.getElementById('nav-auth');
+  if (!slot) return;
+  if (saved) {
+    try {
+      const { email } = JSON.parse(saved);
+      if (email) {
+        slot.innerHTML = `<div class="nav-user">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span class="nav-user-email">${email}</span>
+          <button class="nav-signout" onclick="signOut()" title="Sign out">✕</button>
+        </div>`;
+        return;
+      }
+    } catch(e) {}
+  }
+  slot.innerHTML = `<button class="nav-signin-btn" onclick="document.getElementById('signinModal').classList.add('open')">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+    Sign In
+  </button>`;
+}
+
+function signOut() {
+  localStorage.removeItem(GATE_KEY);
+  window._gateVerified = false;
+  updateNavAuth();
+  // Re-render with gate back
+  if (window.allOffers && window.allOffers.length) {
+    renderCards(window.allOffers);
+  }
+  showToast('Signed out');
+}
+
+async function submitSignin() {
+  const email = document.getElementById('signinEmail')?.value.trim();
+  const errEl = document.getElementById('signin-error');
+  if (!email || !email.includes('@')) {
+    errEl.textContent = 'Please enter a valid email address';
+    errEl.style.display = 'block';
+    return;
+  }
+  const domain = email.split('@')[1]?.toLowerCase();
+  const FREE_DOMAINS_SI = ['gmail.com','yahoo.com','hotmail.com','outlook.com','live.com','icloud.com','me.com','aol.com','msn.com','protonmail.com','proton.me'];
+  if (FREE_DOMAINS_SI.includes(domain)) {
+    errEl.textContent = 'Please use your work email address';
+    errEl.style.display = 'block';
+    return;
+  }
+  errEl.style.display = 'none';
+  const btn = document.querySelector('#signin-form .modal-submit');
+  if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+
+  try {
+    const r = await fetch('/api/signin', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ email, returnUrl: location.href })
+    });
+    const d = await r.json();
+    if (d.autoPass) {
+      // No Resend key — sign in directly
+      localStorage.setItem(GATE_KEY, JSON.stringify({ email, ts: Date.now() }));
+      window._gateVerified = true;
+      document.getElementById('signinModal').classList.remove('open');
+      updateNavAuth();
+      if (window.allOffers) renderCards(window.allOffers);
+      showToast('✓ Signed in!', 'success');
+    } else {
+      document.getElementById('signin-form').style.display = 'none';
+      document.getElementById('signin-sent').style.display = 'block';
+      document.getElementById('signin-email-sent').textContent = email;
+    }
+  } catch(e) {
+    if (btn) { btn.disabled = false; btn.textContent = 'Send Sign In Link →'; }
+    errEl.textContent = 'Something went wrong. Please try again.';
+    errEl.style.display = 'block';
+  }
+}
+
 // ── Modal helpers ──
 function openModal(offer) {
   const modal = document.getElementById('quoteModal');
@@ -2923,6 +3046,7 @@ async function submitQuote() {
 // Close modal on bg click
 document.addEventListener('click', e => {
   if (e.target.id === 'quoteModal') closeModal();
+  if (e.target.id === 'signinModal') document.getElementById('signinModal').classList.remove('open');
 });
 // Keyboard escape
 document.addEventListener('keydown', e => {
