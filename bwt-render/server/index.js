@@ -540,15 +540,15 @@ app.post('/api/quote', async (req, res) => {
         const verifyLink = `${host}/verify?token=${token}`;
         log('info', 'gate', `Verify link for ${email}: ${verifyLink}`);
 
-        const notifyTo = process.env.AGENT_EMAIL || email;
+        const notifyTo = process.env.AGENT_EMAIL || 'quotes@businessworldtravel.com';
 
-        // Send verification email to user
+        // Send verification email directly to user
         const r1 = await fetch('https://api.resend.com/emails', {
           method: 'POST',
           headers: {'Content-Type':'application/json','Authorization':`Bearer ${process.env.RESEND_API_KEY}`},
           body: JSON.stringify({
-            from: 'onboarding@resend.dev',
-            to: [notifyTo],
+            from: process.env.FROM_EMAIL || 'noreply@businessworldtravel.com',
+            to: [email],
             subject: 'Verify your email to access all BWT fares',
             html: `<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;max-width:500px;margin:40px auto;padding:20px">
               <img src="https://bwt-platform.onrender.com/logo.png" alt="BWT" style="height:40px;margin-bottom:24px" onerror="this.style.display='none'">
@@ -571,7 +571,7 @@ app.post('/api/quote', async (req, res) => {
             method: 'POST',
             headers: {'Content-Type':'application/json','Authorization':`Bearer ${process.env.RESEND_API_KEY}`},
             body: JSON.stringify({
-              from: 'onboarding@resend.dev',
+              from: process.env.FROM_EMAIL || 'noreply@businessworldtravel.com',
               to: [process.env.AGENT_EMAIL],
               subject: `New fare access request: ${email} — ${route}`,
               html: `<p><strong>${email}</strong> requested access for <strong>${route}</strong> on ${dep}.</p><p>A verification email has been sent to them.</p>`
