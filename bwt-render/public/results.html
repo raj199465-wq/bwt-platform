@@ -416,6 +416,10 @@ setTimeout(function(){
         <div class="modal-field"><label>Work Email</label><input id="fprEmail" type="email" placeholder="sarah@company.com"></div>
         <div class="modal-field"><label>Company</label><input id="fprCompany" placeholder="Acme Corp"></div>
         <div class="modal-field"><label>Phone (optional)</label><input id="fprPhone" type="tel" placeholder="+1 (555) 000-0000"></div>
+        <div class="modal-field">
+          <label>Found a cheaper fare? Tell us (optional)</label>
+          <textarea id="fprNotes" placeholder="e.g. I found it on Google Flights for $2,800 on the same BA flight..." style="width:100%;border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;resize:vertical;min-height:72px;transition:border-color .15s" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+        </div>
       </div>
       <button class="modal-submit" onclick="submitQuote()">Send My Quote Request →</button>
       <div class="modal-note">No fees · No obligation · We respond within 1 hour</div>
@@ -1564,6 +1568,11 @@ function buildCard(offer, idx, gated=false, starPriority=false) {
       </span>
       <span class="fc-footer-right">Last checked: 2 mins ago</span>
     </div>
+    <div class="fc-tog" onclick="toggleCard(this)">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      Flight details
+    </div>
+    <div class="fc-segs" id="segs-${idx}" data-offer-idx="${idx}"></div>
   `;
 
   if (gated) {
@@ -1993,7 +2002,7 @@ function applyFilters() {
   filteredOffers=allOffers.filter(o=>{
     if (filters.stops!=='any' && o.totalStops!==parseInt(filters.stops)) return false;
     if (o.totalPrice>filters.maxPrice) return false;
-    if (filters.airlines.size>0 && !filters.airlines.has(o.validatingCarrier)) return false;
+    if (filters.airlines.size>0 && filters.airlines.has(o.validatingCarrier)) return false;
     if (filters.bag && !o.baggageSummary?.included) return false;
     if (filters.ref && o.refundable!==true) return false;
     if (filters.time!=='any') {
@@ -2991,6 +3000,10 @@ function openModal(offer) {
         <div class="modal-field"><label>Work Email</label><input id="fprEmail" type="email" placeholder="sarah@company.com"></div>
         <div class="modal-field"><label>Company</label><input id="fprCompany" placeholder="Acme Corp"></div>
         <div class="modal-field"><label>Phone (optional)</label><input id="fprPhone" type="tel" placeholder="+1 (555) 000-0000"></div>
+        <div class="modal-field">
+          <label>Found a cheaper fare? Tell us (optional)</label>
+          <textarea id="fprNotes" placeholder="e.g. I found it on Google Flights for $2,800 on the same BA flight..." style="width:100%;border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;resize:vertical;min-height:72px;transition:border-color .15s" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+        </div>
       </div>
       <button class="modal-submit" onclick="submitQuote()">Send My Quote Request →</button>
       <div class="modal-note">No fees · No obligation · We respond within 1 hour</div>`;
@@ -3027,6 +3040,7 @@ async function submitQuote() {
         firstName:first, lastName:last, email, phone, company:co,
         origin:orig, destination:dest, departureDate:dep, returnDate:ret,
         cabin:'BUSINESS', adults:1, publishedFare:price, route,
+        notes: (document.getElementById('fprNotes')?.value||'').trim(),
         selectedOffer: window._currentQuoteOffer||null
       })
     });
@@ -3047,6 +3061,52 @@ async function submitQuote() {
   }
 }
 
+function buildSegHtml(offer) {
+  const segs = offer.journeys?.[0]?.segments||[];
+  const j = offer.journeys?.[0]||{};
+  let html = '<div class="seg-wrap"><div class="seg-hd">Outbound · '+(j.origin||'')+' → '+(j.destination||'')+'</div>';
+  segs.forEach(seg => {
+    const dep = fmtTime(seg.departure?.datetime||'');
+    const arr = fmtTime(seg.arrival?.datetime||'');
+    const depDate = seg.departure?.datetime ? new Date(seg.departure.datetime).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}) : '';
+    const depCity = (seg.departure?.city||seg.departure?.airport||'');
+    const arrCity = (seg.arrival?.city||seg.arrival?.airport||'');
+    const depApt  = seg.departure?.airport||'';
+    const arrApt  = seg.arrival?.airport||'';
+    const airline = seg.airline?.name||seg.airline?.iata||'';
+    const fNum    = (seg.airline?.iata||'')+' '+(seg.flightNumber||'');
+    const dur     = seg.duration||'';
+    const aircraft= seg.aircraft||'';
+    html += '<div class="seg-row">';
+    html += '<div><div class="seg-t">'+dep+'</div><div class="seg-date">'+depDate+'</div><div class="seg-apt-name">'+depCity+' ('+depApt+')</div></div>';
+    html += '<div class="seg-mid"><div class="seg-mid-dur">'+dur+'</div><div class="seg-mid-line"></div><div class="seg-info">'+airline+' '+fNum+(aircraft?' · '+aircraft:'')+'</div></div>';
+    html += '<div style="text-align:right"><div class="seg-t">'+arr+'</div><div class="seg-apt-name">'+arrCity+' ('+arrApt+')</div></div>';
+    html += '</div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+function toggleCard(btn) {
+  const card = btn.closest('.fcard');
+  if (!card) return;
+  const segsEl = card.querySelector('.fc-segs');
+  if (!segsEl) return;
+  // Populate on first open
+  if (!segsEl.dataset.populated) {
+    const idx = parseInt(segsEl.dataset.offerIdx);
+    const offer = window._offerMap?.[idx];
+    if (offer) {
+      segsEl.innerHTML = buildSegHtml(offer);
+      segsEl.dataset.populated = '1';
+    }
+  }
+  const open = segsEl.classList.toggle('open');
+  btn.innerHTML = open
+    ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg> Hide details'
+    : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg> Flight details';
+}
+
 function closeModal() {
   const modal = document.getElementById('quoteModal');
   if (modal) modal.classList.remove('open');
@@ -3056,23 +3116,32 @@ function buildAirlineFilter(offers) {
   const seen = {};
   offers.forEach(o => {
     const iata = o.validatingCarrier||'';
-    const name = o.groupName||iata;
+    const name = o.groupName||o.validatingCarrierName||iata;
     if (iata && !seen[iata]) seen[iata] = name;
   });
   const list = document.getElementById('airlineList');
   if (!list) return;
-  if (!Object.keys(seen).length) return;
-  list.innerHTML = Object.entries(seen).map(([iata,name]) => `
+  const entries = Object.entries(seen);
+  if (!entries.length) return;
+  list.innerHTML = entries.map(([iata,name]) => `
     <div class="al-item" onclick="toggleAirline('${iata}',this)">
       <input type="checkbox" checked data-iata="${iata}">
       <img class="al-logo" src="https://www.gstatic.com/flights/airline_logos/70px/${iata}.png" onerror="this.style.display='none'" alt="">
       <span class="al-name">${name}</span>
     </div>
   `).join('');
+  // Reset exclusion set when new results load
+  filters.airlines.clear();
 }
 function toggleAirline(iata, el) {
   const cb = el.querySelector('input');
-  if (cb) cb.checked = !cb.checked;
+  if (!cb) return;
+  cb.checked = !cb.checked;
+  // Rebuild airline filter set from all checkboxes
+  filters.airlines.clear();
+  document.querySelectorAll('.al-item input[type=checkbox]').forEach(c => {
+    if (!c.checked) filters.airlines.add(c.dataset.iata);
+  });
   applyFilters();
 }
 
