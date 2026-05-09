@@ -652,8 +652,11 @@ app.post('/api/quote', async (req, res) => {
   const tripLbl  = tripType === 'round' ? 'Round Trip' : tripType === 'multi' ? 'Multi-City' : 'One Way';
   const routeLbl = `${originName||origin} (${origin}) → ${destinationName||destination} (${destination})`;
   const dateLbl  = returnDate ? `${departureDate} → ${returnDate}` : departureDate;
+  const flightDetails = req.body.flightDetails || '';
+  const publishedFare = req.body.publishedFare || '';
+  const clientNotes   = req.body.notes || '';
 
-  log('info', 'quote', 'received', { quoteId, email, origin, destination });
+  log('info', 'quote', 'received', { quoteId, email, origin, destination, flightDetails });
 
   try {
     if (RESEND_KEY) {
