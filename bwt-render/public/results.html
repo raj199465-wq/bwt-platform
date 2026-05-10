@@ -583,7 +583,7 @@ setTimeout(function(){
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
       </div>
       <div class="fp-body">
-        <div class="airline-list" id="airlineList">
+        <div class="airline-list" id="airlinesList">
           <div style="font-size:12px;color:var(--muted);padding:4px 0">Search first to populate airlines</div>
         </div>
       </div>
@@ -1563,7 +1563,7 @@ function buildCard(offer, idx, gated=false, starPriority=false) {
           <div class="fc-airline-name">${groupName}</div>
           <div class="fc-flight-num">${flightNum}</div>
           <div class="fc-aircraft">${aircraft}</div>
-          ${(()=>{const _ds=window._searchDep?new Date(window._searchDep+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}):'';const _rs=window._searchRet?new Date(window._searchRet+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'';return _ds?'<div style="font-size:9px;color:var(--muted);margin-top:4px">📅 '+_ds+(_rs?' → '+_rs:'')+'</div>':''})()}':''})()}
+          ${window._searchDep ? '<span class="cdr" style="display:block;font-size:9px;color:#6b7fa3;margin-top:3px"></span>' : ''}
         </div>
       </div>
 
@@ -2044,15 +2044,11 @@ function fPrice(v) {
 }
 
 function applyFilters() {
-  filters.bag=document.getElementById('fBag').checked;
-  filters.ref=document.getElementById('fRef').checked;
+  // bag/ref filters not in sidebar
   filteredOffers=allOffers.filter(o=>{
     if (filters.stops!=='any' && o.totalStops!==parseInt(filters.stops)) return false;
     if (o.totalPrice>filters.maxPrice) return false;
-    if (filters.airlines.size>0) {
-      const carrier = o.validatingCarrier||'';
-      if (filters.airlines.has(carrier)) return false;
-    }
+    if (filters.airlines.size>0 && !filters.airlines.has(o.validatingCarrier||'')) return false;
     if (filters.bag && !o.baggageSummary?.included) return false;
     if (filters.ref && o.refundable!==true) return false;
     if (filters.time!=='any') {
@@ -3244,39 +3240,8 @@ function closeModal() {
   if (modal) modal.classList.remove('open');
 }
 // submitQuote handled below
-function buildAirlineFilter(offers) {
-  const seen = {};
-  offers.forEach(o => {
-    const iata = o.validatingCarrier||'';
-    const name = o.groupName||o.validatingCarrierName||iata;
-    if (iata && !seen[iata]) seen[iata] = name;
-  });
-  const list = document.getElementById('airlineList');
-  if (!list) return;
-  const entries = Object.entries(seen);
-  if (!entries.length) return;
-  list.innerHTML = entries.map(([iata,name]) => `
-    <div class="al-item" onclick="toggleAirline('${iata}',this)">
-      <input type="checkbox" checked data-iata="${iata}">
-      <img class="al-logo" src="https://www.gstatic.com/flights/airline_logos/70px/${iata}.png" onerror="this.style.display='none'" alt="">
-      <span class="al-name">${name}</span>
-    </div>
-  `).join('');
-  // Reset exclusion set when new results load
-  filters.airlines.clear();
-}
-function toggleAirline(iata, el) {
-  const cb = el.querySelector('input');
-  if (!cb) return;
-  cb.checked = !cb.checked;
-  // Rebuild exclusion set from unchecked boxes
-  filters.airlines.clear();
-  document.querySelectorAll('#airlineList .al-item input[type=checkbox]').forEach(c => {
-    if (!c.checked && c.dataset.iata) filters.airlines.add(c.dataset.iata);
-  });
-  console.log('[BWT] Airline exclusions:', [...filters.airlines]);
-  applyFilters();
-}
+// buildAirlineFilter handled by existing fn above
+// toggleAirline handled by fAirline above
 
 </script>
 </body>
