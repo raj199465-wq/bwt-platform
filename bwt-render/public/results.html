@@ -1991,32 +1991,69 @@ function buildAirlineFilter(offers) {
   wrap.innerHTML = '';
   filters.airlines.clear();
 
+  // Build airline map with alliance info
   const map = new Map();
   offers.forEach(function(o) {
     const code = o.validatingCarrier||'';
     const name = o.groupName||o.carrierName||code;
+    const alliance = ALLIANCES[code]||'independent';
     if (code) {
-      if (!map.has(code)) map.set(code, {name:name, count:0});
+      if (!map.has(code)) map.set(code, {name:name, count:0, alliance:alliance});
       map.get(code).count++;
     }
   });
+  if (!map.size) return;
 
-  if (!map.size) {
-    wrap.innerHTML = '<div style="font-size:11px;color:var(--muted)">No airlines found</div>';
-    return;
-  }
+  // ── Alliance quick-filter row ──
+  const allianceData = {star:'Star Alliance', oneworld:'Oneworld', skyteam:'SkyTeam'};
+  const allianceCounts = {star:0, oneworld:0, skyteam:0};
+  map.forEach(function(v){ if(allianceCounts[v.alliance]!==undefined) allianceCounts[v.alliance]+=v.count; });
 
-  const entries = [...map.entries()].sort(function(a,b){ return b[1].count - a[1].count; });
+  const alRow = document.createElement('div');
+  alRow.style.cssText = 'display:flex;flex-wrap:wrap;gap:4px;padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:8px';
+  Object.keys(allianceData).forEach(function(key) {
+    if (!allianceCounts[key]) return;
+    const btn = document.createElement('button');
+    btn.dataset.alliance = key;
+    btn.textContent = allianceData[key];
+    btn.style.cssText = 'font-family:Syne,sans-serif;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;border:1.5px solid #e2e8f2;background:#fff;color:#6b7fa3;cursor:pointer;transition:all .15s';
+    btn.onclick = function() { filterByAlliance(key, this, map); };
+    alRow.appendChild(btn);
+  });
+  wrap.appendChild(alRow);
+
+  // ── Select All / Unselect All ──
+  const ctrlRow = document.createElement('div');
+  ctrlRow.style.cssText = 'display:flex;gap:8px;padding-bottom:6px;margin-bottom:4px';
+  const selAll = document.createElement('button');
+  selAll.textContent = 'Select All';
+  selAll.style.cssText = 'font-size:10px;font-weight:700;color:var(--gold);background:none;border:none;cursor:pointer;padding:0;font-family:Syne,sans-serif';
+  selAll.onclick = function() { selectAllAirlines(true); };
+  const unselAll = document.createElement('button');
+  unselAll.textContent = 'Unselect All';
+  unselAll.style.cssText = 'font-size:10px;font-weight:700;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;font-family:Syne,sans-serif';
+  unselAll.onclick = function() { selectAllAirlines(false); };
+  ctrlRow.appendChild(selAll);
+  ctrlRow.appendChild(document.createTextNode(' · '));
+  ctrlRow.appendChild(unselAll);
+  wrap.appendChild(ctrlRow);
+
+  // ── Airline checkbox list ──
+  const list = document.createElement('div');
+  list.id = 'airlineCheckList';
+  list.style.cssText = 'display:flex;flex-direction:column;gap:3px;max-height:160px;overflow-y:auto';
+  const entries = [...map.entries()].sort(function(a,b){ return b[1].count-a[1].count; });
   entries.forEach(function(entry) {
-    const code = entry[0];
-    const name = entry[1].name;
-    const count = entry[1].count;
-    const row = document.createElement('div');
-    row.style.cssText = 'display:flex;align-items:center;gap:8px;padding:5px 2px;cursor:pointer';
+    const code = entry[0], data = entry[1];
+    const row = document.createElement('label');
+    row.style.cssText = 'display:flex;align-items:center;gap:7px;padding:4px 2px;cursor:pointer;border-radius:4px';
+    row.onmouseenter = function(){ this.style.background='var(--off)'; };
+    row.onmouseleave = function(){ this.style.background=''; };
     const cb = document.createElement('input');
     cb.type = 'checkbox';
     cb.checked = true;
     cb.dataset.iata = code;
+    cb.dataset.alliance = data.alliance;
     cb.style.cssText = 'width:13px;height:13px;accent-color:#0a1628;flex-shrink:0;cursor:pointer';
     cb.addEventListener('change', function(){ fAirline(code, this.checked); });
     const img = document.createElement('img');
@@ -2025,17 +2062,57 @@ function buildAirlineFilter(offers) {
     img.style.cssText = 'width:20px;height:20px;object-fit:contain;border-radius:3px;background:#f5f7fa;padding:2px;border:1px solid #e2e8f2;flex-shrink:0';
     img.onerror = function(){ this.style.display='none'; };
     const nameEl = document.createElement('span');
-    nameEl.textContent = name;
+    nameEl.textContent = data.name;
     nameEl.style.cssText = 'font-size:11px;color:#0a1628;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap';
     const cntEl = document.createElement('span');
-    cntEl.textContent = count;
-    cntEl.style.cssText = 'font-size:10px;color:#6b7fa3';
-    row.appendChild(cb);
-    row.appendChild(img);
-    row.appendChild(nameEl);
-    row.appendChild(cntEl);
-    wrap.appendChild(row);
+    cntEl.textContent = data.count;
+    cntEl.style.cssText = 'font-size:10px;color:#6b7fa3;flex-shrink:0';
+    row.appendChild(cb); row.appendChild(img); row.appendChild(nameEl); row.appendChild(cntEl);
+    list.appendChild(row);
   });
+  wrap.appendChild(list);
+}
+
+function filterByAlliance(key, btn, map) {
+  // Toggle alliance filter
+  const isOn = btn.dataset.active === '1';
+  // Reset all alliance buttons
+  document.querySelectorAll('#airlinesList button[data-alliance]').forEach(function(b){
+    b.style.background='#fff'; b.style.color='#6b7fa3'; b.style.borderColor='#e2e8f2'; b.dataset.active='0';
+  });
+  filters.airlines.clear();
+  const cbs = document.querySelectorAll('#airlineCheckList input[type=checkbox]');
+  if (isOn) {
+    // Toggle off — select all
+    cbs.forEach(function(cb){ cb.checked = true; });
+  } else {
+    // Filter to this alliance only
+    btn.style.background='#0a1628'; btn.style.color='#fff'; btn.style.borderColor='#0a1628'; btn.dataset.active='1';
+    cbs.forEach(function(cb){
+      const inAlliance = cb.dataset.alliance === key;
+      cb.checked = inAlliance;
+      if (inAlliance) filters.airlines.add(cb.dataset.iata);
+    });
+  }
+  applyFilters();
+}
+
+function selectAllAirlines(checked) {
+  filters.airlines.clear();
+  document.querySelectorAll('#airlineCheckList input[type=checkbox]').forEach(function(cb){
+    cb.checked = checked;
+    if (checked) return; // empty set = show all
+    // if unchecking all, we can't filter to nothing, so keep all
+  });
+  if (!checked) {
+    // Unselect all = show none makes no sense — show all instead
+    document.querySelectorAll('#airlineCheckList input[type=checkbox]').forEach(function(cb){ cb.checked = true; });
+  }
+  // Reset alliance buttons
+  document.querySelectorAll('#airlinesList button[data-alliance]').forEach(function(b){
+    b.style.background='#fff'; b.style.color='#6b7fa3'; b.style.borderColor='#e2e8f2'; b.dataset.active='0';
+  });
+  applyFilters();
 }
 
 
@@ -2066,15 +2143,15 @@ function fAlliance(key, btn, color, bg, border) {
 
 function fStops(v,btn) { document.querySelectorAll('.stp').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); filters.stops=v; applyFilters(); }
 function fTime(v,el)   { document.querySelectorAll('.topt').forEach(t=>t.classList.remove('on')); el.classList.add('on'); filters.time=v; applyFilters(); }
-function fAirline(code,checked) {
-  if (checked) {
-    filters.airlines.add(code);
-  } else {
-    filters.airlines.delete(code);
-    // If all unchecked, clear alliance filter too
-    const anyChecked = document.querySelectorAll('.aopt input[type=checkbox]:checked').length > 0;
-    if (!anyChecked) { filters.airlines.clear(); filters.alliance=null; }
-  }
+function fAirline(code, checked) {
+  // Rebuild inclusion set from all checked boxes
+  filters.airlines.clear();
+  document.querySelectorAll('#airlineCheckList input[type=checkbox]').forEach(function(cb){
+    if (cb.checked) filters.airlines.add(cb.dataset.iata);
+  });
+  // If all are checked = same as no filter, clear set for performance
+  const total = document.querySelectorAll('#airlineCheckList input[type=checkbox]').length;
+  if (filters.airlines.size === total) filters.airlines.clear();
   applyFilters();
 }
 function fPrice(v) {
@@ -3239,10 +3316,27 @@ function buildSegHtml(offer) {
       html +=   '<div style="font-size:10px;color:var(--muted)">'+arrApt+'</div>';
       html += '</div>';
       html += '</div>';
-      // Layover
+      // Layover with duration
       if (i < segs.length-1) {
+        const nextSeg = segs[i+1];
         const layCity = seg.arrival?.city||seg.arrival?.airport||'';
-        html += '<div style="background:rgba(201,168,76,.07);border-left:3px solid rgba(201,168,76,.3);padding:6px 10px;font-size:11px;color:var(--muted);margin:2px 0">🕐 Layover in '+layCity+'</div>';
+        const layApt  = seg.arrival?.airport||'';
+        let layDurStr = '';
+        try {
+          const arrT = new Date(String(seg.arrival?.datetime||'').replace(' ','T'));
+          const depT = new Date(String(nextSeg.departure?.datetime||'').replace(' ','T'));
+          const diffMs = depT - arrT;
+          if (diffMs > 0) {
+            const hrs = Math.floor(diffMs/3600000);
+            const mins = Math.floor((diffMs%3600000)/60000);
+            layDurStr = hrs > 0 ? hrs+'h '+(mins>0?mins+'m':'') : mins+'m';
+          }
+        } catch(e) {}
+        html += '<div style="background:rgba(201,168,76,.07);border-left:3px solid rgba(201,168,76,.3);padding:7px 10px;font-size:11px;color:var(--muted);margin:4px 0;display:flex;align-items:center;gap:8px">';
+        html += '<span style="color:var(--gold)">🕐</span>';
+        html += '<span>Layover in <strong style="color:var(--navy)">'+layCity+(layApt&&layApt!==layCity?' ('+layApt+')':'')+'</strong>';
+        if (layDurStr) html += ' <span style="background:rgba(201,168,76,.15);color:#8a6900;font-weight:700;padding:1px 7px;border-radius:4px;margin-left:4px">'+layDurStr+'</span>';
+        html += '</span></div>';
       }
     });
     return html;
