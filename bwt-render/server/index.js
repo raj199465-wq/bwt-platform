@@ -558,6 +558,89 @@ app.get('/verify', (req, res) => {
   return res.redirect(url.toString());
 });
 
+// ── POST /api/portal-notify — portal email notifications ─────────────────
+app.post('/api/portal-notify', async (req, res) => {
+  const b = req.body || {};
+  const { type } = b;
+  log('info', 'portal', `Notify: ${type}`, b);
+
+  if (!process.env.RESEND_API_KEY) {
+    log('warn', 'portal', 'RESEND_API_KEY not set — email skipped');
+    return res.json({ ok: true, warning: 'No RESEND_API_KEY' });
+  }
+
+  const from = process.env.FROM_EMAIL || 'noreply@businessworldtravel.com';
+  const to   = process.env.AGENT_EMAIL || 'quotes@businessworldtravel.com';
+
+  let subject = '[BWT Portal] Notification';
+  let html    = '<p>Portal notification</p>';
+
+  if (type === 'new_application') {
+    subject = `[BWT Portal] New Application — ${b.company}`;
+    html = `
+      <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto">
+        <h2 style="color:#0a1628">New Portal Application</h2>
+        <table style="width:100%;border-collapse:collapse">
+          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666;width:140px">Company</td><td style="padding:8px;border-bottom:1px solid #eee;font-weight:700">${b.company||'—'}</td></tr>
+          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666">Industry</td><td style="padding:8px;border-bottom:1px solid #eee">${b.industry||'—'}</td></tr>
+          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666">Team Size</td><td style="padding:8px;border-bottom:1px solid #eee">${b.teamSize||'—'}</td></tr>
+          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666">Contact</td><td style="padding:8px;border-bottom:1px solid #eee">${b.contactName||'—'}</td></tr>
+          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666">Email</td><td style="padding:8px;border-bottom:1px solid #eee">${b.contactEmail||'—'}</td></tr>
+          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666">Phone</td><td style="padding:8px;border-bottom:1px solid #eee">${b.phone||'—'}</td></tr>
+          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666">Website</td><td style="padding:8px;border-bottom:1px solid #eee">${b.website||'—'}</td></tr>
+          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666">Applied At</td><td style="padding:8px;border-bottom:1px solid #eee">${b.appliedAt||'—'}</td></tr>
+        </table>
+        <p style="margin-top:16px;color:#c0392b;font-weight:700">⚠ Action required: Log in to the BWT Admin Portal to approve or reject this application.</p>
+        <p style="color:#666;font-size:12px">Company ID: ${b.companyId||'—'}</p>
+      </div>`;
+  } else if (type === 'booking_request') {
+    subject = `[BWT Portal] Booking Request ${b.reference||''} — ${b.route||''}`;
+    html = `
+      <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto">
+        <h2 style="color:#0a1628">New Booking Request</h2>
+        <table style="width:100%;border-collapse:collapse">
+          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666;width:140px">Reference</td><td style="padding:8px;border-bottom:1px solid #eee;font-weight:700">${b.reference||'—'}</td></tr>
+          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666">Company</td><td style="padding:8px;border-bottom:1px solid #eee">${b.company||'—'}</td></tr>
+          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666">Traveller</td><td style="padding:8px;border-bottom:1px solid #eee">${b.travellerName||'—'} · ${b.travellerEmail||'—'}</td></tr>
+          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666">Route</td><td style="padding:8px;border-bottom:1px solid #eee;font-weight:700">${b.route||'—'} · ${b.tripType||''}</td></tr>
+          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666">Dates</td><td style="padding:8px;border-bottom:1px solid #eee">${b.departDate||'—'}${b.returnDate?' → '+b.returnDate:''}</td></tr>
+          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666">Flight</td><td style="padding:8px;border-bottom:1px solid #eee">${b.airline||'—'} ${b.flightNumber||''}</td></tr>
+          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666">Cabin</td><td style="padding:8px;border-bottom:1px solid #eee">${b.cabin||'Business'} · ${b.passengers||1} pax</td></tr>
+          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666">Published Fare</td><td style="padding:8px;border-bottom:1px solid #eee;color:#c0392b;font-weight:700">${b.publishedFare||'—'}</td></tr>
+        </table>
+      </div>`;
+  } else if (type === 'status_change') {
+    subject = `[BWT Portal] Account ${b.status} — ${b.company}`;
+    html = `<div style="font-family:Arial,sans-serif"><h2>Account Status Updated</h2><p><strong>${b.company}</strong> has been <strong>${b.status}</strong>.</p><p>Contact: ${b.adminEmail||'—'}</p></div>`;
+    // Also email the company
+    if (b.adminEmail && b.status === 'approved') {
+      await fetch('https://api.resend.com/emails', {
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':`Bearer ${process.env.RESEND_API_KEY}`},
+        body: JSON.stringify({
+          from, to: [b.adminEmail],
+          subject: 'Your BWT Corporate Portal access has been approved',
+          html: `<div style="font-family:Arial,sans-serif;max-width:500px;margin:40px auto"><h2 style="color:#0a1628">Welcome to BWT Corporate Portal</h2><p>Your company <strong>${b.company}</strong> has been approved. You can now log in at <a href="https://bwt-platform.onrender.com/portal">businessworldtravel.com/portal</a>.</p><p>— The BWT Team</p></div>`
+        })
+      }).catch(()=>{});
+    }
+  }
+
+  try {
+    const r = await fetch('https://api.resend.com/emails', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':`Bearer ${process.env.RESEND_API_KEY}`},
+      body: JSON.stringify({ from, to:[to], subject, html })
+    });
+    const d = await r.json();
+    log('info', 'portal', `Email sent: ${JSON.stringify(d)}`);
+    return res.json({ ok: true, emailId: d.id });
+  } catch(e) {
+    log('error', 'portal', `Email failed: ${e.message}`);
+    return res.status(500).json({ ok: false, error: e.message });
+  }
+});
+
 app.post('/api/quote', async (req, res) => {
   // Handle gate access — send verification email
   if (req.body && req.body.type === 'gate_access') {
