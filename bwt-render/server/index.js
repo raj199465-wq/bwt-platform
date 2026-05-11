@@ -559,6 +559,79 @@ app.get('/verify', (req, res) => {
 });
 
 // ── POST /api/portal-notify — portal email notifications ─────────────────
+// ── GET /portal-action — approve or reject portal application ────────────
+app.get('/portal-action', async (req, res) => {
+  const { t } = req.query;
+  if (!t) return res.send('<h2>Invalid link</h2>');
+
+  let data;
+  try {
+    data = JSON.parse(Buffer.from(t, 'base64url').toString('utf-8'));
+  } catch(e) {
+    return res.send('<h2>Invalid or expired link</h2>');
+  }
+
+  const { action, email, company, companyId, ts } = data;
+  const age = Date.now() - (ts||0);
+  if (age > 7 * 24 * 60 * 60 * 1000) {
+    return res.send('<html><body style="font-family:Arial;padding:40px;max-width:500px;margin:0 auto"><h2>Link Expired</h2><p>This link has expired. Please log into the portal to manage applications.</p></body></html>');
+  }
+
+  log('info', 'portal-action', action + ' for ' + company + ' (' + email + ')');
+
+  const from = process.env.FROM_EMAIL || 'noreply@businessworldtravel.com';
+  const isApprove = action === 'approve';
+
+  // Send email to the applicant
+  if (process.env.RESEND_API_KEY && email) {
+    const subj = isApprove
+      ? 'Your BWT Corporate Portal access has been approved'
+      : 'Update on your BWT Corporate Portal application';
+
+    const userHtml = isApprove
+      ? '<div style="font-family:Arial,sans-serif;max-width:500px;margin:40px auto">'
+        + '<h2 style="color:#0a1628">Welcome to BWT Corporate Portal</h2>'
+        + '<p>Hi ' + company + ',</p>'
+        + '<p>Great news — your corporate travel portal access has been <strong style="color:#1a8f5a">approved</strong>.</p>'
+        + '<p>You can now sign in and start booking business class travel at private contracted rates.</p>'
+        + '<div style="margin:24px 0">'
+        + '<a href="https://bwt-platform.onrender.com/portal" style="background:#f0c040;color:#0a1628;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:700;font-size:15px;display:inline-block">Sign In to Portal →</a>'
+        + '</div>'
+        + '<p style="color:#666;font-size:13px">Use the email address you registered with: <strong>' + email + '</strong></p>'
+        + '<p style="color:#666;font-size:13px">Questions? Call us at (212) 913-0450 or email quotes@businessworldtravel.com</p>'
+        + '<p>— The Business World Travel Team</p></div>'
+      : '<div style="font-family:Arial,sans-serif;max-width:500px;margin:40px auto">'
+        + '<h2 style="color:#0a1628">Update on your BWT Portal Application</h2>'
+        + '<p>Hi ' + company + ',</p>'
+        + '<p>Thank you for your interest in the BWT Corporate Portal.</p>'
+        + '<p>After reviewing your application, we are unable to approve access at this time.</p>'
+        + '<p>If you believe this is an error or would like to discuss further, please contact us:</p>'
+        + '<p><strong>📞 (212) 913-0450</strong><br><strong>✉ quotes@businessworldtravel.com</strong></p>'
+        + '<p>— The Business World Travel Team</p></div>';
+
+    await fetch('https://api.resend.com/emails', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer ' + process.env.RESEND_API_KEY},
+      body: JSON.stringify({ from, to:[email], subject:subj, html:userHtml })
+    }).catch(e => log('warn','portal-action','Email failed: '+e.message));
+  }
+
+  // Return confirmation page to admin
+  const adminHtml = '<html><head><style>body{font-family:Arial,sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background:#f5f7fa}'
+    + '.box{background:#fff;border-radius:12px;padding:40px;text-align:center;max-width:440px;box-shadow:0 4px 24px rgba(0,0,0,.1)}'
+    + 'h2{color:' + (isApprove?'#1a8f5a':'#c0392b') + '}p{color:#666;line-height:1.6}'
+    + '.badge{display:inline-block;background:' + (isApprove?'#e8f5e9':'#fde8e8') + ';color:' + (isApprove?'#1a8f5a':'#c0392b') + ';padding:6px 16px;border-radius:50px;font-weight:700;margin-bottom:16px}'
+    + '</style></head>'
+    + '<body><div class="box">'
+    + '<div class="badge">' + (isApprove?'✅ Approved':'❌ Rejected') + '</div>'
+    + '<h2>' + company + '</h2>'
+    + '<p>This company has been <strong>' + (isApprove?'approved':'rejected') + '</strong>.</p>'
+    + '<p>An email has been sent to <strong>' + email + '</strong>.</p>'
+    + '</div></body></html>';
+
+  return res.send(adminHtml);
+});
+
 app.post('/api/portal-notify', async (req, res) => {
   const b = req.body || {};
   const { type } = b;
@@ -575,24 +648,45 @@ app.post('/api/portal-notify', async (req, res) => {
   let subject = '[BWT Portal] Notification';
   let html    = '<p>Portal notification</p>';
 
-  if (type === 'new_application') {
-    subject = `[BWT Portal] New Application — ${b.company}`;
-    html = `
-      <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto">
-        <h2 style="color:#0a1628">New Portal Application</h2>
-        <table style="width:100%;border-collapse:collapse">
-          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666;width:140px">Company</td><td style="padding:8px;border-bottom:1px solid #eee;font-weight:700">${b.company||'—'}</td></tr>
-          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666">Industry</td><td style="padding:8px;border-bottom:1px solid #eee">${b.industry||'—'}</td></tr>
-          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666">Team Size</td><td style="padding:8px;border-bottom:1px solid #eee">${b.teamSize||'—'}</td></tr>
-          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666">Contact</td><td style="padding:8px;border-bottom:1px solid #eee">${b.contactName||'—'}</td></tr>
-          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666">Email</td><td style="padding:8px;border-bottom:1px solid #eee">${b.contactEmail||'—'}</td></tr>
-          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666">Phone</td><td style="padding:8px;border-bottom:1px solid #eee">${b.phone||'—'}</td></tr>
-          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666">Website</td><td style="padding:8px;border-bottom:1px solid #eee">${b.website||'—'}</td></tr>
-          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666">Applied At</td><td style="padding:8px;border-bottom:1px solid #eee">${b.appliedAt||'—'}</td></tr>
-        </table>
-        <p style="margin-top:16px;color:#c0392b;font-weight:700">⚠ Action required: Log in to the BWT Admin Portal to approve or reject this application.</p>
-        <p style="color:#666;font-size:12px">Company ID: ${b.companyId||'—'}</p>
-      </div>`;
+  if (type === 'new_application' || (type && type.includes('APPLICATION'))) {
+    // Also grab fields from the old format
+    const company    = b.company    || b.company_name || '—';
+    const industry   = b.industry   || '—';
+    const teamSize   = b.teamSize   || b.team_size    || '—';
+    const contactN   = b.contactName|| b.contact_name || '—';
+    const contactE   = b.contactEmail||b.contact_email|| b.adminEmail || '—';
+    const phone      = b.phone      || '—';
+    const website    = b.website    || '—';
+    const appliedAt  = b.appliedAt  || b.applied_at   || new Date().toLocaleString();
+    const companyId  = b.companyId  || b.company_id   || '';
+
+    // Generate approve/reject links
+    const host = process.env.RENDER_EXTERNAL_URL || 'https://bwt-platform.onrender.com';
+    const approveToken = Buffer.from(JSON.stringify({action:'approve', email:contactE, company, companyId, ts:Date.now()})).toString('base64url');
+    const rejectToken  = Buffer.from(JSON.stringify({action:'reject',  email:contactE, company, companyId, ts:Date.now()})).toString('base64url');
+    const approveLink  = host + '/portal-action?t=' + approveToken;
+    const rejectLink   = host + '/portal-action?t=' + rejectToken;
+
+    subject = '[BWT Portal] New Application — ' + company;
+    html = '<div style="font-family:Arial,sans-serif;max-width:600px;margin:40px auto;border:1px solid #e2e8f2;border-radius:12px;overflow:hidden">'
+      + '<div style="background:#0a1628;padding:20px 24px"><h2 style="color:#fff;margin:0;font-size:18px">New Portal Application</h2><p style="color:rgba(255,255,255,.5);margin:4px 0 0;font-size:13px">Action required — approve or reject below</p></div>'
+      + '<div style="padding:24px">'
+      + '<table style="width:100%;border-collapse:collapse;margin-bottom:20px">'
+      + '<tr><td style="padding:8px 0;border-bottom:1px solid #f0f0f0;color:#666;width:130px;font-size:13px">Company</td><td style="padding:8px 0;border-bottom:1px solid #f0f0f0;font-weight:700;font-size:13px">' + company + '</td></tr>'
+      + '<tr><td style="padding:8px 0;border-bottom:1px solid #f0f0f0;color:#666;font-size:13px">Industry</td><td style="padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:13px">' + industry + '</td></tr>'
+      + '<tr><td style="padding:8px 0;border-bottom:1px solid #f0f0f0;color:#666;font-size:13px">Team Size</td><td style="padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:13px">' + teamSize + '</td></tr>'
+      + '<tr><td style="padding:8px 0;border-bottom:1px solid #f0f0f0;color:#666;font-size:13px">Contact</td><td style="padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:13px">' + contactN + '</td></tr>'
+      + '<tr><td style="padding:8px 0;border-bottom:1px solid #f0f0f0;color:#666;font-size:13px">Email</td><td style="padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:13px"><a href="mailto:' + contactE + '">' + contactE + '</a></td></tr>'
+      + '<tr><td style="padding:8px 0;border-bottom:1px solid #f0f0f0;color:#666;font-size:13px">Phone</td><td style="padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:13px">' + phone + '</td></tr>'
+      + '<tr><td style="padding:8px 0;border-bottom:1px solid #f0f0f0;color:#666;font-size:13px">Website</td><td style="padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:13px">' + website + '</td></tr>'
+      + '<tr><td style="padding:8px 0;color:#666;font-size:13px">Applied</td><td style="padding:8px 0;font-size:13px">' + appliedAt + '</td></tr>'
+      + '</table>'
+      + '<div style="display:flex;gap:12px;margin-top:8px">'
+      + '<a href="' + approveLink + '" style="flex:1;display:block;background:#1a8f5a;color:#fff;text-align:center;padding:14px;border-radius:8px;text-decoration:none;font-weight:700;font-size:15px">✅ Approve Access</a>'
+      + '<a href="' + rejectLink  + '" style="flex:1;display:block;background:#c0392b;color:#fff;text-align:center;padding:14px;border-radius:8px;text-decoration:none;font-weight:700;font-size:15px">❌ Reject Application</a>'
+      + '</div>'
+      + '<p style="font-size:11px;color:#999;margin-top:16px;text-align:center">These links expire in 7 days. Company ID: ' + companyId + '</p>'
+      + '</div></div>';
   } else if (type === 'booking_request') {
     subject = `[BWT Portal] Booking Request ${b.reference||''} — ${b.route||''}`;
     html = `
