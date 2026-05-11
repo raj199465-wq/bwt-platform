@@ -15,6 +15,7 @@ const path     = require('path');
 const crypto   = require('crypto');
 
 const { normalizeSearchAPIResponse, sortOffers, assignBadges } = require('./lib/serpapi-normalizer');
+const portalAuth = require('./lib/portal-auth');
 const { getCached, setCached, logAccess } = require('./lib/supabase-cache');
 const { check } = require('./lib/rate-limit');
 
@@ -559,6 +560,109 @@ app.get('/verify', (req, res) => {
 });
 
 // ── POST /api/portal-notify — portal email notifications ─────────────────
+
+// ═══════════════════════════════════════════════════════
+//  PORTAL AUTH API
+// ═══════════════════════════════════════════════════════
+
+// POST /api/portal/register
+app.post('/api/portal/register', async (req, res) => {
+  const { email, password, firstName, lastName, phone, companyName, industry, teamSize, website } = req.body || {};
+  if (!email || !password || !firstName || !lastName || !companyName) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+  if (!portalAuth.ENABLED) {
+    return res.status(503).json({ error: 'Auth service unavailable — Supabase not configured' });
+  }
+  try {
+    // Check if user already exists
+    const existing = await portalAuth.getUser(email);
+    if (existing) return res.status(409).json({ error: 'An account with this email already exists' });
+
+    // Create company
+    const companyId = 'co_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
+    await portalAuth.createCompany({ id: companyId, name: companyName, industry, teamSize });
+
+    // Create user
+    await portalAuth.createUser({ email, password, firstName, lastName, phone, companyId });
+
+    log('info', 'portal', 'New registration: ' + email + ' / ' + companyName);
+    return res.json({ ok: true, companyId });
+  } catch(e) {
+    log('error', 'portal', 'Register error: ' + e.message);
+    return res.status(500).json({ error: 'Registration failed. Please try again.' });
+  }
+});
+
+// POST /api/portal/login
+app.post('/api/portal/login', async (req, res) => {
+  const { email, password } = req.body || {};
+  if (!email || !password) return res.status(400).json({ error: 'Email and password required' });
+  if (!portalAuth.ENABLED) return res.status(503).json({ error: 'Auth service unavailable' });
+  try {
+    const user = await portalAuth.verifyPassword(email, password);
+    if (!user) return res.status(401).json({ error: 'Incorrect email or password' });
+
+    const company = await portalAuth.getCompany(user.company_id);
+    if (!company) return res.status(401).json({ error: 'Company not found' });
+
+    if (company.status === 'pending') {
+      return res.status(403).json({ error: 'pending', message: 'Your application is pending approval. You will receive an email once approved.' });
+    }
+    if (company.status === 'rejected') {
+      return res.status(403).json({ error: 'rejected', message: 'Your application was not approved. Contact quotes@businessworldtravel.com for more information.' });
+    }
+
+    const token = await portalAuth.createSession(email);
+    log('info', 'portal', 'Login: ' + email);
+    return res.json({
+      ok: true, token,
+      user: { email: user.email, firstName: user.first_name, lastName: user.last_name, role: user.role },
+      company: { id: company.id, name: company.name, status: company.status },
+    });
+  } catch(e) {
+    log('error', 'portal', 'Login error: ' + e.message);
+    return res.status(500).json({ error: 'Login failed. Please try again.' });
+  }
+});
+
+// POST /api/portal/logout
+app.post('/api/portal/logout', async (req, res) => {
+  const { token } = req.body || {};
+  if (token && portalAuth.ENABLED) await portalAuth.deleteSession(token);
+  return res.json({ ok: true });
+});
+
+// GET /api/portal/session
+app.get('/api/portal/session', async (req, res) => {
+  const token = req.headers['x-portal-token'] || req.query.token;
+  if (!token || !portalAuth.ENABLED) return res.status(401).json({ error: 'No session' });
+  try {
+    const sess = await portalAuth.getSession(token);
+    if (!sess) return res.status(401).json({ error: 'Session expired' });
+    const user = await portalAuth.getUser(sess.email);
+    const company = user ? await portalAuth.getCompany(user.company_id) : null;
+    return res.json({ ok: true, user, company });
+  } catch(e) {
+    return res.status(500).json({ error: 'Session check failed' });
+  }
+});
+
+// PATCH /api/portal/company/:id/status — approve or reject
+app.patch('/api/portal/company/:id/status', async (req, res) => {
+  const { status } = req.body || {};
+  const { id } = req.params;
+  if (!['approved','rejected'].includes(status)) return res.status(400).json({ error: 'Invalid status' });
+  if (!portalAuth.ENABLED) return res.status(503).json({ error: 'Auth service unavailable' });
+  try {
+    await portalAuth.updateCompanyStatus(id, status);
+    log('info', 'portal', 'Status update: ' + id + ' → ' + status);
+    return res.json({ ok: true });
+  } catch(e) {
+    return res.status(500).json({ error: 'Status update failed' });
+  }
+});
+
 // ── GET /portal-action — approve or reject portal application ────────────
 app.get('/portal-action', async (req, res) => {
   const { t } = req.query;
@@ -578,6 +682,11 @@ app.get('/portal-action', async (req, res) => {
   }
 
   log('info', 'portal-action', action + ' for ' + company + ' (' + email + ')');
+
+  // Update status in Supabase if available
+  if (portalAuth.ENABLED && companyId) {
+    await portalAuth.updateCompanyStatus(companyId, isApprove ? 'approved' : 'rejected').catch(()=>{});
+  }
 
   const from = process.env.FROM_EMAIL || 'noreply@businessworldtravel.com';
   const isApprove = action === 'approve';
