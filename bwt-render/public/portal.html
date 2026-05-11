@@ -2628,132 +2628,9 @@ const DB = {
 
 // Seed demo data on every load — ensures login always works
 function seedDemo() {
-  // Always re-seed core users so login never breaks
-  // In-memory store: always seed fresh on load
-
-  // BWT master admin
-  DB.set('user_admin@businessworldtravel.com', {
-    email:'admin@businessworldtravel.com', pw:'bwtadmin2026',
-    firstName:'James', lastName:'Thornton',
-    role:'bwt_admin', status:'approved', company:'Business World Travel',
-    companyId:'BWT_INTERNAL'
-  });
-
-  // Demo company — approved
-  const coId = 'CO_ACME';
-  DB.set('company_'+coId, {
-    id:coId, name:'Acme Global Consulting', industry:'Consulting',
-    status:'approved', createdAt:'2026-02-15',
-    admins:['sarah@acme.com'],
-    policy:{ cabin:'business', maxFare:6000, fareAction:'warn', advance:'0', approval:'never', approverEmail:'', airlines:'', notes:'' },
-    payment:null,
-  });
-  DB.set('user_sarah@acme.com', {
-    email:'sarah@acme.com', pw:'demo1234',
-    firstName:'Sarah', lastName:'Mitchell',
-    role:'admin', status:'approved', company:'Acme Global Consulting',
-    companyId: coId,
-    profile:{
-      title:'Ms', middle:'', gender:'Female',
-      phone:'+1 212 555 0101', workEmail:'sarah@acme.com',
-      address:'New York, NY, USA',
-      dob:'1985-03-22', nat:'American', nat2:'',
-      passports:[
-        { type:'Passport', num:'US9876543', country:'United States', issue:'2020-01-10', expiry:'2030-01-09', nationality:'American', primary:true },
-        { type:'EU ID Card', num:'DE112233445', country:'Germany', issue:'2019-06-15', expiry:'2029-06-14', nationality:'German', primary:false }
-      ],
-      ffPrograms:[
-        { airline:'United MileagePlus', number:'MP987654321', tier:'Gold' },
-        { airline:'Lufthansa Miles & More', number:'LH445566778', tier:'Silver' },
-        { airline:'Air Canada Aeroplan', number:'AC001122334', tier:'None' },
-        { airline:'British Airways Executive Club', number:'BA998877665', tier:'None' }
-      ],
-      prefs:{ seat:'Aisle', meal:'Standard', prefCabin:'Business Class', ktn:'KTN123456', globalEntry:'GE98765', redress:'', dietary:'', accessibility:'' },
-      emergency:{ name:'James Mitchell', rel:'Spouse / Partner', phone:'+1 212 555 0199', email:'james@email.com' },
-      agentNotes:'Always book aisle seat. Preferred connection via FRA or ZRH. No red-eyes unless absolutely necessary.'
-    }
-  });
-  DB.set('user_tom@acme.com', {
-    email:'tom@acme.com', pw:'demo1234',
-    firstName:'Tom', lastName:'Davies',
-    role:'employee', status:'approved', company:'Acme Global Consulting',
-    companyId: coId,
-    profile:{}
-  });
-  // Pending company
-  const coId2 = 'CO_VERTEX';
-  DB.set('company_'+coId2, {
-    id:coId2, name:'Vertex Capital Partners', industry:'Finance / Banking',
-    status:'pending', createdAt:'2026-03-06',
-    admins:['marcus@vertex.com'],
-    policy:null, payment:null,
-  });
-  DB.set('user_marcus@vertex.com', {
-    email:'marcus@vertex.com', pw:'demo1234',
-    firstName:'Marcus', lastName:'Lee',
-    role:'admin', status:'pending', company:'Vertex Capital Partners',
-    companyId:coId2, profile:{}
-  });
-
-  // Demo trips — only seed once to preserve any added during session
-  if (true) { // always seed trips (in-memory resets each load)
-    const trips = [
-      // Business class — fulfilled
-      { ref:'BWT-881234', userId:'sarah@acme.com', companyId:coId,
-        orig:'JFK', dest:'ZRH', airline:'Swiss International', cabin:'Business Class',
-        depDate:'2026-01-16', retDate:'2026-01-23', tripType:'round',
-        price:4800, publishedPrice:6950, fee:100, pax:1, status:'fulfilled', submittedAt:'2026-01-05T14:22:00Z', purpose:'client' },
-      { ref:'BWT-553301', userId:'tom@acme.com', companyId:coId,
-        orig:'EWR', dest:'LHR', airline:'Lufthansa', cabin:'Business Class',
-        depDate:'2026-01-28', retDate:'2026-02-04', tripType:'round',
-        price:3850, publishedPrice:5400, fee:100, pax:1, status:'fulfilled', submittedAt:'2026-01-10T10:00:00Z', purpose:'client' },
-      { ref:'BWT-441190', userId:'sarah@acme.com', companyId:coId,
-        orig:'JFK', dest:'CDG', airline:'Air France', cabin:'Business Class',
-        depDate:'2026-02-10', retDate:'2026-02-17', tripType:'round',
-        price:4200, publishedPrice:5900, fee:100, pax:1, status:'fulfilled', submittedAt:'2026-01-28T09:00:00Z', purpose:'conference' },
-      { ref:'BWT-330088', userId:'tom@acme.com', companyId:coId,
-        orig:'JFK', dest:'FRA', airline:'Lufthansa', cabin:'Business Class',
-        depDate:'2026-02-22', retDate:'', tripType:'oneway',
-        price:2750, publishedPrice:4100, fee:100, pax:1, status:'fulfilled', submittedAt:'2026-02-08T11:00:00Z', purpose:'internal' },
-      // Economy — fulfilled
-      { ref:'BWT-221177', userId:'tom@acme.com', companyId:coId,
-        orig:'JFK', dest:'LHR', airline:'British Airways', cabin:'Economy',
-        depDate:'2026-02-14', retDate:'2026-02-18', tripType:'round',
-        price:620, publishedPrice:940, fee:35, pax:3, status:'fulfilled', submittedAt:'2026-02-01T08:30:00Z', purpose:'internal' },
-      { ref:'BWT-119944', userId:'sarah@acme.com', companyId:coId,
-        orig:'EWR', dest:'AMS', airline:'United Airlines', cabin:'Economy',
-        depDate:'2026-02-28', retDate:'2026-03-04', tripType:'round',
-        price:590, publishedPrice:870, fee:35, pax:2, status:'fulfilled', submittedAt:'2026-02-15T14:00:00Z', purpose:'conference' },
-      { ref:'BWT-008833', userId:'tom@acme.com', companyId:coId,
-        orig:'ORD', dest:'FRA', airline:'Lufthansa', cabin:'Economy',
-        depDate:'2026-03-05', retDate:'2026-03-09', tripType:'round',
-        price:540, publishedPrice:820, fee:35, pax:4, status:'fulfilled', submittedAt:'2026-02-20T10:15:00Z', purpose:'internal' },
-      // Premium Economy — fulfilled
-      { ref:'BWT-445566', userId:'sarah@acme.com', companyId:coId,
-        orig:'JFK', dest:'LHR', airline:'Virgin Atlantic', cabin:'Premium Economy',
-        depDate:'2026-03-12', retDate:'2026-03-19', tripType:'round',
-        price:1850, publishedPrice:2600, fee:50, pax:1, status:'fulfilled', submittedAt:'2026-02-25T09:00:00Z', purpose:'client' },
-      // Pending / submitted
-      { ref:'BWT-774455', userId:'tom@acme.com', companyId:coId,
-        orig:'ORD', dest:'LHR', airline:'United Airlines', cabin:'Economy',
-        depDate:'2026-04-05', retDate:'', tripType:'oneway',
-        price:580, publishedPrice:890, fee:35, pax:5, status:'submitted', submittedAt:'2026-03-07T09:15:00Z', purpose:'internal' },
-      { ref:'BWT-662211', userId:'sarah@acme.com', companyId:coId,
-        orig:'EWR', dest:'FRA', airline:'Lufthansa', cabin:'Business Class',
-        depDate:'2026-04-18', retDate:'2026-04-25', tripType:'round',
-        price:5100, publishedPrice:7200, fee:100, pax:1, status:'submitted', submittedAt:'2026-03-08T11:30:00Z', purpose:'client' },
-    ];
-    trips.forEach(t => DB.push('trips_'+coId, t));
-  }
-  DB.set('seeded', true);
+  // No-op — auth is handled by Supabase server
+  console.log('[portal] seedDemo: Supabase auth active');
 }
-seedDemo();
-
-// ════════════════════════════════════════════
-//  AUTH
-// ════════════════════════════════════════════
-let currentUser = null;
-
 function authTab(tab, btn) {
   document.querySelectorAll('.auth-tab').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
@@ -2772,10 +2649,15 @@ async function doLogin() {
   const email = (document.getElementById('loginEmail')?.value||'').trim().toLowerCase();
   const pw    = document.getElementById('loginPw')?.value||'';
   const errEl = document.getElementById('loginError');
-  errEl.style.display='none';
-  if (!email||!pw) { errEl.textContent='Please enter your email and password.'; errEl.style.display='block'; return; }
+  if (errEl) errEl.style.display='none';
+  function showLoginErr(msg) {
+    const e = document.getElementById('loginError') || errEl;
+    if (e) { e.textContent=msg; e.style.display='block'; }
+    else console.warn('Login error:', msg);
+  }
+  if (!email||!pw) { showLoginErr('Please enter your email and password.'); return; }
 
-  const btn = document.querySelector('#authLogin .ph-btn-primary');
+  const btn = document.querySelector('#authLogin .ph-btn-primary') || document.querySelector('#authLogin button');
   if (btn) { btn.disabled=true; btn.textContent='Signing in…'; }
 
   try {
@@ -2791,8 +2673,7 @@ async function doLogin() {
         errEl.style.display='block';
         return;
       }
-      errEl.textContent = r.data?.error||'Incorrect email or password.';
-      errEl.style.display='block';
+      showLoginErr(r.data?.error||'Incorrect email or password.');
       return;
     }
     const { token, user, company } = r.data;
@@ -2806,8 +2687,7 @@ async function doLogin() {
     goScreen('screenDash');
     initDash();
   } catch(e) {
-    errEl.textContent = 'Network error. Please try again.';
-    errEl.style.display='block';
+    showLoginErr('Network error. Please try again.');
   } finally {
     if (btn) { btn.disabled=false; btn.textContent='Sign In'; }
   }
@@ -2845,37 +2725,59 @@ async function doRegister() {
   const last     = (document.getElementById('regLast')?.value||'').trim();
   const email    = (document.getElementById('regEmail')?.value||'').trim().toLowerCase();
   const pw       = document.getElementById('regPw')?.value||'';
-  const pw2      = document.getElementById('regPw2')?.value||'';
   const co       = (document.getElementById('regCo')?.value||'').trim();
   const industry = document.getElementById('regIndustry')?.value||'';
   const size     = document.getElementById('regSize')?.value||'';
   const phone    = (document.getElementById('regPhone')?.value||'').trim();
   const website  = (document.getElementById('regWebsite')?.value||'').trim();
-  const errEl    = document.getElementById('regError');
 
-  errEl.style.display='none';
-  if (!first||!last||!email||!pw||!co) { errEl.textContent='Please fill all required fields.'; errEl.style.display='block'; return; }
-  if (pw !== pw2) { errEl.textContent='Passwords do not match.'; errEl.style.display='block'; return; }
-  if (pw.length < 8) { errEl.textContent='Password must be at least 8 characters.'; errEl.style.display='block'; return; }
+  // Show error helper
+  function showRegErr(msg) {
+    let el = document.getElementById('regError');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'regError';
+      el.style.cssText = 'background:#fde8e8;color:#c0392b;border-radius:8px;padding:10px 14px;font-size:13px;margin-bottom:12px';
+      const form = document.getElementById('authRegister');
+      if (form) form.insertBefore(el, form.firstChild);
+    }
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+  const errEl = document.getElementById('regError');
+  if (errEl) errEl.style.display = 'none';
 
-  const btn = document.querySelector('#authRegister button[type=submit]') || document.querySelector('#authRegister .ph-btn-primary');
+  if (!first||!last||!email||!pw||!co) { showRegErr('Please fill all required fields.'); return; }
+  if (pw.length < 8) { showRegErr('Password must be at least 8 characters.'); return; }
+
+  const btn = document.querySelector('#authRegister .ph-btn-primary');
   if (btn) { btn.disabled=true; btn.textContent='Creating account…'; }
 
   try {
-    const r = await apiPortal('POST', '/register', { email, password:pw, firstName:first, lastName:last, phone, companyName:co, industry, teamSize:size, website });
-    if (!r.ok) { errEl.textContent = r.data?.error||'Registration failed.'; errEl.style.display='block'; return; }
+    const r = await apiPortal('POST', '/register', {
+      email, password:pw, firstName:first, lastName:last,
+      phone, companyName:co, industry, teamSize:size, website
+    });
+    if (!r.ok) { showRegErr(r.data?.error||'Registration failed. Please try again.'); return; }
 
     // Notify admin
-    await notifyAdmin_NewApplication({ coName:co, industry, size, phone, website, adminName:first+' '+last, adminEmail:email, appliedAt:new Date().toLocaleString(), coId:r.data?.companyId||'' });
+    await notifyAdmin_NewApplication({
+      coName:co, industry, size, phone, website,
+      adminName:first+' '+last, adminEmail:email,
+      appliedAt:new Date().toLocaleString(), coId:r.data?.companyId||''
+    }).catch(()=>{});
 
     // Show pending screen
-    document.getElementById('pendingCoName').textContent = co;
+    const pco = document.getElementById('pendingCoName');
+    if (pco) pco.textContent = co;
+    const pem = document.getElementById('pendingEmail');
+    if (pem) pem.textContent = email;
     goScreen('screenPending');
   } catch(e) {
-    errEl.textContent = 'Network error. Please try again.';
-    errEl.style.display='block';
+    showRegErr('Network error. Please try again.');
+    console.error('Register error:', e);
   } finally {
-    if (btn) { btn.disabled=false; btn.textContent='Create Account'; }
+    if (btn) { btn.disabled=false; btn.textContent='Request Access'; }
   }
 }
 
@@ -4188,7 +4090,7 @@ window.addEventListener('load', async ()=>{
   seedDemo();
   // Check server session if token exists
   const token = getPortalToken();
-  if (token) {
+  if (token && token.length > 10) {
     try {
       const r = await apiPortal('GET', '/session');
       if (r.ok && r.data?.user) {
