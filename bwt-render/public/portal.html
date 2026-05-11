@@ -2588,19 +2588,42 @@ const PORTAL_CFG = {
 // ════════════════════════════════════════════
 //  DATA STORE — in-memory (works everywhere)
 // ════════════════════════════════════════════
-// ── Persistent DB backed by localStorage ──
+// ── Portal Auth — backed by Supabase via server API ──
+const PORTAL_TOKEN_KEY = 'bwt_portal_token';
+let _portalSession = null; // { token, user, company }
+
+function getPortalToken() {
+  return localStorage.getItem(PORTAL_TOKEN_KEY) || '';
+}
+function savePortalToken(token) {
+  localStorage.setItem(PORTAL_TOKEN_KEY, token);
+}
+function clearPortalToken() {
+  localStorage.removeItem(PORTAL_TOKEN_KEY);
+  _portalSession = null;
+}
+
+async function apiPortal(method, path, body) {
+  const opts = {
+    method,
+    headers: { 'Content-Type': 'application/json', 'X-Portal-Token': getPortalToken() },
+  };
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch('/api/portal' + path, opts);
+  const d = await r.json().catch(() => ({}));
+  return { ok: r.ok, status: r.status, data: d };
+}
+
+// Legacy DB shim — keeps old portal code working for non-auth data (trips etc.)
 const DB = {
   get: function(k) {
-    try {
-      const v = localStorage.getItem('bwt_p_'+k);
-      return v ? JSON.parse(v) : null;
-    } catch(e) { return null; }
+    try { const v=localStorage.getItem('bwt_p_'+k); return v?JSON.parse(v):null; } catch(e){return null;}
   },
   set: function(k,v) {
-    try { localStorage.setItem('bwt_p_'+k, JSON.stringify(v)); } catch(e) {}
+    try { localStorage.setItem('bwt_p_'+k, JSON.stringify(v)); } catch(e){}
   },
   push: function(k,v) { const a=DB.get(k)||[]; a.push(v); DB.set(k,a); },
-  del:  function(k)   { try { localStorage.removeItem('bwt_p_'+k); } catch(e) {} },
+  del:  function(k)   { try { localStorage.removeItem('bwt_p_'+k); } catch(e){} },
 };
 
 // Seed demo data on every load — ensures login always works
@@ -2745,71 +2768,51 @@ function quickLogin(type) {
   doLogin();
 }
 
-function doLogin() {
-  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
-  const pw = document.getElementById('loginPw').value;
+async function doLogin() {
+  const email = (document.getElementById('loginEmail')?.value||'').trim().toLowerCase();
+  const pw    = document.getElementById('loginPw')?.value||'';
   const errEl = document.getElementById('loginError');
   errEl.style.display='none';
+  if (!email||!pw) { errEl.textContent='Please enter your email and password.'; errEl.style.display='block'; return; }
 
-  // ── Rate limiting / lockout ──
-  const lockKey = 'lock_'+email;
-  const lock = DB.get(lockKey)||{attempts:0, lockedUntil:0};
-  const now = Date.now();
+  const btn = document.querySelector('#authLogin .ph-btn-primary');
+  if (btn) { btn.disabled=true; btn.textContent='Signing in…'; }
 
-  if (lock.lockedUntil > now) {
-    const mins = Math.ceil((lock.lockedUntil - now)/60000);
-    errEl.textContent = `Too many failed attempts. Account locked for ${mins} more minute${mins>1?'s':''}.`;
-    errEl.style.display='block'; return;
-  }
-
-  // ── Validate credentials ──
-  const user = DB.get('user_'+email);
-  if (!user || user.pw !== pw) {
-    lock.attempts = (lock.attempts||0) + 1;
-    if (lock.attempts >= PORTAL_CFG.max_login_attempts) {
-      lock.lockedUntil = now + PORTAL_CFG.lockout_minutes * 60000;
-      lock.attempts = 0;
-      DB.set(lockKey, lock);
-      errEl.textContent = `Too many failed attempts. Account locked for ${PORTAL_CFG.lockout_minutes} minutes.`;
-    } else {
-      DB.set(lockKey, lock);
-      const remaining = PORTAL_CFG.max_login_attempts - lock.attempts;
-      errEl.textContent = `Incorrect email or password. ${remaining} attempt${remaining>1?'s':''} remaining before lockout.`;
+  try {
+    const r = await apiPortal('POST', '/login', { email, password:pw });
+    if (!r.ok) {
+      if (r.data?.error === 'pending') {
+        document.getElementById('pendingCoName').textContent = r.data?.company||'your company';
+        goScreen('screenPending');
+        return;
+      }
+      if (r.data?.error === 'rejected') {
+        errEl.textContent = r.data?.message||'Application not approved.';
+        errEl.style.display='block';
+        return;
+      }
+      errEl.textContent = r.data?.error||'Incorrect email or password.';
+      errEl.style.display='block';
+      return;
     }
-    errEl.style.display='block'; return;
-  }
+    const { token, user, company } = r.data;
+    savePortalToken(token);
+    _portalSession = { token, user, company };
 
-  // ── Reset lock on successful auth ──
-  DB.del(lockKey);
+    // Store minimal session data for UI
+    DB.set('sess', { email: user.email, firstName: user.first_name||user.firstName, lastName: user.last_name||user.lastName, role: user.role, companyId: company.id, expires: Date.now() + 30*24*60*60*1000 });
+    DB.set('co_'+company.id, { id: company.id, name: company.name, status: company.status, industry:'', size:'', users:[] });
 
-  // ── Status gates — HARD STOPS ──
-  if (user.status === 'pending') {
-    // Never show portal — always wall them
-    currentUser = user;
-    document.getElementById('pendingCoName').textContent = user.company;
-    document.getElementById('pendingEmail').textContent = email;
-    goScreen('screenPending'); return;
+    goScreen('screenDash');
+    initDash();
+  } catch(e) {
+    errEl.textContent = 'Network error. Please try again.';
+    errEl.style.display='block';
+  } finally {
+    if (btn) { btn.disabled=false; btn.textContent='Sign In'; }
   }
-  if (user.status === 'rejected') {
-    errEl.textContent = 'Your application was not approved. Please contact support@businessworldtravel.com';
-    errEl.style.display='block'; return;
-  }
-  if (user.status !== 'approved') {
-    // Catch any unknown status — deny by default
-    errEl.textContent = 'Your account is not active. Please contact support@businessworldtravel.com';
-    errEl.style.display='block'; return;
-  }
-
-  // ── Valid approved user — create timed session ──
-  currentUser = user;
-  DB.set('session', {
-    email,
-    expires: Date.now() + PORTAL_CFG.session_hours * 3600000,
-    created: new Date().toISOString(),
-  });
-  startSessionTimer();
-  launchPortal();
 }
+
 
 function startSessionTimer() {
   // Check session expiry every 60 seconds
@@ -2838,56 +2841,45 @@ function bumpSession() {
 }
 
 async function doRegister() {
-  const first=document.getElementById('regFirst').value.trim();
-  const last=document.getElementById('regLast').value.trim();
-  const email=document.getElementById('regEmail').value.trim().toLowerCase();
-  const co=document.getElementById('regCo').value.trim();
-  const pw=document.getElementById('regPw').value;
-  const industry=document.getElementById('regIndustry').value;
-  const size=document.getElementById('regSize').value;
-  const phone=document.getElementById('regPhone')?.value.trim()||'';
-  const website=document.getElementById('regWebsite')?.value.trim()||'';
+  const first    = (document.getElementById('regFirst')?.value||'').trim();
+  const last     = (document.getElementById('regLast')?.value||'').trim();
+  const email    = (document.getElementById('regEmail')?.value||'').trim().toLowerCase();
+  const pw       = document.getElementById('regPw')?.value||'';
+  const pw2      = document.getElementById('regPw2')?.value||'';
+  const co       = (document.getElementById('regCo')?.value||'').trim();
+  const industry = document.getElementById('regIndustry')?.value||'';
+  const size     = document.getElementById('regSize')?.value||'';
+  const phone    = (document.getElementById('regPhone')?.value||'').trim();
+  const website  = (document.getElementById('regWebsite')?.value||'').trim();
+  const errEl    = document.getElementById('regError');
 
-  if(!first||!last||!email||!co||!pw){showToast('Please fill in all required fields.');return;}
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showToast('Please enter a valid email address.');return;}
-  if(pw.length<8){showToast('Password must be at least 8 characters.');return;}
-  if(DB.get('user_'+email)){showToast('An account with this email already exists. Please sign in.');return;}
+  errEl.style.display='none';
+  if (!first||!last||!email||!pw||!co) { errEl.textContent='Please fill all required fields.'; errEl.style.display='block'; return; }
+  if (pw !== pw2) { errEl.textContent='Passwords do not match.'; errEl.style.display='block'; return; }
+  if (pw.length < 8) { errEl.textContent='Password must be at least 8 characters.'; errEl.style.display='block'; return; }
 
-  const btn = document.querySelector('#authRegister .btn-gold');
-  btn.disabled=true; btn.innerHTML='<span class="spin"></span> Submitting…';
+  const btn = document.querySelector('#authRegister button[type=submit]') || document.querySelector('#authRegister .ph-btn-primary');
+  if (btn) { btn.disabled=true; btn.textContent='Creating account…'; }
 
-  const coId = 'CO_'+Date.now().toString(36).toUpperCase();
-  const appliedAt = new Date().toISOString();
+  try {
+    const r = await apiPortal('POST', '/register', { email, password:pw, firstName:first, lastName:last, phone, companyName:co, industry, teamSize:size, website });
+    if (!r.ok) { errEl.textContent = r.data?.error||'Registration failed.'; errEl.style.display='block'; return; }
 
-  DB.set('company_'+coId, {
-    id:coId, name:co, industry, size, status:'pending',
-    phone, website,
-    createdAt:appliedAt.split('T')[0],
-    admins:[email], policy:null, payment:null
-  });
-  DB.set('user_'+email, {
-    email, pw, firstName:first, lastName:last,
-    role:'admin', status:'pending', company:co,
-    companyId:coId, profile:{}, appliedAt
-  });
-  DB.push('pendingCompanies', coId);
+    // Notify admin
+    await notifyAdmin_NewApplication({ coName:co, industry, size, phone, website, adminName:first+' '+last, adminEmail:email, appliedAt:new Date().toLocaleString(), coId:r.data?.companyId||'' });
 
-  // ── Notify BWT admin by email ──
-  await notifyAdmin_NewApplication({
-    coName:co, industry, size, phone, website,
-    adminName:`${first} ${last}`, adminEmail:email,
-    appliedAt, coId
-  });
-
-  btn.disabled=false;
-  btn.innerHTML=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8zM19 8v6M22 11h-6"/></svg> Request Access`;
-
-  document.getElementById('pendingCoName').textContent = co;
-  document.getElementById('pendingEmail').textContent = email;
-  goScreen('screenPending');
+    // Show pending screen
+    document.getElementById('pendingCoName').textContent = co;
+    goScreen('screenPending');
+  } catch(e) {
+    errEl.textContent = 'Network error. Please try again.';
+    errEl.style.display='block';
+  } finally {
+    if (btn) { btn.disabled=false; btn.textContent='Create Account'; }
+  }
 }
 
-// ── Email helpers (Formspree) ──
+
 async function notifyAdmin_NewApplication(data) {
   // send via server
   try {
@@ -2956,21 +2948,15 @@ async function notifyApplicant_Decision(userEmail, approved, coName) {
   console.log(`📧 [DEMO] Would email ${userEmail}: Application ${approved?'APPROVED':'REJECTED'} for ${coName}`);
 }
 
-function doLogout() {
-  clearInterval(window._sessionTimer);
-  DB.del('session');
-  currentUser = null;
-  goScreen('screenAuth');
-  document.getElementById('loginEmail').value='';
-  document.getElementById('loginPw').value='';
-  document.getElementById('loginError').style.display='none';
-  // Clear any portal page state
-  document.querySelectorAll('.portal-page').forEach(p=>p.classList.remove('active'));
+async function doLogout() {
+  const token = getPortalToken();
+  if (token) await apiPortal('POST', '/logout', { token }).catch(()=>{});
+  clearPortalToken();
+  DB.del('sess');
+  goScreen('screenLanding');
 }
 
-// ════════════════════════════════════════════
-//  PORTAL LAUNCH + NAV
-// ════════════════════════════════════════════
+
 function goScreen(id) {
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -4198,17 +4184,28 @@ const mapIcon=`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" strok
 const approveIcon=`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>`;
 
 // Auto-resume session
-window.addEventListener('load', ()=>{
+window.addEventListener('load', async ()=>{
   seedDemo();
-  const sess = DB.get('session');
-  if (sess && sess.expires > Date.now()) {
-    const user = DB.get('user_'+sess.email);
-    if (user && user.status==='approved') {
-      currentUser = user;
-      startSessionTimer();
-      launchPortal();
-      return;
-    }
+  // Check server session if token exists
+  const token = getPortalToken();
+  if (token) {
+    try {
+      const r = await apiPortal('GET', '/session');
+      if (r.ok && r.data?.user) {
+        const { user, company } = r.data;
+        if (company?.status === 'approved') {
+          // Restore session
+          DB.set('sess', { email:user.email, firstName:user.first_name||'', lastName:user.last_name||'', role:user.role, companyId:company.id, expires: Date.now()+30*24*60*60*1000 });
+          DB.set('co_'+company.id, { id:company.id, name:company.name, status:company.status, industry:'', size:'', users:[] });
+          // Load currentUser shape expected by portal
+          currentUser = { email:user.email, firstName:user.first_name||'', lastName:user.last_name||'', role:user.role, pw:'', profile:{} };
+          startSessionTimer();
+          launchPortal();
+          return;
+        }
+      }
+    } catch(e) { console.warn('Session check failed:', e); }
+    clearPortalToken();
   }
   goScreen('screenHome');
 });
