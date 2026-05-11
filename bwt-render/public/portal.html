@@ -2588,12 +2588,19 @@ const PORTAL_CFG = {
 // ════════════════════════════════════════════
 //  DATA STORE — in-memory (works everywhere)
 // ════════════════════════════════════════════
-const _store = {};
+// ── Persistent DB backed by localStorage ──
 const DB = {
-  get:(k)=>{ const v=_store['bwt_p_'+k]; return v!==undefined ? JSON.parse(JSON.stringify(v)) : null; },
-  set:(k,v)=>{ _store['bwt_p_'+k] = JSON.parse(JSON.stringify(v)); },
-  push:(k,v)=>{ const a=DB.get(k)||[]; a.push(v); DB.set(k,a); },
-  del:(k)=>{ delete _store['bwt_p_'+k]; },
+  get: function(k) {
+    try {
+      const v = localStorage.getItem('bwt_p_'+k);
+      return v ? JSON.parse(v) : null;
+    } catch(e) { return null; }
+  },
+  set: function(k,v) {
+    try { localStorage.setItem('bwt_p_'+k, JSON.stringify(v)); } catch(e) {}
+  },
+  push: function(k,v) { const a=DB.get(k)||[]; a.push(v); DB.set(k,a); },
+  del:  function(k)   { try { localStorage.removeItem('bwt_p_'+k); } catch(e) {} },
 };
 
 // Seed demo data on every load — ensures login always works
