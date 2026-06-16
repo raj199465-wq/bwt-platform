@@ -3255,7 +3255,7 @@ async function submitQuote() {
 
 function buildSegHtml(offer) {
   // Debug: log journey structure
-  console.log('[BWT] offer journeys:', offer.journeys?.length, offer.journeys?.map(j=>({origin:j.origin,dest:j.destination,segs:j.segments?.length})));
+  console.log('[BWT] offer journeys:', offer.journeys?.length, JSON.stringify(offer.journeys?.map(j=>({origin:j.origin,dest:j.destination,segs:j.segments?.length,firstSeg:j.segments?.[0]?.departure?.datetime}))));
   function safeDate(dt) {
     if (!dt) return '';
     try {
@@ -3265,9 +3265,10 @@ function buildSegHtml(offer) {
   }
 
   function renderJourney(journey, label) {
+    console.log('[BWT] renderJourney:', label, 'segs:', journey?.segments?.length, 'origin:', journey?.origin);
     if (!journey) return '';
     const segs = journey.segments||[];
-    if (!segs.length) return '';
+    if (!segs.length) { console.warn('[BWT] No segments for', label); return ''; }
     // Get journey date from URL params
     const _p = new URLSearchParams(location.search);
     const journeyDate = label==='Return'
