@@ -3254,6 +3254,8 @@ async function submitQuote() {
 }
 
 function buildSegHtml(offer) {
+  // Debug: log journey structure
+  console.log('[BWT] offer journeys:', offer.journeys?.length, offer.journeys?.map(j=>({origin:j.origin,dest:j.destination,segs:j.segments?.length})));
   function safeDate(dt) {
     if (!dt) return '';
     try {
@@ -3348,6 +3350,17 @@ function buildSegHtml(offer) {
   if (journeys.length > 1 && journeys[1]) {
     html += '<div style="margin:6px 0"></div>';
     html += renderJourney(journeys[1], 'Return');
+  } else if (journeys.length === 1 && window._isRound && offer.returnJourney) {
+    // Some API responses put return in a separate field
+    html += '<div style="margin:6px 0"></div>';
+    html += renderJourney(offer.returnJourney, 'Return');
+  } else if (journeys.length === 1 && window._isRound) {
+    // Check if there are return segments in alternate fields
+    const ret = offer.returnSegments || offer.inboundJourney;
+    if (ret) {
+      html += '<div style="margin:6px 0"></div>';
+      html += renderJourney({origin: journeys[0]?.destination, destination: journeys[0]?.origin, segments: Array.isArray(ret) ? ret : ret.segments||[]}, 'Return');
+    }
   }
   html += '</div>';
   return html;
