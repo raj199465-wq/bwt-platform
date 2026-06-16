@@ -3168,11 +3168,15 @@ function openModal(offer) {
     if (rt) rt.textContent = orig + ' → ' + dest + (_ds ? '  ·  ' + _ds + (_rs ? ' – '+_rs : '') : '');
     if (fd) {
       const lines = [];
-      if (fNum) lines.push('✈ Flight: <strong>'+fNum+'</strong>'+(aircraft?' · '+aircraft:'')+(carrier?' ('+carrier+')':''));
-      if (_ds) lines.push('📅 Depart: <strong>'+_ds+'</strong>'+(depDate?' at '+fmtTime(depDt):''));
-      if (_rs) lines.push('🔄 Return: <strong>'+_rs+'</strong>');
+      // Outbound flight(s)
+      const outFlights = j0.segments ? j0.segments.map(s=>s.flightNumber).filter(Boolean).join(' + ') : fNum;
+      if (outFlights) lines.push('✈ Outbound: <strong>'+outFlights+'</strong>'+(aircraft?' · '+aircraft:'')+(carrier?' ('+carrier+')':''));
+      if (_ds) lines.push('📅 Depart: <strong>'+_ds+'</strong>');
+      // Return flight(s)
+      if (retAllFlights) lines.push('↩ Return: <strong>'+retAllFlights+'</strong>');
+      if (_rs) lines.push('📅 Return date: <strong>'+_rs+'</strong>');
       lines.push('💺 Cabin: <strong>Business Class</strong>');
-      lines.push('👥 Passengers: <strong>'+('1 Adult')+'</strong>');
+      lines.push('👥 Passengers: <strong>1 Adult</strong>');
       fd.innerHTML = lines.join('<br>');
       fd.style.display = lines.length ? 'block' : 'none';
     }
@@ -3236,6 +3240,8 @@ async function submitQuote() {
         cabin:'BUSINESS', adults:1, publishedFare:price, route,
         notes: (document.getElementById('fprNotes')?.value||'').trim(),
         flightDetails: document.getElementById('fprFlightDetails')?.textContent||'',
+        outboundFlight: (window._currentQuoteOffer?.journeys?.[0]?.segments||[]).map(s=>s.flightNumber).filter(Boolean).join(' + '),
+        returnFlight: (window._currentQuoteOffer?.journeys?.[1]?.segments||[]).map(s=>s.flightNumber).filter(Boolean).join(' + '),
         selectedOffer: window._currentQuoteOffer||null
       })
     });
