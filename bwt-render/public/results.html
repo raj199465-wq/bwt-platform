@@ -3144,123 +3144,85 @@ function openModal(offer) {
   const modal = document.getElementById('quoteModal');
   if (!modal) return;
   window._currentQuoteOffer = offer || null;
+
   if (offer) {
     const price = Math.round(offer.totalPrice||0);
-    const j = offer.journeys?.[0]||{};
-    const orig = j.origin||'';
-    const dest = j.destination||'';
-    const seg0 = j.segments?.[0]||{};
+    // Outbound
+    const j0 = offer.journeys?.[0]||{};
+    const orig = j0.origin||'';
+    const dest = j0.destination||j0.dest||'';
+    const seg0 = j0.segments?.[0]||{};
     const fNum = seg0.flightNumber||'';
     const aircraft = seg0.aircraft||'';
     const depDt = seg0.departure?.datetime||'';
-    const depDate = depDt ? (() => { try { return new Date(String(depDt).replace(' ','T')).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'}); } catch(e){ return ''; } })() : '';
     const carrier = offer.validatingCarrier||offer.carrierName||'';
+    // All outbound flights (connecting)
+    const outFlights = (j0.segments||[]).map(s=>s.flightNumber).filter(Boolean).join(' + ') || fNum;
+    // Return leg
+    const j1 = offer.journeys?.[1]||null;
+    const retFlights = j1 ? (j1.segments||[]).map(s=>s.flightNumber).filter(Boolean).join(' + ') : '';
+    const retSeg0 = j1?.segments?.[0]||null;
+    const retDt = retSeg0?.departure?.datetime||'';
+
+    // Dates from URL
+    const _dep = window._searchDep||'';
+    const _ret = window._searchRet||'';
+    const fmt = {month:'short',day:'numeric'};
+    const fmtY = {month:'short',day:'numeric',year:'numeric'};
+    const _ds = _dep ? new Date(_dep+'T12:00:00').toLocaleDateString('en-US',fmt) : '';
+    const _rs = _ret ? new Date(_ret+'T12:00:00').toLocaleDateString('en-US',fmtY) : '';
+    const tripLabel = window._isRound ? 'round trip' : 'one way';
 
     const el = document.getElementById('fprPrice');
     const rt = document.getElementById('fprRoute');
     const fd = document.getElementById('fprFlightDetails');
-    const _dep = window._searchDep||'';
-    const _ret = window._searchRet||'';
-    const _ds = _dep ? new Date(_dep+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
-    const _rs = _ret ? new Date(_ret+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
-    const tripLabel = window._isRound ? 'round trip' : 'one way';
+
     if (el) el.textContent = '$' + price.toLocaleString() + ' · ' + tripLabel;
-    if (rt) rt.textContent = orig + ' → ' + dest + (_ds ? '  ·  ' + _ds + (_rs ? ' – '+_rs : '') : '');
+    if (rt) rt.textContent = orig + ' → ' + dest + (_ds ? '  ·  ' + _ds + (_rs ? ' – ' + _rs : '') : '');
+
     if (fd) {
       const lines = [];
-      // Outbound flight(s)
-      const outFlights = j0.segments ? j0.segments.map(s=>s.flightNumber).filter(Boolean).join(' + ') : fNum;
-      if (outFlights) lines.push('✈ Outbound: <strong>'+outFlights+'</strong>'+(aircraft?' · '+aircraft:'')+(carrier?' ('+carrier+')':''));
-      if (_ds) lines.push('📅 Depart: <strong>'+_ds+'</strong>');
-      // Return flight(s)
-      if (retAllFlights) lines.push('↩ Return: <strong>'+retAllFlights+'</strong>');
-      if (_rs) lines.push('📅 Return date: <strong>'+_rs+'</strong>');
+      if (outFlights) lines.push('✈ Outbound: <strong>' + outFlights + '</strong>' + (aircraft ? ' · ' + aircraft : '') + (carrier ? ' (' + carrier + ')' : ''));
+      if (_ds) lines.push('📅 Depart: <strong>' + _ds + '</strong>');
+      if (retFlights) lines.push('↩ Return: <strong>' + retFlights + '</strong>');
+      if (_rs) lines.push('📅 Return date: <strong>' + _rs + '</strong>');
       lines.push('💺 Cabin: <strong>Business Class</strong>');
       lines.push('👥 Passengers: <strong>1 Adult</strong>');
       fd.innerHTML = lines.join('<br>');
-      fd.style.display = lines.length ? 'block' : 'none';
+      fd.style.display = 'block';
     }
   }
-  // Reset form
+
+  // Reset form if it was replaced by success message
   const body = modal.querySelector('.modal-body');
   if (body && !body.querySelector('.modal-fare-box')) {
-    // Form was replaced by success message — rebuild it
-    body.innerHTML = `
-      <div class="modal-fare-box">
-        <div><div class="modal-fare-label">Published Fare</div><div class="modal-fare-price" id="fprPrice">${offer ? '$'+Math.round(offer.totalPrice||0).toLocaleString()+' published fare' : '$—'}</div></div>
-        <div style="text-align:right"><div class="modal-fare-label">Route</div><div style="font-size:13px;font-weight:600;color:var(--navy)" id="fprRoute">${offer ? (offer.journeys?.[0]?.origin||'')+'→'+(offer.journeys?.[0]?.destination||'') : '—'}</div></div>
-      </div>
-      <div class="modal-fields">
-        <div class="modal-field-row">
-          <div class="modal-field"><label>First Name</label><input id="fprFirst" placeholder="Sarah"></div>
-          <div class="modal-field"><label>Last Name</label><input id="fprLast" placeholder="Johnson"></div>
-        </div>
-        <div class="modal-field"><label>Work Email</label><input id="fprEmail" type="email" placeholder="sarah@company.com"></div>
-        <div class="modal-field"><label>Company</label><input id="fprCompany" placeholder="Acme Corp"></div>
-        <div class="modal-field"><label>Phone (optional)</label><input id="fprPhone" type="tel" placeholder="+1 (555) 000-0000"></div>
-        <div class="modal-field">
-          <label>Found a cheaper fare? Tell us (optional)</label>
-          <textarea id="fprNotes" placeholder="e.g. I found it on Google Flights for $2,800 on the same BA flight..." style="width:100%;border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;resize:vertical;min-height:72px;transition:border-color .15s" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'"></textarea>
-        </div>
-      </div>
-      <button class="modal-submit" onclick="submitQuote()">Send My Quote Request →</button>
-      <div class="modal-note">No fees · No obligation · We respond within 1 hour</div>`;
+    body.innerHTML =
+      '<div class="modal-fare-box">' +
+        '<div><div class="modal-fare-label">Published Fare</div><div class="modal-fare-price" id="fprPrice">$—</div></div>' +
+        '<div style="text-align:right"><div class="modal-fare-label">Route</div><div style="font-size:13px;font-weight:600;color:var(--navy)" id="fprRoute">—</div></div>' +
+      '</div>' +
+      '<div id="fprFlightDetails" style="background:#f5f7fa;border-radius:8px;padding:10px 14px;margin:-4px 0 14px;font-size:12px;color:var(--muted);line-height:1.7;display:none"></div>' +
+      '<div class="modal-fields">' +
+        '<div class="modal-field-row">' +
+          '<div class="modal-field"><label>First Name</label><input id="fprFirst" placeholder="Sarah"></div>' +
+          '<div class="modal-field"><label>Last Name</label><input id="fprLast" placeholder="Johnson"></div>' +
+        '</div>' +
+        '<div class="modal-field"><label>Work Email</label><input id="fprEmail" type="email" placeholder="sarah@company.com"></div>' +
+        '<div class="modal-field"><label>Company</label><input id="fprCompany" placeholder="Acme Corp"></div>' +
+        '<div class="modal-field"><label>Phone (optional)</label><input id="fprPhone" type="tel" placeholder="+1 (555) 000-0000"></div>' +
+        '<div class="modal-field"><label>Found a cheaper fare? Tell us (optional)</label>' +
+          '<textarea id="fprNotes" placeholder="e.g. I found it on Google Flights for $2,800..." style="width:100%;border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13px;font-family:DM Sans,sans-serif;outline:none;resize:vertical;min-height:72px"></textarea>' +
+        '</div>' +
+      '</div>' +
+      '<button class="modal-submit" onclick="submitQuote()">Send My Quote Request →</button>' +
+      '<div class="modal-note">No fees · No obligation · We respond within 1 hour</div>';
+    // Re-populate fields after rebuild
+    openModal(offer);
+    return;
   }
   modal.classList.add('open');
 }
-async function submitQuote() {
-  const first = (document.getElementById('fprFirst')?.value||'').trim();
-  const last  = (document.getElementById('fprLast')?.value||'').trim();
-  const email = (document.getElementById('fprEmail')?.value||'').trim();
-  const co    = (document.getElementById('fprCompany')?.value||'').trim();
-  const phone = (document.getElementById('fprPhone')?.value||'').trim();
 
-  if (!first) { showToast('Please enter your first name.'); return; }
-  if (!last)  { showToast('Please enter your last name.');  return; }
-  if (!email || !email.includes('@')) { showToast('Please enter a valid work email.'); return; }
-  if (!co)    { showToast('Please enter your company name.'); return; }
-
-  const btn = document.querySelector('#quoteModal .modal-submit');
-  if (btn) { btn.disabled=true; btn.textContent='Sending...'; }
-
-  const p = new URLSearchParams(location.search);
-  const orig = p.get('from')||'';
-  const dest = p.get('to')||'';
-  const dep  = p.get('dep')||'';
-  const ret  = p.get('ret')||null;
-  const price = document.getElementById('fprPrice')?.textContent||'';
-  const route = document.getElementById('fprRoute')?.textContent||orig+' to '+dest;
-
-  try {
-    const r = await fetch(CFG.quoteUrl, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        firstName:first, lastName:last, email, phone, company:co,
-        origin:orig, destination:dest, departureDate:dep, returnDate:ret,
-        cabin:'BUSINESS', adults:1, publishedFare:price, route,
-        notes: (document.getElementById('fprNotes')?.value||'').trim(),
-        flightDetails: document.getElementById('fprFlightDetails')?.textContent||'',
-        outboundFlight: (window._currentQuoteOffer?.journeys?.[0]?.segments||[]).map(s=>s.flightNumber).filter(Boolean).join(' + '),
-        returnFlight: (window._currentQuoteOffer?.journeys?.[1]?.segments||[]).map(s=>s.flightNumber).filter(Boolean).join(' + '),
-        selectedOffer: window._currentQuoteOffer||null
-      })
-    });
-    const data = await r.json();
-    if (!r.ok) { showToast(data.error||'Submit failed.','error'); return; }
-    document.querySelector('#quoteModal .modal-body').innerHTML =
-      '<div style="text-align:center;padding:20px 0">' +
-      '<div style="font-size:48px;margin-bottom:16px">&#x2705;</div>' +
-      '<div style="font-family:Syne,sans-serif;font-size:18px;font-weight:700;color:#0a1628;margin-bottom:8px">Quote request sent!</div>' +
-      '<p style="font-size:13px;color:#6b7fa3;line-height:1.7">Thanks ' + first + '! We will review your fare and come back with our best price — usually within the hour.</p>' +
-      '<p style="font-size:12px;color:#6b7fa3;margin-top:16px">(212) 913-0450 · quotes@businessworldtravel.com</p>' +
-      '<button onclick="closeModal()" style="margin-top:20px;background:#f0c040;border:none;border-radius:7px;padding:10px 24px;font-family:Syne,sans-serif;font-size:13px;font-weight:700;cursor:pointer;color:#0a1628">Done</button>' +
-      '</div>';
-  } catch(e) {
-    showToast('Network error. Please email quotes@businessworldtravel.com','error');
-  } finally {
-    if (btn) { btn.disabled=false; btn.textContent='Send My Quote Request'; }
-  }
-}
 
 function buildSegHtml(offer) {
   // Debug: log journey structure
