@@ -670,7 +670,7 @@ app.get('/portal-action', async (req, res) => {
 
   let data;
   try {
-    data = JSON.parse(Buffer.from(t, 'base64url').toString('utf-8'));
+    data = JSON.parse(Buffer.from(t.replace(/-/g,'+').replace(/_/g,'/'), 'base64').toString('utf-8'));
   } catch(e) {
     return res.send('<h2>Invalid or expired link</h2>');
   }
@@ -771,8 +771,8 @@ app.post('/api/portal-notify', async (req, res) => {
 
     // Generate approve/reject links
     const host = process.env.RENDER_EXTERNAL_URL || 'https://bwt-platform.onrender.com';
-    const approveToken = Buffer.from(JSON.stringify({action:'approve', email:contactE, company, companyId, ts:Date.now()})).toString('base64url');
-    const rejectToken  = Buffer.from(JSON.stringify({action:'reject',  email:contactE, company, companyId, ts:Date.now()})).toString('base64url');
+    const approveToken = Buffer.from(JSON.stringify({action:'approve', email:contactE, company, companyId, ts:Date.now()})).toString('base64').replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'');
+    const rejectToken  = Buffer.from(JSON.stringify({action:'reject',  email:contactE, company, companyId, ts:Date.now()})).toString('base64').replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'');
     const approveLink  = host + '/portal-action?t=' + approveToken;
     const rejectLink   = host + '/portal-action?t=' + rejectToken;
 
