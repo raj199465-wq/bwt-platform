@@ -823,7 +823,9 @@ function gateSubmitInline() {
 
   setTimeout(() => {
     localStorage.setItem(GATE_KEY, JSON.stringify({email, ts: Date.now()}));
+    window._calledFromGateSubmit = true;
     gatePass();
+    window._calledFromGateSubmit = false;
   }, 600);
 }
 
@@ -835,7 +837,7 @@ const CFG = {
 };
 
 let allOffers = [], filteredOffers = [];
-gateCheck();
+// gateCheck runs after search completes
 
 
 /* ═══════════════════════════════════════════════
@@ -1420,6 +1422,7 @@ async function doSearch() {
     setRhCount(`${allOffers.length} result${allOffers.length!==1?'s':''}`);
     buildAirlineFilter(allOffers);
     if(typeof buildHistogram==='function') buildHistogram(allOffers);
+    gateCheck(); // Check verification BEFORE rendering so FREE_CARDS is set correctly
     renderCards(filteredOffers);
     hideLdr();
     setTimeout(() => {
