@@ -700,15 +700,15 @@ app.get('/portal-action', async (req, res) => {
     return res.send('<html><body style="font-family:Arial;padding:40px;max-width:500px;margin:0 auto"><h2>Link Expired</h2><p>This link has expired. Please log into the portal to manage applications.</p></body></html>');
   }
 
+  const isApprove = action === 'approve';
   log('info', 'portal-action', action + ' for ' + company + ' (' + email + ')');
 
-  // Update status in Supabase if available
+  // Update status in Supabase
   if (portalAuth.ENABLED && companyId) {
     await portalAuth.updateCompanyStatus(companyId, isApprove ? 'approved' : 'rejected').catch(()=>{});
   }
 
   const from = process.env.FROM_EMAIL || 'noreply@businessworldtravel.com';
-  const isApprove = action === 'approve';
 
   // Send email to the applicant
   if (process.env.RESEND_API_KEY && email) {
