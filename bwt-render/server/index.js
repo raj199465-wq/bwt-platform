@@ -155,6 +155,20 @@ app.post('/api/cockpit-search', async (req, res) => {
 });
 
 // ── GET /api/health ────────────────────────────────────────────────────────────
+app.get('/api/portal/health', async (req, res) => {
+  const enabled = portalAuth.ENABLED;
+  let supabaseOk = false;
+  if (enabled) {
+    try {
+      const r = await fetch(process.env.SUPABASE_URL + '/rest/v1/companies?limit=1', {
+        headers: { 'apikey': process.env.SUPABASE_KEY || process.env.SUPABASE_SERVICE_KEY || '', 'Authorization': 'Bearer ' + (process.env.SUPABASE_KEY || process.env.SUPABASE_SERVICE_KEY || '') }
+      });
+      supabaseOk = r.ok;
+    } catch(e) { supabaseOk = false; }
+  }
+  return res.json({ enabled, supabaseOk, envVars: { hasUrl: !!process.env.SUPABASE_URL, hasKey: !!(process.env.SUPABASE_KEY || process.env.SUPABASE_SERVICE_KEY) } });
+});
+
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'ok',
@@ -589,8 +603,13 @@ app.post('/api/portal/register', async (req, res) => {
     log('info', 'portal', 'New registration: ' + email + ' / ' + companyName);
     return res.json({ ok: true, companyId });
   } catch(e) {
-    log('error', 'portal', 'Register error: ' + e.message);
-    return res.status(500).json({ error: 'Registration failed. Please try again.' });
+    log('error', 'portal', 'Register error: ' + e.message + ' | Stack: ' + (e.stack||'').split('\n')[1]);
+    // Return detailed error in non-production for debugging
+    return res.status(500).json({ 
+      error: 'Registration failed. Please try again.',
+      detail: e.message,
+      supabaseEnabled: portalAuth.ENABLED,
+    });
   }
 });
 
