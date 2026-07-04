@@ -3099,8 +3099,17 @@ async function doLogout() {
 
 
 function goScreen(id) {
+  const aliases = { screenLanding:'screenHome', screenDash:'screenPortal' };
+  const realId = aliases[id] || id;
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  const el = document.getElementById(realId);
+  if (el) {
+    el.classList.add('active');
+  } else {
+    console.warn('[portal] goScreen: not found:', realId);
+    const home = document.getElementById('screenHome');
+    if (home) home.classList.add('active');
+  }
 }
 
 function launchPortal() {
