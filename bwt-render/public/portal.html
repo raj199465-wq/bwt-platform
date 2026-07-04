@@ -1708,11 +1708,11 @@ body{background:var(--l1);color:var(--lt);font-family:'DM Sans',sans-serif;font-
           <div class="search-row">
             <div class="ff" style="margin:0">
               <label>From</label>
-              <input type="text" id="pFrom" placeholder="e.g. JFK — New York" list="portalCities">
+              <input type="text" id="pFrom" placeholder="Type city or airport code (e.g. BOM, JFK, LHR)" list="portalCities">
             </div>
             <div class="ff" style="margin:0">
               <label>To</label>
-              <input type="text" id="pTo" placeholder="e.g. ZRH — Zurich" list="portalCities">
+              <input type="text" id="pTo" placeholder="Type city or airport code (e.g. LHR, CDG, ZRH)" list="portalCities">
             </div>
           </div>
           <div class="search-row search-row-4" style="margin-bottom:20px">
@@ -2560,17 +2560,255 @@ body{background:var(--l1);color:var(--lt);font-family:'DM Sans',sans-serif;font-
 "></div>
 
 <datalist id="portalCities">
-  <option value="JFK — New York John F. Kennedy"><option value="EWR — Newark Liberty">
-  <option value="ORD — Chicago O'Hare"><option value="LAX — Los Angeles">
-  <option value="MIA — Miami"><option value="BOS — Boston Logan">
-  <option value="SFO — San Francisco"><option value="IAD — Washington Dulles">
-  <option value="YYZ — Toronto Pearson"><option value="YVR — Vancouver">
-  <option value="YUL — Montreal Trudeau"><option value="LHR — London Heathrow">
-  <option value="CDG — Paris Charles de Gaulle"><option value="FRA — Frankfurt">
-  <option value="ZRH — Zurich"><option value="AMS — Amsterdam Schiphol">
-  <option value="MUC — Munich"><option value="FCO — Rome Fiumicino">
-  <option value="MAD — Madrid Barajas"><option value="VIE — Vienna">
-  <option value="CPH — Copenhagen"><option value="ARN — Stockholm Arlanda">
+  <option value="ABJ — Abidjan">Félix-Houphouët-Boigny International (ABJ)</option>
+  <option value="AUH — Abu Dhabi">Abu Dhabi International Airport (AUH)</option>
+  <option value="ABV — Abuja">Nnamdi Azikiwe International (ABV)</option>
+  <option value="ACC — Accra">Kotoka International Airport (ACC)</option>
+  <option value="ADD — Addis Ababa">Addis Ababa Bole International (ADD)</option>
+  <option value="ADL — Adelaide">Adelaide Airport (ADL)</option>
+  <option value="AMD — Ahmedabad">Sardar Vallabhbhai Patel International (AMD)</option>
+  <option value="ALG — Algiers">Houari Boumediene Airport (ALG)</option>
+  <option value="ALA — Almaty">Almaty International Airport (ALA)</option>
+  <option value="AMM — Amman">Queen Alia International Airport (AMM)</option>
+  <option value="ATQ — Amritsar">Sri Guru Ram Dass Jee International (ATQ)</option>
+  <option value="AMS — Amsterdam">Amsterdam Schiphol Airport (AMS)</option>
+  <option value="ANC — Anchorage">Ted Stevens Anchorage International (ANC)</option>
+  <option value="AUA — Aruba">Queen Beatrix International Airport (AUA)</option>
+  <option value="ATH — Athens">Athens Eleftherios Venizelos (ATH)</option>
+  <option value="ATL — Atlanta">Hartsfield-Jackson Atlanta International (ATL)</option>
+  <option value="AKL — Auckland">Auckland Airport (AKL)</option>
+  <option value="AUS — Austin">Austin-Bergstrom International (AUS)</option>
+  <option value="IXB — Bagdogra">Bagdogra Airport (IXB)</option>
+  <option value="BAH — Bahrain">Bahrain International Airport (BAH)</option>
+  <option value="DPS — Bali">Ngurah Rai International (DPS)</option>
+  <option value="BWI — Baltimore">Baltimore/Washington International (BWI)</option>
+  <option value="BLR — Bangalore">Kempegowda International Airport (BLR)</option>
+  <option value="BKK — Bangkok">Suvarnabhumi Airport (BKK)</option>
+  <option value="DMK — Bangkok">Don Mueang International (DMK)</option>
+  <option value="BCN — Barcelona">Barcelona El Prat Airport (BCN)</option>
+  <option value="PEK — Beijing">Beijing Capital International (PEK)</option>
+  <option value="PKX — Beijing">Beijing Daxing International (PKX)</option>
+  <option value="BEY — Beirut">Rafic Hariri International Airport (BEY)</option>
+  <option value="BGY — Bergamo">Bergamo Orio al Serio Airport (BGY)</option>
+  <option value="BER — Berlin">Berlin Brandenburg Airport (BER)</option>
+  <option value="BHX — Birmingham">Birmingham Airport (BHX)</option>
+  <option value="BOG — Bogotá">El Dorado International Airport (BOG)</option>
+  <option value="BOS — Boston">Logan International Airport (BOS)</option>
+  <option value="BSB — Brasília">Brasília International Airport (BSB)</option>
+  <option value="BGI — Bridgetown">Grantley Adams International (BGI)</option>
+  <option value="BNE — Brisbane">Brisbane Airport (BNE)</option>
+  <option value="BRU — Brussels">Brussels Airport (BRU)</option>
+  <option value="OTP — Bucharest">Henri Coandă International (OTP)</option>
+  <option value="BUD — Budapest">Budapest Ferenc Liszt Airport (BUD)</option>
+  <option value="EZE — Buenos Aires">Ministro Pistarini International (EZE)</option>
+  <option value="AEP — Buenos Aires">Jorge Newbery Airfield (AEP)</option>
+  <option value="CAI — Cairo">Cairo International Airport (CAI)</option>
+  <option value="YYC — Calgary">Calgary International Airport (YYC)</option>
+  <option value="CUN — Cancún">Cancún International Airport (CUN)</option>
+  <option value="CPT — Cape Town">Cape Town International (CPT)</option>
+  <option value="CCS — Caracas">Simón Bolívar International (CCS)</option>
+  <option value="CTG — Cartagena">Rafael Núñez International Airport (CTG)</option>
+  <option value="CMN — Casablanca">Mohammed V International Airport (CMN)</option>
+  <option value="CEB — Cebu">Mactan-Cebu International (CEB)</option>
+  <option value="IXC — Chandigarh">Chandigarh Airport (IXC)</option>
+  <option value="CLT — Charlotte">Charlotte Douglas International (CLT)</option>
+  <option value="CTU — Chengdu">Chengdu Tianfu International (CTU)</option>
+  <option value="MAA — Chennai">Chennai International Airport (MAA)</option>
+  <option value="CNX — Chiang Mai">Chiang Mai International (CNX)</option>
+  <option value="MDW — Chicago">Chicago Midway Airport (MDW)</option>
+  <option value="CHC — Christchurch">Christchurch Airport (CHC)</option>
+  <option value="CJB — Coimbatore">Coimbatore International (CJB)</option>
+  <option value="CGN — Cologne">Cologne Bonn Airport (CGN)</option>
+  <option value="CMB — Colombo">Bandaranaike International Airport (CMB)</option>
+  <option value="CPH — Copenhagen">Copenhagen Airport (CPH)</option>
+  <option value="CUR — Curaçao">Hato International Airport (CUR)</option>
+  <option value="DAD — Da Nang">Da Nang International Airport (DAD)</option>
+  <option value="DKR — Dakar">Blaise Diagne International Airport (DKR)</option>
+  <option value="DFW — Dallas">Dallas/Fort Worth International (DFW)</option>
+  <option value="DAL — Dallas">Dallas Love Field (DAL)</option>
+  <option value="DAR — Dar es Salaam">Julius Nyerere International (DAR)</option>
+  <option value="DEL — Delhi">Indira Gandhi International (DEL)</option>
+  <option value="DEN — Denver">Denver International Airport (DEN)</option>
+  <option value="DTW — Detroit">Detroit Metropolitan Wayne County (DTW)</option>
+  <option value="DAC — Dhaka">Hazrat Shahjalal International (DAC)</option>
+  <option value="DOH — Doha">Hamad International Airport (DOH)</option>
+  <option value="DXB — Dubai">Dubai International Airport (DXB)</option>
+  <option value="DWC — Dubai">Al Maktoum International Airport (DWC)</option>
+  <option value="DUB — Dublin">Dublin Airport (DUB)</option>
+  <option value="DUR — Durban">King Shaka International Airport (DUR)</option>
+  <option value="DUS — Düsseldorf">Düsseldorf Airport (DUS)</option>
+  <option value="EDI — Edinburgh">Edinburgh Airport (EDI)</option>
+  <option value="YEG — Edmonton">Edmonton International Airport (YEG)</option>
+  <option value="FLL — Fort Lauderdale">Fort Lauderdale-Hollywood International (FLL)</option>
+  <option value="FOR — Fortaleza">Pinto Martins International (FOR)</option>
+  <option value="FRA — Frankfurt">Frankfurt Airport (FRA)</option>
+  <option value="GVA — Geneva">Geneva Airport (GVA)</option>
+  <option value="GRO — Girona">Girona-Costa Brava Airport (GRO)</option>
+  <option value="GLA — Glasgow">Glasgow Airport (GLA)</option>
+  <option value="GOI — Goa">Dabolim Airport (GOI)</option>
+  <option value="GOT — Gothenburg">Gothenburg Landvetter Airport (GOT)</option>
+  <option value="GDL — Guadalajara">Miguel Hidalgo y Costilla International (GDL)</option>
+  <option value="CAN — Guangzhou">Guangzhou Baiyun International (CAN)</option>
+  <option value="GUA — Guatemala City">La Aurora International Airport (GUA)</option>
+  <option value="GYE — Guayaquil">José Joaquín de Olmedo International (GYE)</option>
+  <option value="GAU — Guwahati">Lokpriya Gopinath Bordoloi International (GAU)</option>
+  <option value="HAM — Hamburg">Hamburg Airport (HAM)</option>
+  <option value="HAN — Hanoi">Noi Bai International Airport (HAN)</option>
+  <option value="HAV — Havana">José Martí International Airport (HAV)</option>
+  <option value="HEL — Helsinki">Helsinki Vantaa Airport (HEL)</option>
+  <option value="SGN — Ho Chi Minh City">Tan Son Nhat International (SGN)</option>
+  <option value="HKG — Hong Kong">Hong Kong International (HKG)</option>
+  <option value="HNL — Honolulu">Daniel K. Inouye International (HNL)</option>
+  <option value="IAH — Houston">George Bush Intercontinental (IAH)</option>
+  <option value="HOU — Houston">William P. Hobby Airport (HOU)</option>
+  <option value="HRG — Hurghada">Hurghada International Airport (HRG)</option>
+  <option value="HYD — Hyderabad">Rajiv Gandhi International Airport (HYD)</option>
+  <option value="ISB — Islamabad">New Islamabad International (ISB)</option>
+  <option value="IST — Istanbul">Istanbul Airport (IST)</option>
+  <option value="SAW — Istanbul">Istanbul Sabiha Gökçen Airport (SAW)</option>
+  <option value="ADB — Izmir">Izmir Adnan Menderes Airport (ADB)</option>
+  <option value="CGK — Jakarta">Soekarno-Hatta International (CGK)</option>
+  <option value="JED — Jeddah">King Abdulaziz International (JED)</option>
+  <option value="JNB — Johannesburg">O.R. Tambo International (JNB)</option>
+  <option value="KBL — Kabul">Hamid Karzai International (KBL)</option>
+  <option value="EBB — Kampala">Entebbe International Airport (EBB)</option>
+  <option value="KHI — Karachi">Jinnah International Airport (KHI)</option>
+  <option value="KTM — Kathmandu">Tribhuvan International Airport (KTM)</option>
+  <option value="KIN — Kingston">Norman Manley International (KIN)</option>
+  <option value="COK — Kochi">Cochin International Airport (COK)</option>
+  <option value="CCU — Kolkata">Netaji Subhas Chandra Bose International (CCU)</option>
+  <option value="KUL — Kuala Lumpur">Kuala Lumpur International (KUL)</option>
+  <option value="SZB — Kuala Lumpur">Sultan Abdul Aziz Shah Airport (SZB)</option>
+  <option value="KWI — Kuwait City">Kuwait International Airport (KWI)</option>
+  <option value="KBP — Kyiv">Boryspil International Airport (KBP)</option>
+  <option value="LOS — Lagos">Murtala Muhammed International (LOS)</option>
+  <option value="LHE — Lahore">Allama Iqbal International Airport (LHE)</option>
+  <option value="LAS — Las Vegas">Harry Reid International Airport (LAS)</option>
+  <option value="LIM — Lima">Jorge Chávez International Airport (LIM)</option>
+  <option value="LIS — Lisbon">Lisbon Humberto Delgado Airport (LIS)</option>
+  <option value="LHR — London">Heathrow Airport (LHR)</option>
+  <option value="LGW — London">Gatwick Airport (LGW)</option>
+  <option value="STN — London">Stansted Airport (STN)</option>
+  <option value="LTN — London">Luton Airport (LTN)</option>
+  <option value="LCY — London">City Airport (LCY)</option>
+  <option value="LAX — Los Angeles">Los Angeles International (LAX)</option>
+  <option value="LKO — Lucknow">Chaudhary Charan Singh International (LKO)</option>
+  <option value="LUX — Luxembourg">Luxembourg Airport (LUX)</option>
+  <option value="LYS — Lyon">Lyon-Saint Exupéry Airport (LYS)</option>
+  <option value="MAD — Madrid">Adolfo Suárez Madrid-Barajas (MAD)</option>
+  <option value="MAN — Manchester">Manchester Airport (MAN)</option>
+  <option value="MNL — Manila">Ninoy Aquino International (MNL)</option>
+  <option value="RAK — Marrakech">Marrakech Menara Airport (RAK)</option>
+  <option value="MRS — Marseille">Marseille Provence Airport (MRS)</option>
+  <option value="MDE — Medellín">José María Córdova International (MDE)</option>
+  <option value="MEL — Melbourne">Melbourne Airport (MEL)</option>
+  <option value="MEX — Mexico City">Benito Juárez International (MEX)</option>
+  <option value="MIA — Miami">Miami International Airport (MIA)</option>
+  <option value="MXP — Milan">Milan Malpensa Airport (MXP)</option>
+  <option value="LIN — Milan">Milan Linate Airport (LIN)</option>
+  <option value="MSP — Minneapolis">Minneapolis-Saint Paul International (MSP)</option>
+  <option value="MBA — Mombasa">Moi International Airport (MBA)</option>
+  <option value="MBJ — Montego Bay">Sangster International Airport (MBJ)</option>
+  <option value="YUL — Montreal">Montréal-Trudeau International (YUL)</option>
+  <option value="SVO — Moscow">Sheremetyevo International (SVO)</option>
+  <option value="DME — Moscow">Domodedovo International (DME)</option>
+  <option value="BOM — Mumbai">Chhatrapati Shivaji Maharaj International (BOM)</option>
+  <option value="MUC — Munich">Munich Airport (MUC)</option>
+  <option value="MCT — Muscat">Muscat International Airport (MCT)</option>
+  <option value="AGP — Málaga">Málaga-Costa del Sol Airport (AGP)</option>
+  <option value="NGO — Nagoya">Chubu Centrair International (NGO)</option>
+  <option value="NAG — Nagpur">Dr. Babasaheb Ambedkar International (NAG)</option>
+  <option value="NBO — Nairobi">Jomo Kenyatta International (NBO)</option>
+  <option value="NAP — Naples">Naples International Airport (NAP)</option>
+  <option value="BNA — Nashville">Nashville International Airport (BNA)</option>
+  <option value="NAS — Nassau">Lynden Pindling International (NAS)</option>
+  <option value="JFK — New York">John F. Kennedy International (JFK)</option>
+  <option value="LGA — New York">LaGuardia Airport (LGA)</option>
+  <option value="EWR — Newark">Newark Liberty International (EWR)</option>
+  <option value="NCE — Nice">Cote d Azur Airport (NCE)</option>
+  <option value="OAK — Oakland">Oakland International Airport (OAK)</option>
+  <option value="MCO — Orlando">Orlando International Airport (MCO)</option>
+  <option value="KIX — Osaka">Kansai International Airport (KIX)</option>
+  <option value="ITM — Osaka">Itami Airport (ITM)</option>
+  <option value="OSL — Oslo">Oslo Gardermoen Airport (OSL)</option>
+  <option value="YOW — Ottawa">Ottawa Macdonald-Cartier International (YOW)</option>
+  <option value="PMI — Palma de Mallorca">Palma de Mallorca Airport (PMI)</option>
+  <option value="PTY — Panama City">Tocumen International Airport (PTY)</option>
+  <option value="CDG — Paris">Charles de Gaulle Airport (CDG)</option>
+  <option value="ORY — Paris">Paris Orly Airport (ORY)</option>
+  <option value="PAT — Patna">Jay Prakash Narayan Airport (PAT)</option>
+  <option value="PER — Perth">Perth Airport (PER)</option>
+  <option value="PHL — Philadelphia">Philadelphia International Airport (PHL)</option>
+  <option value="PNH — Phnom Penh">Phnom Penh International (PNH)</option>
+  <option value="PHX — Phoenix">Phoenix Sky Harbor International (PHX)</option>
+  <option value="HKT — Phuket">Phuket International Airport (HKT)</option>
+  <option value="IXZ — Port Blair">Veer Savarkar International (IXZ)</option>
+  <option value="POS — Port of Spain">Piarco International Airport (POS)</option>
+  <option value="PDX — Portland">Portland International Airport (PDX)</option>
+  <option value="OPO — Porto">Francisco Sá Carneiro Airport (OPO)</option>
+  <option value="PRG — Prague">Václav Havel Airport Prague (PRG)</option>
+  <option value="PNQ — Pune">Pune Airport (PNQ)</option>
+  <option value="PUJ — Punta Cana">Punta Cana International Airport (PUJ)</option>
+  <option value="UIO — Quito">Mariscal Sucre International (UIO)</option>
+  <option value="REC — Recife">Recife/Guararapes International (REC)</option>
+  <option value="KEF — Reykjavik">Keflavík International Airport (KEF)</option>
+  <option value="GIG — Rio de Janeiro">Rio de Janeiro Galeão International (GIG)</option>
+  <option value="SDU — Rio de Janeiro">Santos Dumont Airport (SDU)</option>
+  <option value="RUH — Riyadh">King Khalid International Airport (RUH)</option>
+  <option value="FCO — Rome">Leonardo da Vinci International (FCO)</option>
+  <option value="SLC — Salt Lake City">Salt Lake City International (SLC)</option>
+  <option value="SAN — San Diego">San Diego International Airport (SAN)</option>
+  <option value="SFO — San Francisco">San Francisco International (SFO)</option>
+  <option value="SJC — San Jose">Norman Y. Mineta San Jose International (SJC)</option>
+  <option value="SJO — San José">Juan Santamaría International (SJO)</option>
+  <option value="SAL — San Salvador">Monseñor Óscar Arnulfo Romero (SAL)</option>
+  <option value="SCL — Santiago">Arturo Merino Benítez International (SCL)</option>
+  <option value="SDQ — Santo Domingo">Las Américas International (SDQ)</option>
+  <option value="CTS — Sapporo">New Chitose Airport (CTS)</option>
+  <option value="SEA — Seattle">Seattle-Tacoma International (SEA)</option>
+  <option value="ICN — Seoul">Incheon International Airport (ICN)</option>
+  <option value="GMP — Seoul">Gimpo International Airport (GMP)</option>
+  <option value="SVQ — Seville">Seville Airport (SVQ)</option>
+  <option value="PVG — Shanghai">Shanghai Pudong International (PVG)</option>
+  <option value="SHA — Shanghai">Shanghai Hongqiao International (SHA)</option>
+  <option value="SHJ — Sharjah">Sharjah International Airport (SHJ)</option>
+  <option value="SSH — Sharm el-Sheikh">Sharm el-Sheikh International (SSH)</option>
+  <option value="SZX — Shenzhen">Shenzhen Baoan International (SZX)</option>
+  <option value="REP — Siem Reap">Siem Reap-Angkor International (REP)</option>
+  <option value="SIN — Singapore">Singapore Changi Airport (SIN)</option>
+  <option value="SOF — Sofia">Sofia Airport (SOF)</option>
+  <option value="SXM — St Maarten">Princess Juliana International (SXM)</option>
+  <option value="LED — St Petersburg">Pulkovo Airport (LED)</option>
+  <option value="ARN — Stockholm">Stockholm Arlanda Airport (ARN)</option>
+  <option value="STR — Stuttgart">Stuttgart Airport (STR)</option>
+  <option value="SUB — Surabaya">Juanda International Airport (SUB)</option>
+  <option value="STV — Surat">Surat Airport (STV)</option>
+  <option value="SYD — Sydney">Kingsford Smith Airport (SYD)</option>
+  <option value="GRU — São Paulo">São Paulo Guarulhos International (GRU)</option>
+  <option value="CGH — São Paulo">São Paulo Congonhas Airport (CGH)</option>
+  <option value="TPE — Taipei">Taiwan Taoyuan International (TPE)</option>
+  <option value="TSA — Taipei">Taipei Songshan Airport (TSA)</option>
+  <option value="TPA — Tampa">Tampa International Airport (TPA)</option>
+  <option value="TAS — Tashkent">Islam Karimov Tashkent International (TAS)</option>
+  <option value="TLV — Tel Aviv">Ben Gurion International Airport (TLV)</option>
+  <option value="SKG — Thessaloniki">Thessaloniki Macedonia Airport (SKG)</option>
+  <option value="TRV — Thiruvananthapuram">Trivandrum International (TRV)</option>
+  <option value="NRT — Tokyo">Narita International Airport (NRT)</option>
+  <option value="HND — Tokyo">Haneda Airport (HND)</option>
+  <option value="YYZ — Toronto">Toronto Pearson International (YYZ)</option>
+  <option value="TUN — Tunis">Tunis-Carthage International (TUN)</option>
+  <option value="VLC — Valencia">Valencia Airport (VLC)</option>
+  <option value="YVR — Vancouver">Vancouver International Airport (YVR)</option>
+  <option value="VCE — Venice">Venice Marco Polo Airport (VCE)</option>
+  <option value="VIE — Vienna">Vienna International Airport (VIE)</option>
+  <option value="VTE — Vientiane">Wattay International Airport (VTE)</option>
+  <option value="VGA — Vijayawada">Vijayawada Airport (VGA)</option>
+  <option value="WAW — Warsaw">Warsaw Chopin Airport (WAW)</option>
+  <option value="IAD — Washington DC">Washington Dulles International (IAD)</option>
+  <option value="DCA — Washington DC">Ronald Reagan Washington National (DCA)</option>
+  <option value="WLG — Wellington">Wellington International Airport (WLG)</option>
+  <option value="RGN — Yangon">Yangon International Airport (RGN)</option>
+  <option value="ZRH — Zurich">Zurich Airport (ZRH)</option>
 </datalist>
 
 <script>
