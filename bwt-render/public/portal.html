@@ -2839,6 +2839,7 @@ function savePortalToken(token) {
 function clearPortalToken() {
   localStorage.removeItem(PORTAL_TOKEN_KEY);
   _portalSession = null;
+  if (window._sessionTimerId) { clearInterval(window._sessionTimerId); window._sessionTimerId = null; }
 }
 
 async function apiPortal(method, path, body) {
@@ -2935,7 +2936,7 @@ async function doLogin() {
 function startSessionTimer() {
   // Check session expiry every 60 seconds
   clearInterval(window._sessionTimer);
-  window._sessionTimer = setInterval(()=>{
+  window._sessionTimer = window._sessionTimerId = setInterval(()=>{
     const sess = DB.get('session');
     if (!sess || Date.now() > sess.expires) {
       clearInterval(window._sessionTimer);
@@ -3105,7 +3106,7 @@ function goScreen(id) {
 function launchPortal() {
   goScreen('screenPortal');
   // Populate sidebar
-  document.getElementById('sidebarName').textContent = `${currentUser.firstName} ${currentUser.lastName}`;
+  const sn = document.getElementById('sidebarName'); if(sn) sn.textContent = (currentUser.firstName||'') + ' ' + (currentUser.lastName||'');
   document.getElementById('sidebarCo').textContent = currentUser.company;
   document.getElementById('dashName').textContent = currentUser.firstName;
 
