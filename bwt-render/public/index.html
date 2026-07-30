@@ -53,7 +53,7 @@ nav{background:var(--navy);position:sticky;top:0;z-index:500;border-bottom:1px s
 
 /* Hero right — visual */
 .hero-right{position:relative;z-index:10;display:flex;align-items:flex-end;justify-content:flex-end}
-.hero-visual-img{width:100%;max-width:560px;border-radius:16px;overflow:hidden;position:relative;box-shadow:0 24px 80px rgba(0,0,0,.5)}
+.hero-visual-img{width:100%;max-width:560px;border-radius:16px;overflow:hidden;position:relative;box-shadow:0 24px 80px rgba(0,0,0,.5);min-height:420px;background-size:cover;background-position:center}
 .hero-visual-img img{width:100%;display:block;height:420px;object-fit:cover;object-position:center}
 .hero-forte-card{position:absolute;bottom:24px;right:24px;background:rgba(10,22,40,.92);border:1px solid rgba(201,168,76,.4);border-radius:12px;padding:16px 20px;text-align:center;backdrop-filter:blur(12px)}
 .hfc-top{font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;display:flex;align-items:center;gap:6px;justify-content:center}
@@ -282,9 +282,10 @@ footer{background:#060e1e;padding:24px clamp(16px,4vw,64px);display:flex;align-i
 
 <!-- HERO -->
 <section class="hero" id="search">
-  <div class="hero-bg-img">
-    <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1800&q=80&auto=format&fit=crop" alt="Business class flight">
-  </div>
+  <div class="hero-bg-img" style="position:absolute;inset:0;background:linear-gradient(135deg,#060e1e 0%,#0a1628 40%,#0d2244 70%,#091830 100%)">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%,rgba(200,164,93,.06) 0%,transparent 60%)"></div>
+  <div style="position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(200,164,93,.2),transparent)"></div>
+</div>
   <div class="hero-bg-overlay"></div>
 
   <!-- Left -->
@@ -306,13 +307,7 @@ footer{background:#060e1e;padding:24px clamp(16px,4vw,64px);display:flex;align-i
 
   <!-- Right -->
   <div class="hero-right">
-    <div class="hero-visual-img">
-      <img src="https://images.unsplash.com/photo-1583396618422-fb2e2d53f6da?w=900&q=80&auto=format&fit=crop" alt="Business class wing view over city">
-      <div class="hero-forte-card">
-        <div class="hfc-top">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-          Our Forte
-        </div>
+    <div <div class="hero-visual-img" style="background-image:url('https://images.pexels.com/photos/1009748/pexels-photo-1009748.jpeg?auto=compress&cs=tinysrgb&w=900');background-size:cover;background-position:center;border-radius:inherit;position:absolute;inset:0"></div>
         <div class="hfc-main">
           USA &amp; CANADA<br>
           <span class="arr">↔</span><br>
