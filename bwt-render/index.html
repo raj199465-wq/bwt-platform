@@ -53,7 +53,7 @@ nav{background:var(--navy);position:sticky;top:0;z-index:500;border-bottom:1px s
 
 /* Hero right — visual */
 .hero-right{position:relative;z-index:10;display:flex;align-items:flex-end;justify-content:flex-end}
-.hero-visual-img{width:100%;max-width:560px;border-radius:16px;overflow:hidden;position:relative;box-shadow:0 24px 80px rgba(0,0,0,.5)}
+.hero-visual-img{width:100%;max-width:560px;border-radius:16px;overflow:hidden;position:relative;box-shadow:0 24px 80px rgba(0,0,0,.5);min-height:420px;background-size:cover;background-position:center}
 .hero-visual-img img{width:100%;display:block;height:420px;object-fit:cover;object-position:center}
 .hero-forte-card{position:absolute;bottom:24px;right:24px;background:rgba(10,22,40,.92);border:1px solid rgba(201,168,76,.4);border-radius:12px;padding:16px 20px;text-align:center;backdrop-filter:blur(12px)}
 .hfc-top{font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;display:flex;align-items:center;gap:6px;justify-content:center}
@@ -282,9 +282,7 @@ footer{background:#060e1e;padding:24px clamp(16px,4vw,64px);display:flex;align-i
 
 <!-- HERO -->
 <section class="hero" id="search">
-  <div class="hero-bg-img">
-    <img src="https://images.unsplash.com/photo-1529074963764-98f45c47344b?w=1800&q=80&auto=format&fit=crop&crop=center" alt="Business class flight" onerror="this.style.display=\'none\'">>
-  </div>
+  <div class="hero-bg-img" style="background-image:url('https://images.unsplash.com/photo-1529074963764-98f45c47344b?w=1800&q=80&auto=format&fit=crop');background-size:cover;background-position:center;position:absolute;inset:0"></div>
   <div class="hero-bg-overlay"></div>
 
   <!-- Left -->
@@ -306,13 +304,7 @@ footer{background:#060e1e;padding:24px clamp(16px,4vw,64px);display:flex;align-i
 
   <!-- Right -->
   <div class="hero-right">
-    <div class="hero-visual-img">
-      <img src="https://images.unsplash.com/photo-1540339832862-474599807836?w=900&q=80&auto=format&fit=crop" alt="Business class wing view over city" onerror="this.style.display=\'none\'">>
-      <div class="hero-forte-card">
-        <div class="hfc-top">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-          Our Forte
-        </div>
+    <div <div class="hero-visual-img" style="background-image:url('https://images.unsplash.com/photo-1540339832862-474599807836?w=900&q=80&auto=format&fit=crop');background-size:cover;background-position:center;border-radius:inherit;position:absolute;inset:0"></div>
         <div class="hfc-main">
           USA &amp; CANADA<br>
           <span class="arr">↔</span><br>
